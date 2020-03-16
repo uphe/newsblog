@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.TicketMapper">
+    <insert id="addTicket" parameterType="Ticket">
+        insert into Ticket(randomTicket,expired,userId)
+        values (#{randomTicket},#{expired},#{userId})
+    </insert>
+    <update id="updateTicket">
+        update ticket
+        set expired = #{expired}
+        where randomTicket = #{randomTicket}
+    </update>
+    <select id="selectTicketByRandomTicket" resultType="Ticket">
+        select * from ticket
+        where randomTicket = #{randomTicket}
+    </select>
+
+
+</mapper>

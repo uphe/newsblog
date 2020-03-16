@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>注册</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+<form class="form-signin" th:action="@{/register}">
+    <img class="mb-4" th:src="@{/img/bootstrap-solid.svg}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">请注册</h1>
+
+    <p th:if="${registerMsg != null}" th:text="${registerMsg}" style="color: red"></p>
+
+    <label class="sr-only">账号</label>
+    <input type="text" name="username" class="form-control" required="" autofocus="">
+
+    <label class="sr-only">密码</label>
+    <input type="password" name="password" class="form-control" required="">
+
+    <button id="register" class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+</form>
+</body>
+</html>

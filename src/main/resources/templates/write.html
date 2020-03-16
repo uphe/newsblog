@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"/>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="/editormd/editormd.js"></script>
+
+</head>
+<body>
+<!--    <div>-->
+<!--        <input type="textarea" placeholder="请输入标题" name="title">-->
+<!--        <input type="submit" value="发布">-->
+<!--    </div>-->
+
+
+<form action="/editormd">
+    <div id="test-editor">
+        <textarea name="editormd" style="display:none;"></textarea>
+    </div>
+
+    <script type="text/javascript">
+        $(function() {
+            var editor = editormd("test-editor", {
+                width: "100%",
+                height: 600,
+                path: "/editormd/lib/", //依赖lib文件夹路径
+
+            });
+            var previewedHTML = editor.getPreviewedHTML();
+        });
+    </script>
+
+<!--    var frm = $("#documentFrm");-->
+<!--    $.ajax({-->
+<!--    type : "post",-->
+<!--    url : frm.attr("action"),-->
+<!--    data : frm.serialize(),// 获得表单数据-->
+<!--    success : function(result) {-->
+<!--    if (result > 0) {-->
+<!--    alert("成功!");-->
+<!--    } else {-->
+<!--    alert("失败!");-->
+<!--    }-->
+<!--    }-->
+<!--    });-->
+<!--    后台 用String xx = request.getParameter("form中input的name");-->
+
+
+    <input type="submit" value="发布">
+</form>
+
+
+</body>
+</html>
