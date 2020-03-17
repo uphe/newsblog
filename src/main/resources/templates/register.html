@@ -14,13 +14,38 @@
 
     <p th:if="${registerMsg != null}" th:text="${registerMsg}" style="color: red"></p>
 
-    <label class="sr-only">账号</label>
-    <input type="text" name="username" class="form-control" required="" autofocus="">
-
-    <label class="sr-only">密码</label>
-    <input type="password" name="password" class="form-control" required="">
+    <input id="name" type="text" name="username" class="form-control" required="" autofocus="" placeholder="请输入账号">
+    <input id="pwd1" type="password" name="password" class="form-control" required="" placeholder="请输入密码">
+    <input id="pwd2" type="password" class="form-control" required="" placeholder="请再次输入密码">
 
     <button id="register" class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
 </form>
+
+<script>
+     $(function(){
+         $("#name").blur(function () {
+             var reg = new RegExp(/^[\da-zA-Z_]+$/);
+             var name = $("#name").val();
+             if (!reg.test(name)) {
+                 alert("账号只能为数字字母和下划线");
+                 $("#name").val(null);
+             }
+         });
+         $("#pwd1").blur(function(){
+             var reg = new RegExp(/^[\da-zA-Z_]+$/);
+             if (!reg.test($("#pwd1").val())) {
+                 alert("密码只能为数字字母和下划线");
+                 $("#pwd1").val(null);
+             }
+         });
+        $("#pwd2").blur(function(){
+            if($("#pwd1").val() != $("#pwd2").val()){
+                alert("两次密码不一致");
+                $("#pwd2").val(null);
+            }
+        });
+     });
+</script>
+
 </body>
 </html>
