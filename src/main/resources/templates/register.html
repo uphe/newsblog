@@ -33,6 +33,7 @@
                  $("#name").val(null);
              }
          });
+
          $("#pwd1").blur(function(){
              var reg = new RegExp(/^[\da-zA-Z_]+$/);
              if (!reg.test($("#pwd1").val())) {
@@ -40,6 +41,7 @@
                  $("#pwd1").val(null);
              }
          });
+
         $("#pwd2").blur(function(){
             if($("#pwd1").val() != $("#pwd2").val()){
                 alert("两次密码不一致");
