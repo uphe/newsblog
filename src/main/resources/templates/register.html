@@ -30,7 +30,7 @@
              var name = $("#name").val();
              if (!reg.test(name)) {
                  alert("账号只能为数字字母和下划线");
-                 $("#name").val(null);
+                 $("#name").val("");
              }
          });
 
@@ -38,14 +38,14 @@
              var reg = new RegExp(/^[\da-zA-Z_]+$/);
              if (!reg.test($("#pwd1").val())) {
                  alert("密码只能为数字字母和下划线");
-                 $("#pwd1").val(null);
+                 $("#pwd1").val("");
              }
          });
 
         $("#pwd2").blur(function(){
             if($("#pwd1").val() != $("#pwd2").val()){
                 alert("两次密码不一致");
-                $("#pwd2").val(null);
+                $("#pwd2").val("");
             }
         });
      });
