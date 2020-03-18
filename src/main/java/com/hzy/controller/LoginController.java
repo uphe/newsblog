@@ -55,8 +55,24 @@ public class LoginController {
             ticket.setUserId(user.getUserId());
             ticketService.addTicket(ticket);
 
+        } else { //这是没有记住密码
+            String randomTicket = UUID.randomUUID().toString().replaceAll("-","");
+            Cookie cookie = new Cookie("randomTicket", randomTicket);
+            //cookie.setMaxAge(60*60*24*7);
+            response.addCookie(cookie);
+
+            Ticket ticket = new Ticket();
+            Date date = new Date();
+            date.setTime(date.getTime() + 1000*60*60*24);
+
+            ticket.setRandomTicket(randomTicket);
+            ticket.setExpired(date);
+            ticket.setUserId(user.getUserId());
+            ticketService.addTicket(ticket);
+
         }
         // 用户登录成功，把信息放到session里
+
         session.setAttribute("user",user);
 
         // 重定向过去，url里没有用户信息

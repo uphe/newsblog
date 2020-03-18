@@ -1,6 +1,7 @@
 package com.hzy.configuration;
 
 import com.hzy.interceptor.IndexInterceptor;
+import com.hzy.interceptor.WriteInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -10,6 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfiguration implements WebMvcConfigurer {
     @Autowired
     private IndexInterceptor indexInterceptor;
+    @Autowired
+    private WriteInterceptor writeInterceptor;
 
     /*
     * 配置indexInterceptor拦截器的拦截路径，这里只拦截了首页
@@ -19,5 +22,8 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(indexInterceptor)
                 .addPathPatterns("/","/index","index.html");
+
+        registry.addInterceptor(writeInterceptor)
+                .addPathPatterns("/toWrite","/editormd");
     }
 }

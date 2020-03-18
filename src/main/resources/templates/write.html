@@ -10,48 +10,54 @@
 
 </head>
 <body>
-<!--    <div>-->
-<!--        <input type="textarea" placeholder="请输入标题" name="title">-->
-<!--        <input type="submit" value="发布">-->
-<!--    </div>-->
 
+<input id="title" type="text" placeholder="请输入标题">
 
-<form action="/editormd">
-    <div id="test-editor">
-        <textarea name="editormd" style="display:none;"></textarea>
-    </div>
+<input id="input" type="button" value="发布">
 
-    <script type="text/javascript">
-        $(function() {
-            var editor = editormd("test-editor", {
-                width: "100%",
-                height: 600,
-                path: "/editormd/lib/", //依赖lib文件夹路径
+<div id="test-editor">
+    <textarea style="display:none;"></textarea>
+</div>
 
-            });
-            var previewedHTML = editor.getPreviewedHTML();
+<script type="text/javascript">
+    $(function() {
+        var editor = editormd("test-editor", {
+            width: "100%",
+            height: 600,
+            path: "/editormd/lib/", //依赖lib文件夹路径
+            saveHTMLToTextarea : true
         });
-    </script>
 
-<!--    var frm = $("#documentFrm");-->
-<!--    $.ajax({-->
-<!--    type : "post",-->
-<!--    url : frm.attr("action"),-->
-<!--    data : frm.serialize(),// 获得表单数据-->
-<!--    success : function(result) {-->
-<!--    if (result > 0) {-->
-<!--    alert("成功!");-->
-<!--    } else {-->
-<!--    alert("失败!");-->
-<!--    }-->
-<!--    }-->
-<!--    });-->
-<!--    后台 用String xx = request.getParameter("form中input的name");-->
+        $("#input").click(function () {
+            $.post({
+                url: "/editormd",
+                data: {
+                    title: $("#title").val(),
+                    // 存入子数据库的是markdown源码editor.getMarkdown()
+                    editormd: editor.getMarkdown()
+                },
+                success: function () {
+                    location.href="/";
+                },
+                error: function () {
+                    alert("发送失败");
+                }
+            });
 
-
-    <input type="submit" value="发布">
-</form>
-
+            //console.log(editor.getPreviewedHTML());
+            //var md = editor.getMarkdown();
+            //editor.markdownToHTML();
+            // testEditormd = md.markdownToHTML("editor", {
+            //     htmlDecode      : "style,script,iframe",  // you can filter tags decode
+            //     emoji           : true,
+            //     taskList        : true,
+            //     tex             : true,  // 默认不解析
+            //     flowChart       : true,  // 默认不解析
+            //     sequenceDiagram : true,  // 默认不解析
+            // });
+        })
+    });
+</script>
 
 </body>
 </html>
