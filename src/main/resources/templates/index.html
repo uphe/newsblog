@@ -20,7 +20,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">头条资讯</a>
+            <a class="navbar-brand" href="/">头条资讯</a>
             <p class="navbar-text">你关心的才是头条</p>
         </div>
 
@@ -40,7 +40,59 @@
     </div><!-- /.container-fluid -->
 </nav>
 
+<!-- 主体部分 -->
+<div class="w">
+    <!-- 头条资讯 -->
+    <div class="container-fluid hd">
+        <div class="row">
+            <i class="hd_icon"></i>
+            <span class="hd_tt">头条资讯</span>
+            <span class="hd_time">2020-02-08</span>
+        </div>
+    </div>
+    <!-- 主体 -->
+    <div th:each="map : ${mapMap.values()}" class="container-fluid bd">
+        <!-- 行 -->
+        <div class="row border_bottom">
+            <!-- 图标 -->
+            <div class="col-lg-1  col-md-1 col-xs-1 bd_icon">
+                <div class="up_39">
+                    <span  th:text="${map.get('blog').likeCount}"></span>
+                    <!--                    39-->
+                </div>
+                <div class="down_39">
+                    <span></span>
+                </div>
+            </div>
+            <!-- 图片 -->
+<!--            <div class="col-lg-1 col-md-1 col-xs-1">-->
+<!--                &lt;!&ndash;                <div class="bd_img"></div>&ndash;&gt;-->
+<!--                <img  th:src="${map.get('news').image}"  th:width="50px">-->
+<!--            </div>-->
+            <!-- 文字部分 -->
+            <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
+                <div class="bd_text">
+                    <p th:text="${map.get('blog').title}"></p>
+                    <a href="javascript:;" th:text="${map.get('blog').summary}"></a>
+                    <i></i>
+                    <em th:text="${map.get('blog').commentCount}"></em>
+                </div>
 
+            </div>
+            <!-- 右侧用户信息部分 -->
+            <div class="col-lg-9 col-md-6 col-sm-4 col-xs-8 clearfix user_message">
+                <div class="user">
+                    <!--                <img src="./img/xzq.jpg" alt="" class="user_tit">-->
+                    <img th:src="${map.get('user').headUrl}" width="30px" class="user_tit">
+                    <p>
+                        来自
+                        <a href="#">腾讯质量开放平台</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!--！！！图片处理！！！-->
