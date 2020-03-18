@@ -33,7 +33,11 @@ public class BlogController {
             Blog blog = new Blog();
             blog.setArticle(editormd);
             blog.setCreateDate(new Date());
-            blog.setSummary("摘要");
+            if (editormd.length() > 50) {
+                blog.setSummary(editormd.substring(0,50));
+            } else {
+                blog.setSummary(editormd);
+            }
             blog.setTitle(title);
             blog.setUserId(user.getUserId());
             System.out.println(blog.toString());
