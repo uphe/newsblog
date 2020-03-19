@@ -1,0 +1,22 @@
+.title-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.title-img img {
+    display: inline-block;
+    width: 40px;
+    margin-top: -10px;
+    margin-left: -5px;
+    vertical-align: bottom;
+}
+
+.xs:hover ul.dropdown-menu-list {
+    display: block;
+}
+
+#hg {
+    line-height: 30px;
+}
