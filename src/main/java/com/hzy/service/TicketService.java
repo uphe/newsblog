@@ -15,10 +15,11 @@ public class TicketService {
     public int addTicket(Ticket ticket) {
         return ticketMapper.addTicket(ticket);
     }
-    public int updateTicket(String randomTicket, Date expired) {
 
-        return 0;
+    public int updateTicket(String randomTicket, Date expired) {
+        return ticketMapper.updateTicket(randomTicket, expired);
     }
+
     public Ticket selectTicketByRandomTicket(String randomTicket) {
         return ticketMapper.selectTicketByRandomTicket(randomTicket);
     }

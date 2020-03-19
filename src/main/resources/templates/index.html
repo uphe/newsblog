@@ -31,7 +31,6 @@
                 <li th:if="${user} == null"><a href="/toLogin">写博客</a></li>
                 <li th:if="${user} != null"><a href="/toWrite">写博客</a></li>
 
-<!--                <li><a href="#">消息</a></li>-->
                 <li class="dropdown xs">
                     <a href="#" class="dropdown-toggle" id="hg" data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="false">
@@ -51,7 +50,33 @@
                 </li>
 
                 <li th:if="${user} == null"><a th:href="@{/toLogin}">登录/注册</a></li>
-                <li><img th:if="${user} != null" th:src="${user.getHeadUrl()}" width="25px" class="user_tit"></img></li>
+                <li th:if="${user} != null" class="dropdown xs">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <div class="title-img">
+                            <img th:src="${user.getHeadUrl()}" width="25px" class="user_tit">
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-list">
+                        <li><a href="#">我的关注</a></li>
+                        <li><a href="#">我的收藏</a></li>
+                        <li><a href="#">个人中心</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">帐号设置</a></li>
+                        <li><a href="#">我的博客</a></li>
+                        <li><a href="#">管理博客</a></li>
+                        <li><a href="#">我的学院</a></li>
+                        <li><a href="#">我的下载</a></li>
+                        <li><a href="#">我的活动</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">我的C币</a></li>
+                        <li><a href="#">订单中心</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">帮助</a></li>
+                        <li><a id="logout" href="/user/logout">退出</a></li>
+                    </ul>
+                </li>
+<!--                <li><img th:if="${user} != null" th:src="${user.getHeadUrl()}" width="25px" class="user_tit"></img></li>-->
                 </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -110,6 +135,22 @@
         </div>
     </div>
 </div>
+
+<!--<script>-->
+<!--    $(function () {-->
+<!--        $("#logout").click(function () {-->
+<!--            $.get({-->
+<!--               url: "/user/logout",-->
+<!--               success: function () {-->
+<!--                   location.href="/index"-->
+<!--               },-->
+<!--               error: function () {-->
+<!--                    alert("退出失败");-->
+<!--               }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 
 
 <!--！！！图片处理！！！-->

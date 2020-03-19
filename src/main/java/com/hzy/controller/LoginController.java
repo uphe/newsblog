@@ -4,15 +4,17 @@ import com.hzy.pojo.Ticket;
 import com.hzy.pojo.User;
 import com.hzy.service.TicketService;
 import com.hzy.service.UserService;
+import com.hzy.utils.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import javax.xml.transform.Source;
 import java.util.Date;
 import java.util.UUID;
 
@@ -76,6 +78,23 @@ public class LoginController {
         session.setAttribute("user",user);
 
         // 重定向过去，url里没有用户信息
+        return "redirect:/";
+    }
+
+    @RequestMapping("/user/logout")
+    public String logout(Model model, HttpServletRequest request,HttpSession session) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("randomTicket")) {
+                    cookie.setMaxAge(0);
+                    ticketService.updateTicket(cookie.getValue(), new Date());
+                    session.setAttribute("user",null);
+                    model.addAttribute("user",null);
+                    return "redirect:/";
+                }
+            }
+        }
         return "redirect:/";
     }
 }
