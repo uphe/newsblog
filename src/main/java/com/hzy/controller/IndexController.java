@@ -58,12 +58,16 @@ public class IndexController {
         return mapMap;
     }
 
+    @RequestMapping("/toEditor")
+    public String toEditor() {
+        return "editor";
+    }
+
     @PostMapping("/uploadImage")
-    @ResponseBody
-    public String uploadImage(@RequestParam("file") MultipartFile file) {
-        System.out.println(file);
-        String fileUrl = userService.saveImage(file);
-        return fileUrl;
+    public String uploadImage(@RequestParam("file") MultipartFile file,HttpSession session) {
+        String fileUrl = userService.saveImage(file,session);
+        //return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/getImage")

@@ -7,6 +7,11 @@
         insert into user(username,password,salt,headUrl)
         values(#{username},#{password},#{salt},#{headUrl})
     </insert>
+    <update id="updateUser" parameterType="User">
+        update user
+        set username = #{username},password = #{password},headUrl = #{headUrl}
+        where userId = #{userId}
+    </update>
     <select id="selectUserById" resultType="User">
         select * from user
         where userId = #{userId}

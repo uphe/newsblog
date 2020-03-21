@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,7 +67,7 @@ public class UserService {
     /*
     * 保存到文件中的图片只有图片名，保存到数据库中的文件是文件的全URL路径
     * */
-    public String saveImage (MultipartFile file) {
+    public String saveImage (MultipartFile file, HttpSession session) {
         // System.out.println(file.getOriginalFilename());// java.jpg
         int doPos = file.getOriginalFilename().lastIndexOf(".");
         if (doPos < 0) {
@@ -84,7 +85,11 @@ public class UserService {
             logger.info("上传图片失败" + e.getMessage());
             e.printStackTrace();
         }
-        return FileUtils.HOST_PORT + "getImage?fileName=" + fileName;
+        String url = FileUtils.HOST_PORT + "getImage?fileName=" + fileName;
+        User user = (User) session.getAttribute("user");
+        user.setHeadUrl(url);
+        userMapper.updateUser(user);
+        return url;
     }
 
     public void getImage(String fileName, HttpServletResponse response) {
