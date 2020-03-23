@@ -4,6 +4,7 @@ import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.UserService;
+import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,6 @@ public class BlogController {
             }
             blog.setTitle(title);
             blog.setUserId(user.getUserId());
-            System.out.println(blog.toString());
             blogService.addBlog(blog);
         }
         return "";
@@ -51,7 +51,12 @@ public class BlogController {
 
     @RequestMapping("/toDetails")
     public String toDetails(Model model,HttpSession session,int blogId) {
-        model.addAttribute("blog", blogService.selectBlogById(blogId));
+        Blog blog = blogService.selectBlogById(blogId);
+        String markdownString = blog.getArticle();
+        String html = MarkDownUtil.mdToHtml(markdownString);
+        blog.setArticle(html);
+
+        model.addAttribute("blog", blog);
         model.addAttribute("user",session.getAttribute("user"));
         return "details";
     }

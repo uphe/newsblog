@@ -19,6 +19,19 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.atlassian.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+        <!-- commonmark table -->
+        <dependency>
+            <groupId>com.atlassian.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-tables</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+
+
         <!--JSON-->
         <dependency>
             <groupId>com.alibaba</groupId>
