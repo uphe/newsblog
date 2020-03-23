@@ -3,14 +3,15 @@ package com.hzy.controller;
 import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
+import com.hzy.service.UserService;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 
@@ -44,5 +45,11 @@ public class BlogController {
             blogService.addBlog(blog);
         }
         return "";
+    }
+
+    @RequestMapping("/toDetails")
+    public String toDetails(Model model,int blogId) {
+        model.addAttribute("blog", blogService.selectBlogById(blogId));
+        return "details";
     }
 }

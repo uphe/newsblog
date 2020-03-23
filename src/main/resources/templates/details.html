@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>首页</title>
+    <title>详情</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/头条.css">
@@ -59,25 +59,25 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-list">
                         <li><a href="/toEditor">修改头像</a></li>
-<!--                        <li><a href="#">我的收藏</a></li>-->
-<!--                        <li><a href="#">个人中心</a></li>-->
+                        <!--                        <li><a href="#">我的收藏</a></li>-->
+                        <!--                        <li><a href="#">个人中心</a></li>-->
                         <li role="separator" class="divider"></li>
-<!--                        <li><a href="#">帐号设置</a></li>-->
-<!--                        <li><a href="#">我的博客</a></li>-->
-<!--                        <li><a href="#">管理博客</a></li>-->
-<!--                        <li><a href="#">我的学院</a></li>-->
-<!--                        <li><a href="#">我的下载</a></li>-->
-<!--                        <li><a href="#">我的活动</a></li>-->
-<!--                        <li role="separator" class="divider"></li>-->
-<!--                        <li><a href="#">我的C币</a></li>-->
-<!--                        <li><a href="#">订单中心</a></li>-->
-<!--                        <li role="separator" class="divider"></li>-->
-<!--                        <li><a href="#">帮助</a></li>-->
+                        <!--                        <li><a href="#">帐号设置</a></li>-->
+                        <!--                        <li><a href="#">我的博客</a></li>-->
+                        <!--                        <li><a href="#">管理博客</a></li>-->
+                        <!--                        <li><a href="#">我的学院</a></li>-->
+                        <!--                        <li><a href="#">我的下载</a></li>-->
+                        <!--                        <li><a href="#">我的活动</a></li>-->
+                        <!--                        <li role="separator" class="divider"></li>-->
+                        <!--                        <li><a href="#">我的C币</a></li>-->
+                        <!--                        <li><a href="#">订单中心</a></li>-->
+                        <!--                        <li role="separator" class="divider"></li>-->
+                        <!--                        <li><a href="#">帮助</a></li>-->
                         <li><a id="logout" href="/user/logout">退出</a></li>
                     </ul>
                 </li>
-<!--                <li><img th:if="${user} != null" th:src="${user.getHeadUrl()}" width="25px" class="user_tit"></img></li>-->
-                </ul>
+                <!--                <li><img th:if="${user} != null" th:src="${user.getHeadUrl()}" width="25px" class="user_tit"></img></li>-->
+            </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
@@ -93,42 +93,17 @@
         </div>
     </div>
     <!-- 主体 -->
-    <div th:each="map : ${mapMap.values()}" class="container-fluid bd">
         <!-- 行 -->
         <div class="row border_bottom">
-            <!-- 图标 -->
-            <div class="col-lg-1  col-md-1 col-xs-1 bd_icon">
-                <div class="up_39">
-                    <span  th:text="${map.get('blog').likeCount}"></span>
-                    <!--                    39-->
-                </div>
-                <div class="down_39">
-                    <span></span>
-                </div>
-            </div>
             <!-- 文字部分 -->
             <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
                 <div class="bd_text">
-                    <a th:href="@{/toDetails(blogId=${map.get('blog').blogId})}" th:text="${map.get('blog').title}"></a>
-                    <p th:text="${map.get('blog').summary}"></p>
-                    <i></i>
-                    <em th:text="${map.get('blog').commentCount}"></em>
-                </div>
-
-            </div>
-            <!-- 右侧用户信息部分 -->
-            <div class="col-lg-9 col-md-6 col-sm-4 col-xs-8 clearfix user_message">
-                <div class="user">
-                    <!--                <img src="./img/xzq.jpg" alt="" class="user_tit">-->
-                    <img th:src="${map.get('user').headUrl}" width="30px" class="user_tit">
-                    <p>
-                        来自
-                        <a href="#">腾讯质量开放平台</a>
-                    </p>
+                    <h1 th:text="${blog.title}"></h1>
+                    <p th:text="${blog.article}"></p>
                 </div>
             </div>
         </div>
-    </div>
+
 </div>
 
 
