@@ -10,6 +10,7 @@ import java.util.List;
 public class BlogService {
     @Autowired
     private BlogMapper blogMapper;
+
     public int addBlog(Blog blog) {
         return blogMapper.addBlog(blog);
     }

@@ -19,6 +19,8 @@ import java.util.Date;
 public class BlogController {
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/toWrite")
     public String toWrite(HttpSession session) {
@@ -48,8 +50,9 @@ public class BlogController {
     }
 
     @RequestMapping("/toDetails")
-    public String toDetails(Model model,int blogId) {
+    public String toDetails(Model model,HttpSession session,int blogId) {
         model.addAttribute("blog", blogService.selectBlogById(blogId));
+        model.addAttribute("user",session.getAttribute("user"));
         return "details";
     }
 }
