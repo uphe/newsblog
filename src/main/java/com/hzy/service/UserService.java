@@ -80,6 +80,10 @@ public class UserService {
         }
         String fileName = UUID.randomUUID().toString().replaceAll("-","") + "." + fileExt;
         try {
+            File file1 = new File(FileUtils.IMAGE_DIR);
+            if (!file1.exists()) {
+                file1.mkdir();
+            }
             Files.copy(file.getInputStream(),new File(FileUtils.IMAGE_DIR + fileName).toPath());
         } catch (IOException e) {
             logger.info("上传图片失败" + e.getMessage());
