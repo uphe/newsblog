@@ -3,21 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
     <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"/>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <script src="/editormd/editormd.js"></script>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/foundation/5.5.3/css/foundation.min.css">
+    <link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">
 
 </head>
+
 <body>
 
-<input id="title" type="text" placeholder="请输入标题">
-
-<input id="input" type="button" value="发布">
-
+<form>
+    <br>
+    <div class="row">
+        <div class="large-12 columns manager">
+            <div class="row collapse prefix-radius">
+                <div class="small-2 columns">
+                    <span type="button" class="prefix "><i class="fi-arrow-left"></i>文章管理</span>
+                </div>
+                <div class="small-8 columns">
+                    <input id="title" type="text" placeholder="请输入标题">
+                </div>
+                <div class="small-2 columns">
+                    <ul class="button-group">
+<!--                        <li><button  class="button  tiny save">保存</button></li>-->
+                        <li><input id="input" class="button  tiny send  success" type="button" value="发送"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 <div id="test-editor">
     <textarea style="display:none;"></textarea>
 </div>
+
 
 <script type="text/javascript">
     $(function() {
@@ -40,21 +60,10 @@
                     location.href="/";
                 },
                 error: function () {
+                    console.log("发送失败");
                     alert("发送失败");
                 }
             });
-
-            //console.log(editor.getPreviewedHTML());
-            //var md = editor.getMarkdown();
-            //editor.markdownToHTML();
-            // testEditormd = md.markdownToHTML("editor", {
-            //     htmlDecode      : "style,script,iframe",  // you can filter tags decode
-            //     emoji           : true,
-            //     taskList        : true,
-            //     tex             : true,  // 默认不解析
-            //     flowChart       : true,  // 默认不解析
-            //     sequenceDiagram : true,  // 默认不解析
-            // });
         })
     });
 </script>

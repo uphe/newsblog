@@ -58,6 +58,6 @@ public class BlogController {
 
         model.addAttribute("blog", blog);
         model.addAttribute("user",session.getAttribute("user"));
-        return "details";
+        return "detail";
     }
 }
