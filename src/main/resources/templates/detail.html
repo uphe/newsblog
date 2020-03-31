@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>详情</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/头条.css">
     <link rel="stylesheet" href="css/csdn.css">
@@ -49,6 +50,7 @@
                     </ul>
                 </li>
 
+                <input type="hidden" id="userId" th:value="${user.getUserId()}">
                 <li th:if="${user} == null"><a th:href="@{/toLogin}">登录/注册</a></li>
                 <li th:if="${user} != null" class="dropdown xs">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -59,20 +61,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-list">
                         <li><a href="/toEditor">修改头像</a></li>
-                        <!--                        <li><a href="#">我的收藏</a></li>-->
-                        <!--                        <li><a href="#">个人中心</a></li>-->
                         <li role="separator" class="divider"></li>
-                        <!--                        <li><a href="#">帐号设置</a></li>-->
-                        <!--                        <li><a href="#">我的博客</a></li>-->
-                        <!--                        <li><a href="#">管理博客</a></li>-->
-                        <!--                        <li><a href="#">我的学院</a></li>-->
-                        <!--                        <li><a href="#">我的下载</a></li>-->
-                        <!--                        <li><a href="#">我的活动</a></li>-->
-                        <!--                        <li role="separator" class="divider"></li>-->
-                        <!--                        <li><a href="#">我的C币</a></li>-->
-                        <!--                        <li><a href="#">订单中心</a></li>-->
-                        <!--                        <li role="separator" class="divider"></li>-->
-                        <!--                        <li><a href="#">帮助</a></li>-->
                         <li><a id="logout" href="/user/logout">退出</a></li>
                     </ul>
                 </li>
@@ -93,19 +82,113 @@
         </div>
     </div>
     <!-- 主体 -->
-        <!-- 行 -->
-        <div class="row border_bottom">
-            <!-- 文字部分 -->
-            <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
-                <div class="bd_text">
-                    <h1 th:text="${blog.title}"></h1>
-                    <p th:utext="${blog.article}"></p>
-                </div>
+    <!-- 行 -->
+    <div class="row border_bottom">
+        <!-- 文字部分 -->
+        <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
+            <div class="bd_text">
+                <input type="hidden" id="blogId" th:value="${blog.getBlogId()}">
+                <h1 th:text="${blog.title}"></h1>
+                <p th:utext="${blog.article}"></p>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px">头像</div>
+    <div class="col-md-8 ">
+        <span>评论</span>
+        <textarea type="text" class="form-control " id="content" placeholder="想对作者说点什么" style="height: 70px" ></textarea>
+        <div style="display: none" id="selectcode">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <button href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加代码片段<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li id="HTML"><a href="#">HTML</a></li>
+                        <li id="CSS"><a href="#">CSS</a></li>
+                        <li id="JS"><a href="#">JS</a></li>
+                        <li id="JAVA"><a href="#">JAVA</a></li>
+                        <li id="PYTHON"><a href="#">PYTHON</a></li>
+                        <li id="PLAIN"><a href="#">其它</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button id="send" style="float: right;background: red;opacity: 0.7;color: whitesmoke">发表评论</button>
+        </div>
+    </div>
 
 </div>
 
+<div th:if="${mapMap} != null" th:each="map : ${mapMap.values()}" class="row">
+    <img th:src="${user.getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>
+    <div style="background: antiquewhite;height: 50px" class="col-md-8 ">
+        <date th:text="${map.get('comment').getCreateDate()}">2020年3月30日</date>
+        <br>
+        <span th:text="${map.get('comment').getContent()}">爱上看见阿卡</span>
+    </div>
+</div>
+<script type="text/javascript">
+$(function () {
+    var userId = $("#userId").val();
+    var blogId = $("#blogId").val();
+    $("#send").click(function () {
+        $.post({
+            url: "/detail",
+            dataType: "json",
+            data: {
+                content: $("#content").val(),
+                userId: userId,
+                blogId: blogId
+            },
+            success: function () {
+                console.log("success");
+                location.href = "/toDetail?blogId="+blogId
 
+                // 下面可以异步
+                //getid(id).innerHTML = datastr; 这个是原生js的写法
+                //$("#"+id).html(datastr); //这个是jquery写法
+            },
+            error: function () {
+                console.log("error");
+            }
+        })
+    });
+});
+
+
+
+
+    var code=document.getElementById("selectcode");
+    var content=document.getElementById("content");
+    var html=document.getElementById("HTML");
+    var css=document.getElementById("CSS");
+    var js=document.getElementById("JS");
+    var java=document.getElementById("JAVA");
+    var python=document.getElementById("PYTHON");
+    var plain=document.getElementById("PLAIN");
+    content.onfocus=function(){
+        code.style.display="block";
+    };
+    html.onclick=function(){
+        content.value=content.value+"[code=html]" + "\n\n"+ "[/code]";
+    };
+    css.onclick=function(){
+        content.value=content.value+"[code=css]" + "\n\n"+ "[/code]";
+    };
+    js.onclick=function(){
+        content.value=content.value+"[code=javascript]" + "\n\n"+ "[/code]";
+    };
+    java.onclick=function(){
+        content.value=content.value+"[code=java]" + "\n\n"+ "[/code]";
+    };
+    python.onclick=function(){
+        content.value=content.value+"[code=python]" + "\n\n"+ "[/code]";
+    };
+    plain.onclick=function(){
+        content.value=content.value+"[code=plain] "+ "\n\n"+ "[/code]";
+    }
+
+</script>
 </body>
 </html>

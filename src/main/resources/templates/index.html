@@ -109,7 +109,7 @@
             <!-- 文字部分 -->
             <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
                 <div class="bd_text">
-                    <a th:href="@{/toDetails(blogId=${map.get('blog').blogId})}" th:text="${map.get('blog').title}"></a>
+                    <a th:href="@{/toDetail(blogId=${map.get('blog').blogId})}" th:text="${map.get('blog').title}"></a>
                     <p th:text="${map.get('blog').summary}"></p>
                     <i></i>
                     <em th:text="${map.get('blog').commentCount}"></em>

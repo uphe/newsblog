@@ -20,5 +20,11 @@ public class BlogService {
     public Blog selectBlogById(int blogId) {
         return blogMapper.selectBlogById(blogId);
     }
+    public int selectCommentCountByBlogId(int blogId) {
+        return blogMapper.selectCommentCountByBlogId(blogId);
+    }
+    public int updateCommentCountByBlogId(int commentCount, int blogId) {
+        return blogMapper.updateCommentCountByBlogId(commentCount,blogId);
+    }
 
 }

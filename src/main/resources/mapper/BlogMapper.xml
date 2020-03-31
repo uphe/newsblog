@@ -20,7 +20,12 @@
         order by blogId desc
         limit #{offset},#{limit}
     </select>
-
-
-
+    <select id="selectCommentCountByBlogId" resultType="_int">
+        select commentCount from blog
+        where blogId = #{blogId}
+    </select>
+    <update id="updateCommentCountByBlogId">
+        update blog set commentCount = #{commentCount}
+        where blogId = #{blogId}
+    </update>
 </mapper>

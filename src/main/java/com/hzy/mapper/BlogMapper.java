@@ -12,4 +12,6 @@ public interface BlogMapper {
     Blog selectBlogById(int blogId);
     // 这里的offset是开始下标
     List<Blog> selectBlogByUserIdAndOffset(int userId,int offset,int limit);
+    int selectCommentCountByBlogId(int blogId);
+    int updateCommentCountByBlogId(int commentCount, int blogId);
 }

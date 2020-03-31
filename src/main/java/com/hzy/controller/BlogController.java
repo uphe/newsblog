@@ -1,8 +1,10 @@
 package com.hzy.controller;
 
 import com.hzy.pojo.Blog;
+import com.hzy.pojo.Comment;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
+import com.hzy.service.CommentService;
 import com.hzy.service.UserService;
 import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
@@ -13,8 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.Map;
 
 @Controller
 public class BlogController {
@@ -22,6 +28,8 @@ public class BlogController {
     private BlogService blogService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CommentService commentService;
 
     @RequestMapping("/toWrite")
     public String toWrite(HttpSession session) {
@@ -49,15 +57,48 @@ public class BlogController {
         return "";
     }
 
-    @RequestMapping("/toDetails")
-    public String toDetails(Model model,HttpSession session,int blogId) {
+    @RequestMapping("/toDetail")
+    public String toDetail(Model model,HttpSession session,int blogId) {
         Blog blog = blogService.selectBlogById(blogId);
+        List<Comment> commentList = commentService.selectCommentByBlogId(blogId);
+
         String markdownString = blog.getArticle();
         String html = MarkDownUtil.mdToHtml(markdownString);
         blog.setArticle(html);
 
         model.addAttribute("blog", blog);
         model.addAttribute("user",session.getAttribute("user"));
+
+        Map<String,Map<String,Object>> mapMap = new HashMap<>();
+
+        int i = 0;
+        for (Comment comment : commentList) {
+            User user = userService.selectUserById(comment.getUserId());
+            Map<String,Object> map = new HashMap<>();
+
+            map.put("user",user);
+            map.put("comment",comment);
+
+            mapMap.put("map" + i ++,map);
+        }
+        model.addAttribute("mapMap",mapMap);
         return "detail";
     }
+
+    @RequestMapping("/detail")
+    @ResponseBody
+    public String Detail(String content,int userId,int blogId,Model model){
+        if (userId == 0) {
+            System.out.println("请先登录");
+        }
+        Comment comment = new Comment();
+        comment.setBlogId(blogId);
+        comment.setContent(content);
+        comment.setUserId(userId);
+        comment.setCreateDate(new Date());
+        commentService.addComment(comment);
+        blogService.updateCommentCountByBlogId(blogService.selectBlogById(blogId).getCommentCount() + 1,blogId);
+        return "{\"msg\":\"success\"}";
+    }
+
 }
