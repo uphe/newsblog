@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class IndexController {
     }
     private Map<String, Map<String,Object>> getBlog(int userId, int offset, int limit) {
         List<Blog> blogList = blogService.selectBlogByUserIdAndOffset(userId, offset, limit);
-        Map<String,Map<String,Object>> mapMap = new HashMap<>();
+        Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
         int i = 0;
         for (Blog blog : blogList) {
             User user = userService.selectUserById(blog.getUserId());

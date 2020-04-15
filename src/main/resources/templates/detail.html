@@ -50,7 +50,7 @@
                     </ul>
                 </li>
 
-                <input type="hidden" id="userId" th:value="${user.getUserId()}">
+                <input th:if="${user} != null" type="hidden" id="userId" th:value="${user.getUserId()}">
                 <li th:if="${user} == null"><a th:href="@{/toLogin}">登录/注册</a></li>
                 <li th:if="${user} != null" class="dropdown xs">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -95,7 +95,7 @@
     </div>
 </div>
 
-<div class="row">
+<div th:if="${user} != null" class="row">
     <div class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px">头像</div>
     <div class="col-md-8 ">
         <span>评论</span>
@@ -119,13 +119,15 @@
     </div>
 
 </div>
-
+<div th:if="${user} == null" class="row">
+    <a th:href="@{/toLogin}" type="button">请先登录</a>
+</div>
 <div th:if="${mapMap} != null" th:each="map : ${mapMap.values()}" class="row">
-    <img th:src="${user.getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>
+    <img th:src="${map.get('user').getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>
     <div style="background: antiquewhite;height: 50px" class="col-md-8 ">
-        <date th:text="${map.get('comment').getCreateDate()}">2020年3月30日</date>
+        <span th:text="${map.get('comment').getCreateDate()}"></span>
         <br>
-        <span th:text="${map.get('comment').getContent()}">爱上看见阿卡</span>
+        <span th:text="${map.get('comment').getContent()}"></span>
     </div>
 </div>
 <script type="text/javascript">

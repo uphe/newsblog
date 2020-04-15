@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.Map;
 
 @Controller
 public class BlogController {
@@ -59,6 +56,7 @@ public class BlogController {
 
     @RequestMapping("/toDetail")
     public String toDetail(Model model,HttpSession session,int blogId) {
+
         Blog blog = blogService.selectBlogById(blogId);
         List<Comment> commentList = commentService.selectCommentByBlogId(blogId);
 
@@ -67,21 +65,25 @@ public class BlogController {
         blog.setArticle(html);
 
         model.addAttribute("blog", blog);
-        model.addAttribute("user",session.getAttribute("user"));
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user",user);
 
-        Map<String,Map<String,Object>> mapMap = new HashMap<>();
 
-        int i = 0;
-        for (Comment comment : commentList) {
-            User user = userService.selectUserById(comment.getUserId());
-            Map<String,Object> map = new HashMap<>();
+        if (commentList != null) {
+            Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
+            int i = 0;
+            for (Comment comment : commentList) {
+                user = userService.selectUserById(comment.getUserId());
+                Map<String,Object> map = new HashMap<>();
 
-            map.put("user",user);
-            map.put("comment",comment);
+                map.put("user",user);
+                map.put("comment",comment);
 
-            mapMap.put("map" + i ++,map);
+                mapMap.put("map" + i ++,map);
+            }
+            model.addAttribute("mapMap",mapMap);
         }
-        model.addAttribute("mapMap",mapMap);
+
         return "detail";
     }
 
