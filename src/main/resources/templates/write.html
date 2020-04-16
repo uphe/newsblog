@@ -38,7 +38,6 @@
     <textarea style="display:none;"></textarea>
 </div>
 
-
 <script type="text/javascript">
     $(function() {
         var editor = editormd("test-editor", {
@@ -47,9 +46,12 @@
             path: "/editormd/lib/", //依赖lib文件夹路径
             saveHTMLToTextarea : true,
             // 图片上传
-            // imageUpload: true,
-            // imageFormats: ["png","bmp","jpg","jpeg","gif"],
-            // imageUploadURL: "/uploadImage"
+            imageUpload: true,
+            imageFormats: ["png","bmp","jpg","jpeg","gif"],
+            imageUploadURL: "/uploadEditorImage",
+            onload : function() {
+                console.log('onload', this);
+            }
         });
 
         $("#input").click(function () {

@@ -1,10 +1,10 @@
 package com.hzy.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.UserService;
-import com.hzy.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,10 +65,23 @@ public class IndexController {
     }
 
     @PostMapping("/uploadImage")
-    public String uploadImage(@RequestParam("file") MultipartFile file,HttpSession session) {
+    public String uploadImage(@RequestParam("file") MultipartFile file, HttpSession session) {
         String fileUrl = userService.saveImage(file,session);
+
         //return "index";
         return "redirect:/";
+    }
+
+    @PostMapping("/uploadEditorImage")
+    @ResponseBody
+    public JSONObject uploadEditorImage(@RequestParam("editormd-image-file") MultipartFile file, HttpSession session) {
+        String fileUrl = userService.saveImage(file,session);
+        //给editormd进行回调
+        JSONObject res = new JSONObject();
+        res.put("url",fileUrl);
+        res.put("success", 1);
+        res.put("message", "upload success!");
+        return res;
     }
 
     @GetMapping("/getImage")
