@@ -26,5 +26,7 @@ public class BlogService {
     public int updateCommentCountByBlogId(int commentCount, int blogId) {
         return blogMapper.updateCommentCountByBlogId(commentCount,blogId);
     }
-
+    public int updateHitCountByBlogId(int blogId) {
+        return blogMapper.updateHitCountByBlogId(blogId);
+    }
 }

@@ -57,6 +57,7 @@ public class BlogController {
     @RequestMapping("/toDetail")
     public String toDetail(Model model,HttpSession session,int blogId) {
 
+        blogService.updateHitCountByBlogId(blogId);
         Blog blog = blogService.selectBlogById(blogId);
         List<Comment> commentList = commentService.selectCommentByBlogId(blogId);
 

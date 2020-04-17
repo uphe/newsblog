@@ -14,4 +14,5 @@ public interface BlogMapper {
     List<Blog> selectBlogByUserIdAndOffset(int userId,int offset,int limit);
     int selectCommentCountByBlogId(int blogId);
     int updateCommentCountByBlogId(int commentCount, int blogId);
+    int updateHitCountByBlogId(int blogId);
 }

@@ -1,5 +1,9 @@
 package com.hzy.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Date;
 
 public class Blog {
@@ -8,6 +12,7 @@ public class Blog {
     private String article;
     private String summary;
     private int likeCount;
+    private int hitCount;
     private int commentCount;
     private Date createDate;
     private int userId;
@@ -52,6 +57,14 @@ public class Blog {
         this.likeCount = likeCount;
     }
 
+    public int getHitCount() {
+        return hitCount;
+    }
+
+    public void setHitCount(int hitCount) {
+        this.hitCount = hitCount;
+    }
+
     public int getCommentCount() {
         return commentCount;
     }
@@ -84,6 +97,7 @@ public class Blog {
                 ", article='" + article + '\'' +
                 ", summary='" + summary + '\'' +
                 ", likeCount=" + likeCount +
+                ", hitCount=" + hitCount +
                 ", commentCount=" + commentCount +
                 ", createDate=" + createDate +
                 ", userId=" + userId +

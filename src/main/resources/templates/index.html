@@ -111,6 +111,7 @@
                 <div class="bd_text">
                     <a th:href="@{/toDetail(blogId=${map.get('blog').blogId})}" th:text="${map.get('blog').title}"></a>
                     <p th:text="${map.get('blog').summary}"></p>
+                    点击量：<em th:text="${map.get('blog').hitCount}"></em>
                     <i></i>
                     <em th:text="${map.get('blog').commentCount}"></em>
                 </div>

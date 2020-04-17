@@ -28,4 +28,8 @@
         update blog set commentCount = #{commentCount}
         where blogId = #{blogId}
     </update>
+    <update id="updateHitCountByBlogId">
+        update blog set hitCount = hitCount + 1
+        where blogId = #{blogId}
+    </update>
 </mapper>
