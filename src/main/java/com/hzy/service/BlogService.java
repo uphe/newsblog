@@ -29,4 +29,7 @@ public class BlogService {
     public int updateHitCountByBlogId(int blogId) {
         return blogMapper.updateHitCountByBlogId(blogId);
     }
+    public int updateLikeCountByBlogId(int likeCount,int blogId) {
+        return blogMapper.updateLikeCountByBlogId(likeCount,blogId);
+    }
 }

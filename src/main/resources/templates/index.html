@@ -98,13 +98,16 @@
         <div class="row border_bottom">
             <!-- 图标 -->
             <div class="col-lg-1  col-md-1 col-xs-1 bd_icon">
+                <a th:href="@{/like(blogId=${map.get('blog').blogId})}" th:text="${map.get('blog').likeCount}"></a>
+<!--                <input type="hidden" id="blogId" th:value="${map.get('blog').blogId}">-->
+<!--                <a id="like" href="javascript:;" th:text="${map.get('blog').likeCount}"></a>-->
                 <div class="up_39">
                     <span  th:text="${map.get('blog').likeCount}"></span>
                     <!--                    39-->
                 </div>
-                <div class="down_39">
-                    <span></span>
-                </div>
+<!--                <div class="down_39">-->
+<!--                    <span></span>-->
+<!--                </div>-->
             </div>
             <!-- 文字部分 -->
             <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
@@ -132,6 +135,30 @@
     </div>
 </div>
 
+<!--<script type="text/javascript">-->
+<!--    $(function() {-->
+<!--        $("#like").click(function () {-->
+<!--            $.post({-->
+<!--                url: "/like",-->
+<!--                sync: true,-->
+<!--                data: {-->
+<!--                    blogId: $("#blogId").val(),-->
+<!--                },-->
+<!--                success: function (data) {-->
+<!--                    //location.href="/";-->
+
+<!--                    // 下面可以异步-->
+<!--                    data = JSON.parse(data);-->
+<!--                    $("#like").html(data.msg);-->
+<!--                },-->
+<!--                error: function () {-->
+<!--                    console.log("点赞失败");-->
+<!--                    alert("点赞失败");-->
+<!--                }-->
+<!--            });-->
+<!--        })-->
+<!--    });-->
+<!--</script>-->
 
 </body>
 </html>

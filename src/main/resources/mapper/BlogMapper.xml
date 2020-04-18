@@ -32,4 +32,8 @@
         update blog set hitCount = hitCount + 1
         where blogId = #{blogId}
     </update>
+    <update id="updateLikeCountByBlogId">
+        update blog set likeCount = #{likeCount}
+        where blogId = #{blogId}
+    </update>
 </mapper>

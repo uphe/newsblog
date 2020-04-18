@@ -15,4 +15,5 @@ public interface BlogMapper {
     int selectCommentCountByBlogId(int blogId);
     int updateCommentCountByBlogId(int commentCount, int blogId);
     int updateHitCountByBlogId(int blogId);
+    int updateLikeCountByBlogId(int likeCount,int blogId);
 }
