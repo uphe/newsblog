@@ -60,7 +60,8 @@ public class IndexController {
     }
 
     @RequestMapping("/toEditor")
-    public String toEditor() {
+    public String toEditor(Model model,HttpSession session) {
+        model.addAttribute("user",session.getAttribute("user"));
         return "editor";
     }
 

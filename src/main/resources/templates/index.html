@@ -3,84 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/头条.css">
-    <link rel="stylesheet" href="css/csdn.css">
+<!--    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="css/头条.css">-->
+<!--    <link rel="stylesheet" href="css/csdn.css">-->
+    <!-- 头部导航 -->
+    <div th:replace="~{header :: myhead}"></div>
 </head>
 <body>
-<!-- 头部导航 -->
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">头条资讯</a>
-            <p class="navbar-text">你关心的才是头条</p>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-
-                <li th:if="${user} == null"><a href="/toLogin">写博客</a></li>
-                <li th:if="${user} != null"><a href="/toWrite">写博客</a></li>
-
-                <li class="dropdown xs">
-                    <a href="#" class="dropdown-toggle" id="hg" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="false">
-                        消息
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-list" id="dropdown-menu-list">
-                        <li><a href="#">公告</a></li>
-                        <li><a href="#">评论</a></li>
-                        <li><a href="#">关注</a></li>
-                        <li><a href="#">点赞</a></li>
-                        <li><a href="#">点赞</a></li>
-                        <li><a href="#">私信</a></li>
-                        <li><a href="#">回答</a></li>
-                        <li><a href="#">系统通知</a></li>
-                        <li><a href="#">消息设置</a></li>
-                    </ul>
-                </li>
-
-                <li th:if="${user} == null"><a th:href="@{/toLogin}">登录/注册</a></li>
-                <li th:if="${user} != null" class="dropdown xs">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
-                        <div class="title-img">
-                            <img th:src="${user.getHeadUrl()}" width="25px" class="user_tit">
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-list">
-                        <li><a href="/toEditor">修改头像</a></li>
-<!--                        <li><a href="#">我的收藏</a></li>-->
-<!--                        <li><a href="#">个人中心</a></li>-->
-                        <li role="separator" class="divider"></li>
-<!--                        <li><a href="#">帐号设置</a></li>-->
-<!--                        <li><a href="#">我的博客</a></li>-->
-<!--                        <li><a href="#">管理博客</a></li>-->
-<!--                        <li><a href="#">我的学院</a></li>-->
-<!--                        <li><a href="#">我的下载</a></li>-->
-<!--                        <li><a href="#">我的活动</a></li>-->
-<!--                        <li role="separator" class="divider"></li>-->
-<!--                        <li><a href="#">我的C币</a></li>-->
-<!--                        <li><a href="#">订单中心</a></li>-->
-<!--                        <li role="separator" class="divider"></li>-->
-<!--                        <li><a href="#">帮助</a></li>-->
-                        <li><a id="logout" href="/user/logout">退出</a></li>
-                    </ul>
-                </li>
-<!--                <li><img th:if="${user} != null" th:src="${user.getHeadUrl()}" width="25px" class="user_tit"></img></li>-->
-                </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
 
 <!-- 主体部分 -->
 <div class="w">
