@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.TypeMapper">
+    <insert id="addType" parameterType="Type">
+        insert into newsblog.type(typeName,userId)
+        values (#{typeName},#{userId})
+    </insert>
+
+    <select id="selectTypeByUserId" resultType="Type">
+        select * from newsblog.type
+        where userId = #{userId}
+    </select>
+
+
+</mapper>

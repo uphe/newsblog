@@ -57,6 +57,7 @@
                 url: "/editormd",
                 data: {
                     title: $("#title").val(),
+                    // typeString: 1,// 此处需要异步获取类型id
                     // 存入子数据库的是markdown源码editor.getMarkdown()
                     editormd: editor.getMarkdown()
                 },

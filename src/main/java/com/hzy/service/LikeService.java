@@ -1,6 +1,6 @@
 package com.hzy.service;
 
-import com.hzy.utils.JedisKeyUtil;
+import com.hzy.utils.JedisUtil;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
@@ -8,13 +8,15 @@ import redis.clients.jedis.Jedis;
 public class LikeService {
 
     public Long like(int userId,int blogId) {
-        Jedis jedis = new Jedis("39.106.231.3",6379);
-        String likeKey = JedisKeyUtil.getLikeKey(blogId);
+        Jedis jedis = JedisUtil.getJedis();
+        String likeKey = JedisUtil.getLikeKey(blogId);
         if (jedis.sismember(likeKey,String.valueOf(userId))) {
             jedis.srem(likeKey,String.valueOf(userId));
         } else {
             jedis.sadd(likeKey,String.valueOf(userId));
         }
-        return jedis.scard(likeKey);
+        long num = jedis.scard(likeKey);
+        JedisUtil.release(jedis);
+        return num;
     }
 }

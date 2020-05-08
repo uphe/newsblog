@@ -9,10 +9,12 @@ import com.hzy.service.UserService;
 import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
@@ -36,7 +38,10 @@ public class BlogController {
 
     @PostMapping(path = "/editormd")
     @ResponseBody
-    public String Editor(String title, String editormd, HttpSession session) {
+    public String Editor(String title, String editormd,
+                         @RequestParam(value = "typeString",defaultValue = "") String typeString,
+                         @RequestParam(value = "labelString",defaultValue = "") String labelString,
+                         HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(editormd) && user != null) {
             Blog blog = new Blog();
@@ -49,6 +54,9 @@ public class BlogController {
             }
             blog.setTitle(title);
             blog.setUserId(user.getUserId());
+            // 这里如果没有分离或标签，默认是空串
+            blog.setTypeString(typeString);
+            blog.setLabelString(labelString);
             blogService.addBlog(blog);
         }
         return "";

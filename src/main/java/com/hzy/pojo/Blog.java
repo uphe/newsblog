@@ -1,9 +1,5 @@
 package com.hzy.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.Date;
 
 public class Blog {
@@ -16,6 +12,8 @@ public class Blog {
     private int commentCount;
     private Date createDate;
     private int userId;
+    private String typeString;
+    private String labelString;
 
     public int getBlogId() {
         return blogId;
@@ -89,6 +87,22 @@ public class Blog {
         this.userId = userId;
     }
 
+    public String getTypeString() {
+        return typeString;
+    }
+
+    public void setTypeString(String typeString) {
+        this.typeString = typeString;
+    }
+
+    public String getLabelString() {
+        return labelString;
+    }
+
+    public void setLabelString(String labelString) {
+        this.labelString = labelString;
+    }
+
     @Override
     public String toString() {
         return "Blog{" +
@@ -101,6 +115,8 @@ public class Blog {
                 ", commentCount=" + commentCount +
                 ", createDate=" + createDate +
                 ", userId=" + userId +
+                ", typeString='" + typeString + '\'' +
+                ", labelString='" + labelString + '\'' +
                 '}';
     }
 }

@@ -1,11 +1,9 @@
 package com.hzy;
 
-import com.hzy.mapper.BlogMapper;
-import com.hzy.mapper.CommentMapper;
-import com.hzy.mapper.TicketMapper;
-import com.hzy.mapper.UserMapper;
+import com.hzy.mapper.*;
 import com.hzy.pojo.Comment;
 import com.hzy.pojo.Ticket;
+import com.hzy.pojo.Type;
 import com.hzy.pojo.User;
 import com.hzy.utils.MD5Utils;
 import org.junit.jupiter.api.Test;
@@ -13,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -26,17 +25,19 @@ class NewsblogApplicationTests {
     private TicketMapper ticketMapper;
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private TypeMapper typeMapper;
     @Test
     void contextLoads() {
-//        Comment comment = new Comment();
-//
-//        comment.setUserId(1);
-//        comment.setCreateDate(new Date());
-//        comment.setContent("hello");
-//        comment.setBlogId(1);
-//        commentMapper.addComment(comment);
-//        System.out.println(commentMapper.selectCommentByBlogId(1));
-//        System.out.println(blogMapper.selectCommentCountByBlogId(1));
+//        Type type = new Type();
+//        type.setTypeName("MySQL");
+//        type.setUserId(1);
+//        type.setBlogId(1);
+//        typeMapper.addType(type);
+        List<Type> types = typeMapper.selectTypeByUserId(1);
+        for (Type type : types) {
+            System.out.println(type);
+        }
     }
 
 }
