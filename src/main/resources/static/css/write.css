@@ -1,0 +1,464 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f4f4f4;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+}
+
+button,
+input {
+    outline: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.flex {
+    display: flex;
+}
+
+/* 发布按钮 点击时发布模块显示 */
+.show-post-article-btn {
+    width: 100px;
+    margin: 5px;
+    display: inline-block;
+    border: none;
+    background-image: none;
+    padding: 6px;
+    background: #e33e33;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 400;
+}
+
+.show-post-article-btn:hover {
+    cursor: pointer;
+    background-color: #a11f16;
+}
+
+/* 发布模块 */
+.csdn-post-article-modal {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #a1a1a180;
+    z-index: 999;
+}
+
+/* 弹出框 */
+.publish-article {
+    position: relative;
+    max-width: 606px;
+    min-width: 320px;
+    width: 606px;
+    height: 642px;
+    margin: 7% auto 0;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.modal-inner {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 4px;
+    border: 1px solid #e3e3e3;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
+    box-sizing: border-box;
+}
+
+/* 头部 */
+.modal-publish {
+    position: relative;
+}
+
+.modal-publish h3 {
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: #3c3c3c;
+    line-height: 24px;
+}
+
+.modal-publish button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    background-image: none;
+}
+
+.modal-publish button:hover {
+    color: rgba(0, 0, 0, .67);
+    cursor: pointer;
+}
+
+/* 提示警告信息 */
+.modal-info {
+    height: 36px;
+    line-height: 36px;
+    background: #fff6e5;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #e33e33;
+    padding-left: 15px;
+    box-sizing: border-box;
+}
+
+/* 内容区 */
+.modal-content .form-entry {
+    margin: 1em 0;
+    line-height: 32px;
+}
+
+/* 添加文章标签 */
+.article-tag {
+    position: relative;
+}
+
+/* 左边的label标签 */
+.form-entry .form-entry-lable {
+    display: block;
+    color: #4d4d4d;
+    margin-right: 6px;
+    user-select: none;
+    width: 72px;
+    font-size: .9rem;
+    white-space: nowrap;
+}
+
+/* 右侧公共部分 */
+.add-right {
+    display: inline-block;
+    padding: 0 8px;
+    height: 28px;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #e8e8ee;
+    color: #555666;
+    line-height: 28px;
+    font-size: 14px;
+    white-space: nowrap;
+    user-select: none;
+}
+
+
+/* +图标 */
+.add-article-tag .icon-add {
+    width: 14px;
+    height: 18px;
+}
+
+/* 添加标签和hover标签时 */
+.add-right:hover,
+.add-article-active,
+div.tag-active {
+    background: rgba(38, 125, 204, .05);
+    color: #267dcc;
+    border-color: rgba(38, 125, 204, .2);
+    cursor: pointer;
+}
+
+/* mark层 */
+.mark-section {
+    position: relative;
+}
+
+/* mark层的添加标签 */
+.mark-section-title {
+    overflow: hidden;
+}
+
+/* mark弹出框盒子 */
+.mark-section .mark-section-box {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 30px;
+    width: 440px;
+    height: auto;
+    z-index: 5;
+    background: #fff;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .1);
+    border: 1px solid #e3e3e3;
+    padding: 10px 15px;
+}
+
+.csdn-post-article-modal .publish-article .modal-inner .toggle-class {
+    display: none;
+}
+
+/* 生成的文章标签列 */
+.tags-list {
+    display: inline-block;
+    background: rgba(38, 125, 204, .05);
+    border-radius: 4px;
+    border: 1px solid rgba(38, 125, 204, .2);
+    height: 28px;
+    font-size: 14px;
+    line-height: 28px;
+    margin-right: 4px;
+    padding: 0 8px;
+    background-color: #fff;
+}
+
+/* 文章标签列 */
+.mark-section-title .tags-list,
+.mark-section .add-article-active {
+    color: #267dcc;
+    background: rgba(38, 125, 204, .05);
+    cursor: pointer;
+}
+
+/* 生成文章标签的盒子 */
+.mark-section-tag-box {
+    display: inline-block;
+}
+
+/* 新建标签中的x和分类专栏中的x样式 */
+.mark-section-tag-box .icon-remove,
+.new-classfy .form-entry-field .flex-box .icon-remove {
+    display: inline-block;
+    line-height: 15px;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+}
+
+.mark-section-tag-box .icon-remove:hover,
+.new-classfy .form-entry-field .flex-box .icon-remove:hover {
+    border-radius: 50%;
+    background-color: #267dcc;
+    color: #fff;
+}
+
+/* 选择标签 */
+.mark-section-box-selectTags {
+    font-size: 12px;
+    color: #999;
+    margin-left: -2px;
+}
+
+/* 选择标签中的关闭按钮 */
+.mark-section-box-selectTags .icon-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+    background: none;
+}
+
+/* 1 */
+.mark-section-box-selectTags .icon-close:hover {
+    color: rgba(0, 0, 0, .67);
+    background-color: rgba(0, 0, 0, .05);
+}
+
+/* 添加文章标签的搜索框 */
+.mark-section-box-search input {
+    height: 36px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    padding-left: 15px;
+}
+
+/* 推荐 */
+.mark-section-box-recommend {
+    margin-top: 10px;
+}
+
+.recommend-list-items {
+    padding: 0 10px;
+    height: 24px;
+    box-sizing: border-box;
+    line-height: 24px;
+    display: inline-block;
+    list-style: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #303133;
+    cursor: pointer;
+    user-select: none;
+}
+
+.is-active {
+    background: #fcecea;
+    border-right-color: #fff;
+    border-left-color: #fff;
+    color: #e33e33;
+    border-radius: 2px;
+    border: 1px solid #fcecea;
+}
+
+.mark-section-nothing-recommend {
+    font-size: 14px;
+    font-weight: 400;
+    color: #999aaa;
+    text-align: center;
+    height: 80px;
+    margin-top: 5px;
+}
+
+
+
+
+/* 新建分类栏 */
+.new-classfy-tag {
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(38, 125, 204, .1);
+    color: #555666;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+/* 分类部分 */
+.form-entry-field {
+    overflow: hidden;
+}
+
+.flex-box {
+    display: flex;
+    min-height: 24px;
+    height: 24px;
+}
+
+/* 分类专栏选择部分 */
+.tag-options {
+    position: relative;
+    height: 160px;
+    border-radius: 4px;
+    border: 1px solid #e8e8ee;
+    padding: 0 16px;
+    margin-top: 20px;
+}
+
+.tag-options-mark {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+    color: #999aaa;
+    line-height: 160px;
+    background-color: #ffffffe6;
+}
+
+/* 分类的头部 */
+.tag-options .tag-options-tit {
+    height: 36px;
+    line-height: 36px;
+    border-bottom: 1px solid #e8e8ee;
+}
+
+.tag-options .tag-options-tit span {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #555666;
+}
+
+/* #二级标题样式 */
+/* .tag-options .tag-options-tit span:last-child {
+    color: #ccccd8;
+    } */
+
+/* 分类的选项 */
+.tag-options-box {
+    float: left;
+    height: 21px;
+    line-height: 21px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 2px 16px 8px 0;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #606266;
+}
+
+/* 选择框的文字 */
+.tag-options-box .tag-options-lable {
+    padding-left: 10px;
+    user-select: none;
+}
+
+.tag-options-box .spanValue {
+    cursor: default;
+}
+
+/* 添加分类 */
+.icon-remove-active {
+    background-color: #3399ea;
+    color: #fff;
+}
+
+/* 底部 */
+.modal-button-bar {
+    margin-top: 1.8em;
+    text-align: right;
+}
+
+.modal-button-bar .btn {
+    background-image: none;
+    outline: none;
+    border: 0;
+    border-radius: 4px;
+    color: #333;
+    background-color: transparent;
+    display: inline-block;
+    height: auto;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: .875em;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.modal-button-bar .btn:hover {
+    cursor: pointer;
+}
+
+.modal-button-bar .btn-save {
+    color: #3399ea;
+}
+
+.modal-button-bar .btn-publish {
+    padding: 6px;
+    background: #fcecea;
+    border-radius: 4px;
+    color: #e33e33;
+}
+
+/* .btn-active 按钮处于当前状态 */
+.modal-button-bar .btn-save:hover,
+.modal-button-bar .btn-cancel:hover,
+.btn-active {
+    /* color: #333; */
+    background-color: rgba(0, 0, 0, .05);
+}

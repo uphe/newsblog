@@ -6,6 +6,7 @@ public class User {
     private String password;
     private String salt;
     private String headUrl;
+    private int userType;
 
     public int getUserId() {
         return userId;
@@ -47,6 +48,14 @@ public class User {
         this.headUrl = headUrl;
     }
 
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -55,6 +64,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +
                 ", headUrl='" + headUrl + '\'' +
+                ", userType=" + userType +
                 '}';
     }
 }

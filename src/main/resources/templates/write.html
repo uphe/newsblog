@@ -8,10 +8,15 @@
     <script src="/editormd/editormd.js"></script>
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/foundation/5.5.3/css/foundation.min.css">
     <link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">
+
+    <link rel="stylesheet" href="css/write.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/write.js"></script>
+
 </head>
 
 <body>
-<form>
+<!--<form>-->
     <br>
     <div class="row">
         <div class="large-12 columns manager">
@@ -25,13 +30,160 @@
                 <div class="small-2 columns">
                     <ul class="button-group">
 <!--                        <li><button  class="button  tiny save">保存</button></li>-->
-                        <li><input id="input" class="button  tiny send  success" type="button" value="发送"></li>
+<!--                        <li><input id="input" class="button  tiny send  success" type="button" value="发送"></li>-->
+                        <button class="show-post-article-btn">发布文章</button>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-</form>
+<!--</form>-->
+
+<!--<button class="show-post-article-btn">发布文章</button>-->
+<!-- 发布文章模块 -->
+<div class="csdn-post-article-modal">
+    <div class="publish-article">
+        <div class="modal-inner">
+            <!-- 发布文章 -->
+            <div class="modal-publish">
+                <h3>发布文章</h3>
+                <button title="关闭">x</button>
+            </div>
+            <!-- 警告信息 -->
+            <div class="modal-info">
+                <i class="icon icon-error">!</i>
+                <span>请勿发布涉及政治、广告、营销、翻墙、违反国家法律法规等内容，</span>
+                <a target="_blank" href="#" style="color: rgb(51, 153, 234);">详见《资源共享规范》</a>
+            </div>
+            <!-- 内容区 -->
+            <div class="modal-content">
+                <!-- 添加文章标签 -->
+                <div class="form-entry flex article-tag">
+                    <label for="" class="form-entry-lable">文章标签：</label>
+                    <div>
+                        <div class="mark-section">
+                            <!-- 点击添加部分 -->
+                            <div class="mark-section-title flex">
+                                <!-- 生成的文章标签列 -->
+                                <div>
+                                    <!-- <div class="mark-section-tag-box tags-list">
+                                        <span>Java</span>
+                                        <i class="icon icon-remove">x</i>
+                                    </div>
+                                    <div class="mark-section-tag-box tags-list">
+                                        <span>Web</span>
+                                        <i class="icon icon-remove">x</i>
+                                    </div>
+                                    <div class="mark-section-tag-box tags-list">
+                                        <span>Javascript</span>
+                                        <i class="icon icon-remove">x</i>
+                                    </div>
+                                    <div class="mark-section-tag-box tags-list">
+                                        <span>JDBC</span>
+                                        <i class="icon icon-remove">x</i>
+                                    </div>
+                                    <div class="mark-section-tag-box tags-list">
+                                        <span>h5</span>
+                                        <i class="icon icon-remove">x</i>
+                                    </div> -->
+                                </div>
+                                <!-- 点击添加文章标签按钮 -->
+                                <div class="add-right add-article-tag">
+                                    <i class="icon icon-add">+</i>
+                                    添加文章标签
+                                </div>
+                            </div>
+                            <!-- 文章标签弹出框 -->
+                            <div class="mark-section-box toggle-class">
+                                <div class="mark-section-box-selectTags">
+                                    <span>还可添加<em>5</em>个标签</span>
+                                    <button class="icon icon-close">x</button>
+                                </div>
+                                <div class="mark-section-box-search">
+                                    <input type="search" placeholder="请输入文字搜索，Enter键入可添加自定义标签">
+                                </div>
+                                <div class="mark-section-box-recommend">
+                                    <div class="recommend-list">
+                                        <div class="recommend-list-items is-active">推荐</div>
+                                        <div class="recommend-list-items">数据库</div>
+                                        <div class="recommend-list-items">工具</div>
+                                        <div class="recommend-list-items">后端</div>
+                                        <div class="recommend-list-items">移动端</div>
+                                        <div class="recommend-list-items">前端</div>
+                                        <div class="recommend-list-items">运维</div>
+                                        <div class="recommend-list-items">大数据</div>
+                                        <div class="recommend-list-items">人工智能</div>
+                                        <div class="recommend-list-items">其他</div>
+                                    </div>
+                                </div>
+                                <div class="mark-section-nothing-recommend">暂无推荐标签</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 添加分类 -->
+                <div class="form-entry flex new-classfy">
+                    <label class="form-entry-lable">分类专栏：</label>
+                    <!-- 分类区域 -->
+                    <div class="form-entry-field">
+                        <!-- 生成的文章分类列 -->
+                        <div class="flex-box">
+                            <div class="add-right new-classfy-tag tag-active">
+                                <span>Java</span>
+                                <i class="icon icon-remove">x</i>
+                            </div>
+                            <div class="add-right add-new-classfy-tag">
+                                <i class="icon icon-add">+</i>
+                                新建分类专栏
+                            </div>
+                        </div>
+                        <!-- 分类选择按钮 -->
+                        <div class="tag-options">
+                            <div class="tag-options-mark">
+                                最多选择三个专栏哦~
+                            </div>
+                            <div class="tag-options-tit">
+                                <span>最多选择3个分类专栏</span>
+                                <!-- <span>#为二级分类</span> -->
+                            </div>
+                            <!-- 生成添加分类专栏列表 -->
+                            <div class="tag-options-list">
+                                <div class="tag-options-box">
+                                    <label class="tag-options-lable"></label>
+                                    <input type="checkbox" name="Java" checked>
+                                    <span class="spanValue">Java</span>
+                                </div>
+                                <div class="tag-options-box">
+                                    <label class="tag-options-lable"></label>
+                                    <input type="checkbox" name="Java">
+                                    <span class="spanValue">Web前端</span>
+                                </div>
+                                <div class="tag-options-box">
+                                    <label class="tag-options-lable"></label>
+                                    <input type="checkbox" name="Java">
+                                    <span class="spanValue">Javascript</span>
+                                </div>
+                                <div class="tag-options-box">
+                                    <label class="tag-options-lable"></label>
+                                    <input type="checkbox" name="Java">
+                                    <span class="spanValue">算法</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- 底部发布 -->
+            <div class="modal-button-bar">
+                <button class="btn btn-cancel">取消</button>
+                <button class="btn btn-save">保存为草稿</button>
+                <button id="input" class="btn btn-publish">发布文章</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="test-editor">
     <textarea style="display:none;"></textarea>
 </div>

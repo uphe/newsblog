@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
 
 import javax.servlet.http.HttpSession;
-
 @Controller
 public class BlogController {
     @Autowired

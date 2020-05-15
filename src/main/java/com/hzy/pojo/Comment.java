@@ -2,6 +2,10 @@ package com.hzy.pojo;
 
 import java.util.Date;
 
+/**
+ * 评论表，主要负责博客的评论，parentId主要是指向被回复的人的id
+ * 如果不是回复，那就指向0或null
+ */
 public class Comment {
     private int commentId;
     private String content;

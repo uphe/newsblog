@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.RemindMapper">
+    <insert id="addRemind" parameterType="Remind">
+        insert into remind(remindContent,fromId,toId,blogId,createDate,state)
+        values (#{remindContent},#{fromId},#{toId},#{blogId},#{createDate},#{state})
+    </insert>
+    <select id="selectRemindByToId" parameterType="_int" resultType="Remind">
+        select * from remind
+        where toId = #{toId} and state = 0
+    </select>
+    <update id="updateRemindByRemindId" parameterType="_int">
+        update remind set state = 1
+        where remindId = #{remindId}
+    </update>
+    <update id="updateRemindByToId" parameterType="_int">
+        update remind set state = 1
+        where toId = #{toId}
+    </update>
+</mapper>

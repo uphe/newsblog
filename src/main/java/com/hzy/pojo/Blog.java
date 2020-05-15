@@ -2,6 +2,10 @@ package com.hzy.pojo;
 
 import java.util.Date;
 
+/**
+ * 这是博客表，主要存储博客的一些信息，这里又博客的id，标题，文章，摘要
+ * 点赞数，点击量，评论数，创建时间，创建者id，类别，标签
+ */
 public class Blog {
     private int blogId;
     private String title;

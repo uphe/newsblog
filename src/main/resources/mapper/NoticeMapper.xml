@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.NoticeMapper">
+    <insert id="addNotice" parameterType="Notice">
+        insert into notice(noticeTitle,noticeContent,operatorId,publishTime,expirationTime)
+        values (#{noticeTitle},#{noticeContent},#{operatorId},#{publishTime},#{expirationTime})
+    </insert>
+    <select id="selectNoticeByUserId" parameterType="_int" resultType="Notice">
+        select * from notice
+        where expirationTime > now()
+        and noticeId not in
+        (select noticeId from readnotice where userId = #{userId} and expirationTime > now())
+    </select>
+    <select id="selectNoticeByNoticeId" parameterType="_int" resultType="Notice">
+        select * from notice
+        where noticeId = #{noticeId}
+    </select>
+
+</mapper>

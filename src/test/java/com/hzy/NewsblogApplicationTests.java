@@ -1,10 +1,8 @@
 package com.hzy;
 
 import com.hzy.mapper.*;
-import com.hzy.pojo.Comment;
-import com.hzy.pojo.Ticket;
-import com.hzy.pojo.Type;
-import com.hzy.pojo.User;
+import com.hzy.pojo.*;
+import com.hzy.utils.JedisUtil;
 import com.hzy.utils.MD5Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +25,25 @@ class NewsblogApplicationTests {
     private CommentMapper commentMapper;
     @Autowired
     private TypeMapper typeMapper;
+    @Autowired
+    private NoticeMapper noticeMapper;
+    @Autowired
+    private ReadNoticeMapper readNoticeMapper;
+    @Autowired
+    private RemindMapper remindMapper;
+
     @Test
     void contextLoads() {
-//        Type type = new Type();
-//        type.setTypeName("MySQL");
-//        type.setUserId(1);
-//        type.setBlogId(1);
-//        typeMapper.addType(type);
-        List<Type> types = typeMapper.selectTypeByUserId(1);
-        for (Type type : types) {
-            System.out.println(type);
-        }
+//        Remind remind = new Remind();
+//        remind.setFromId(1);
+//        remind.setToId(2);
+//        remind.setBlogId(1);
+//        remind.setRemindContent("hello");
+//        remind.setCreateDate(new Date());
+//        remind.setState(0);
+//        System.out.println(remindMapper.addRemind(remind));
+//        System.out.println(remindMapper.selectRemindByToId(2));
+//        remindMapper.updateRemindByRemindId(4);
+        remindMapper.updateRemindByToId(2);
     }
-
 }
