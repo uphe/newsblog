@@ -42,9 +42,9 @@
                         <ul th:if="${user} != null" class="dropdown-menu dropdown-menu-list" id="dropdown-menu-list">
                             <li th:if="${user.getUserType()} == 0"><a href="/toNotice">公告</a></li>
                             <li th:if="${user.getUserType()} != 0"><a href="/toEditorNotice">发公告</a></li>
-                            <li><a href="#">评论</a></li>
+<!--                            <li><a href="#">评论</a></li>-->
                             <li><a href="#">关注</a></li>
-                            <li><a href="/toLike">点赞</a></li>
+                            <li><a href="/toLike">点赞/评论</a></li>
                             <li><a href="#">私信</a></li>
                             <li><a href="#">回答</a></li>
                             <li><a href="#">系统通知</a></li>
