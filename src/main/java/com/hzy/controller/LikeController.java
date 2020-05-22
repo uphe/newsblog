@@ -28,6 +28,8 @@ public class LikeController {
             blogService.updateLikeCountByBlogId(likeCount,blogId);
 
             //return "{\"msg\":" + likeCount + "}";
+        } else {
+            return "login";
         }
         //return "{\"msg\":\"error\"}";
         return "redirect:/";

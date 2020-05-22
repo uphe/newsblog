@@ -13,6 +13,7 @@ public class Remind {
     private int blogId;
     private Date createDate;
     private int state;
+    private int remindType;
 
     public int getRemindId() {
         return remindId;
@@ -70,6 +71,14 @@ public class Remind {
         this.state = state;
     }
 
+    public int getRemindType() {
+        return remindType;
+    }
+
+    public void setRemindType(int remindType) {
+        this.remindType = remindType;
+    }
+
     @Override
     public String toString() {
         return "Remind{" +
@@ -80,6 +89,7 @@ public class Remind {
                 ", blogId=" + blogId +
                 ", createDate=" + createDate +
                 ", state=" + state +
+                ", remindType=" + remindType +
                 '}';
     }
 }

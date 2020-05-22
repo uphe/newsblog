@@ -7,6 +7,7 @@ import com.hzy.utils.MD5Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import redis.clients.jedis.Jedis;
 
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,6 @@ class NewsblogApplicationTests {
 //        System.out.println(remindMapper.addRemind(remind));
 //        System.out.println(remindMapper.selectRemindByToId(2));
 //        remindMapper.updateRemindByRemindId(4);
-        remindMapper.updateRemindByToId(2);
+//        remindMapper.updateRemindByToId(2);
     }
 }

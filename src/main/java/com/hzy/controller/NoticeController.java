@@ -59,7 +59,6 @@ public class NoticeController {
     }
     @RequestMapping("/toNoticeDetail")
     public String toNoticeDetail(int noticeId, HttpSession session) {
-        System.out.println(noticeId);
         User user = (User) session.getAttribute("user");
 
         ReadNotice readNotice = new ReadNotice();
