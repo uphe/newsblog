@@ -2,148 +2,120 @@
     margin: 0;
     padding: 0;
 }
-
 body {
     background-color: #f4f4f4;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    position: fixed;
-    width: 100%;
+    overflow: hidden;
 }
-
-button,
-input {
-    outline: none;
+/* 清除浮动 */
+.clearfix:after {
+    content: "";
+    display:block;
+    clear:both;
+    height:0;/*兼容旧浏览器*/
+    visibility:hidden;/*兼容旧浏览器*/
+}
+.clearfix {
+    *zoom:1;/*兼容IE6~7浏览器*/
+}
+li {
+    list-style: none;
 }
 
 a {
     text-decoration: none;
+    color: #3399ea;
 }
-
-.flex {
-    display: flex;
+i {
+    font-style: normal;
 }
-
-/* 发布按钮 点击时发布模块显示 */
-.show-post-article-btn {
-    width: 100px;
-    margin: 5px;
-    display: inline-block;
+button {
     border: none;
-    background-image: none;
-    padding: 6px;
-    background: #e33e33;
-    border-radius: 4px;
-    color: #fff;
-    font-weight: 400;
-}
-
-.show-post-article-btn:hover {
+    outline: none;
+    background-color: transparent;
     cursor: pointer;
+}
+/* 发布文章按钮 */
+.publish button {
+    height: 36px;
+    font-size: 16px;
+    color: #fff;
+    padding: 0 16px;
+    border-radius: 4px;
+    background-color: #ca0c16;
+    cursor: pointer;
+}
+.publish button:hover {
     background-color: #a11f16;
 }
-
-/* 发布模块 */
-.csdn-post-article-modal {
+/* 模态框 */
+.modal {
     display: none;
     position: absolute;
-    left: 0;
-    top: 0;
     width: 100%;
     height: 100%;
-    background-color: #a1a1a180;
+    overflow: auto;
     z-index: 999;
 }
-
-/* 弹出框 */
-.publish-article {
+.modal-content {
     position: relative;
-    max-width: 606px;
-    min-width: 320px;
     width: 606px;
-    height: 642px;
-    margin: 7% auto 0;
-    overflow: hidden;
-    border-radius: 4px;
-}
-
-.modal-inner {
+    margin: 7% auto 100px;
     background-color: #fff;
     padding: 24px;
-    border-radius: 4px;
     border: 1px solid #e3e3e3;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
-    box-sizing: border-box;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+
 }
 
-/* 头部 */
-.modal-publish {
-    position: relative;
-}
-
-.modal-publish h3 {
+.modal-content-head h3 {
     margin-bottom: 16px;
     font-size: 16px;
     color: #3c3c3c;
     line-height: 24px;
 }
-
-.modal-publish button {
+.modal-content-head button {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 16px;
+    right: 16px;
+    color: #ccc;
     width: 24px;
     height: 24px;
-    border: none;
-    border-radius: 4px;
-    background-image: none;
+    padding: 2px;
 }
-
-.modal-publish button:hover {
-    color: rgba(0, 0, 0, .67);
-    cursor: pointer;
-}
-
-/* 提示警告信息 */
-.modal-info {
+.modal-content .modal-content-notice {
+    width: 100%;
     height: 36px;
     line-height: 36px;
-    background: #fff6e5;
-    border-radius: 4px;
     font-size: 12px;
-    font-weight: 400;
+    background: #fff6e5;
     color: #e33e33;
-    padding-left: 15px;
-    box-sizing: border-box;
+    font-weight: 400;
+}
+.modal-content .modal-content-notice i {
+    display: inline-block;
+    margin-left:13px;
+    width: 14px;
+    height: 14px;
+    background: url("../images/warning.png") no-repeat;
+    vertical-align: -2px;
 }
 
-/* 内容区 */
-.modal-content .form-entry {
+.form-tag-box {
     margin: 1em 0;
     line-height: 32px;
 }
-
-/* 添加文章标签 */
-.article-tag {
+.form-tag-box label {
+    float: left;
+    margin-right: 8px;
+    font-size: .9rem;
+    color: #4d4d4d;
+}
+.mark-selection {
+    float: left;
     position: relative;
 }
-
-/* 左边的label标签 */
-.form-entry .form-entry-lable {
-    display: block;
-    color: #4d4d4d;
-    margin-right: 6px;
-    user-select: none;
-    width: 72px;
-    font-size: .9rem;
-    white-space: nowrap;
-}
-
-/* 右侧公共部分 */
-.add-right {
-    display: inline-block;
+.form-tag-box button {
+    position: relative;
     padding: 0 8px;
     height: 28px;
     background: #fff;
@@ -152,156 +124,106 @@ a {
     color: #555666;
     line-height: 28px;
     font-size: 14px;
-    white-space: nowrap;
-    user-select: none;
 }
-
-
-/* +图标 */
-.add-article-tag .icon-add {
-    width: 14px;
-    height: 18px;
-}
-
-/* 添加标签和hover标签时 */
-.add-right:hover,
-.add-article-active,
-div.tag-active {
-    background: rgba(38, 125, 204, .05);
+.form-tag-box button:hover {
     color: #267dcc;
-    border-color: rgba(38, 125, 204, .2);
+    background: rgba(38, 125, 204, .05);
+}
+.form-tag-box .add-tag {
+    color: #267dcc;
+    background: rgba(38, 125, 204, .05);
+    cursor: initial;
+    margin-right: 8px;
+}
+.add-tag .add-tag-close {
+    color: #3485cf;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 14px;
+    margin-left: 10px;
     cursor: pointer;
+    text-align: center;
 }
-
-/* mark层 */
-.mark-section {
-    position: relative;
+.add-tag .add-tag-close:hover {
+    border-radius: 50%;
+    background-color: #267dcc;
+    color: #fff;
 }
-
-/* mark层的添加标签 */
-.mark-section-title {
-    overflow: hidden;
-}
-
-/* mark弹出框盒子 */
-.mark-section .mark-section-box {
-    display: block;
+.mark-selection-box {
+    display: none;
     position: absolute;
     left: 0;
-    top: 30px;
-    width: 440px;
+    top: 30;
+    width: 444px;
     height: auto;
-    z-index: 5;
+    z-index: 999;
     background: #fff;
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .1);
     border: 1px solid #e3e3e3;
     padding: 10px 15px;
 }
-
-.csdn-post-article-modal .publish-article .modal-inner .toggle-class {
-    display: none;
+.mark-selection-box .close {
+    position: absolute;
+    right: 6px;
+    top: 2px;
+    font-size: 12px;
+    color: #ccc;
+    background-color: transparent;
+    border: none;
 }
 
-/* 生成的文章标签列 */
-.tags-list {
-    display: inline-block;
-    background: rgba(38, 125, 204, .05);
-    border-radius: 4px;
-    border: 1px solid rgba(38, 125, 204, .2);
-    height: 28px;
-    font-size: 14px;
-    line-height: 28px;
-    margin-right: 4px;
-    padding: 0 8px;
-    background-color: #fff;
+.mark-selection-box-selectTag {
+    padding-bottom: 5px;
+    width: 100%;
+    height: auto;
 }
-
-/* 文章标签列 */
-.mark-section-title .tags-list,
-.mark-section .add-article-active {
-    color: #267dcc;
-    background: rgba(38, 125, 204, .05);
-    cursor: pointer;
-}
-
-/* 生成文章标签的盒子 */
-.mark-section-tag-box {
-    display: inline-block;
-}
-
-/* 新建标签中的x和分类专栏中的x样式 */
-.mark-section-tag-box .icon-remove,
-.new-classfy .form-entry-field .flex-box .icon-remove {
-    display: inline-block;
-    line-height: 15px;
-    width: 15px;
-    height: 15px;
-    text-align: center;
-}
-
-.mark-section-tag-box .icon-remove:hover,
-.new-classfy .form-entry-field .flex-box .icon-remove:hover {
-    border-radius: 50%;
-    background-color: #267dcc;
-    color: #fff;
-}
-
-/* 选择标签 */
-.mark-section-box-selectTags {
+.mark-selection-box-selectTag span {
     font-size: 12px;
     color: #999;
     margin-left: -2px;
 }
-
-/* 选择标签中的关闭按钮 */
-.mark-section-box-selectTags .icon-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    border: none;
-    cursor: pointer;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    font-size: 15px;
-    background: none;
+.mark-selection-box-selectTag .max-tag-num {
+    display: none;
+    color: #e70b0b;
 }
-
-/* 1 */
-.mark-section-box-selectTags .icon-close:hover {
-    color: rgba(0, 0, 0, .67);
-    background-color: rgba(0, 0, 0, .05);
-}
-
-/* 添加文章标签的搜索框 */
-.mark-section-box-search input {
-    height: 36px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 100%;
-    padding-left: 15px;
-}
-
-/* 推荐 */
-.mark-section-box-recommend {
-    margin-top: 10px;
-}
-
-.recommend-list-items {
-    padding: 0 10px;
-    height: 24px;
-    box-sizing: border-box;
-    line-height: 24px;
-    display: inline-block;
-    list-style: none;
+.max-class-num {
+    display: none;
     font-size: 14px;
-    font-weight: 500;
-    color: #303133;
-    cursor: pointer;
-    user-select: none;
+    color: #ccc;
 }
-
-.is-active {
+.mark-selection-box-input {
+    height: 36px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.mark-selection-box-input input {
+    height: 36px;
+    padding-right: 30px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    line-height: 40px;
+    outline: 0;
+    padding: 0 15px;
+    width: 100%;
+}
+.mark-selection-box .tags-items li{
+    float: left;
+    padding: 0 5px;
+    border: 1px solid transparent;
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
+    color: #3d3d3d;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.mark-selection-box .tags-items .isactive {
     background: #fcecea;
     border-right-color: #fff;
     border-left-color: #fff;
@@ -309,156 +231,215 @@ div.tag-active {
     border-radius: 2px;
     border: 1px solid #fcecea;
 }
-
-.mark-section-nothing-recommend {
-    font-size: 14px;
+.mark-selection-box .tag-items-content div {
+    display: none;
+}
+.mark-selection-box .tag-items-content ul li {
+    float: left;
+    padding: 0 8px;
+    height: 24px;
+    background: #f7f7fc;
+    border-radius: 2px;
+    border: 1px solid #e8e8ee;
+    font-size: 12px;
     font-weight: 400;
+    color: #4d4d4d;
+    line-height: 24px;
+    cursor:pointer;
+    margin-right:10px;
+    margin-bottom: 10px;
+}
+.mark-selection-box .tag-items-content .no-recomend-tag {
+    display: block;
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    font-weight: 400px;
     color: #999aaa;
     text-align: center;
-    height: 80px;
-    margin-top: 5px;
 }
 
-
-
-
-/* 新建分类栏 */
-.new-classfy-tag {
-    height: 28px;
-    padding: 0 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(38, 125, 204, .1);
-    color: #555666;
-    font-size: 14px;
-    margin-right: 5px;
+.form-tag-box .icon {
+    width: 14px;
+    height: 18px;
+    font-size: 20px;
+    vertical-align: -2px;
+    margin-right: 4px;
 }
-
-/* 分类部分 */
-.form-entry-field {
+.form-tag-box label {
+    float: left;
+}
+.form-tag-box .right {
+    float: left;
+    width: 480px;
+    position: relative;
     overflow: hidden;
 }
-
-.flex-box {
-    display: flex;
-    min-height: 24px;
-    height: 24px;
+.right .add-tag span {
+    border: none;
+    outline: none;
 }
 
-/* 分类专栏选择部分 */
-.tag-options {
-    position: relative;
-    height: 160px;
-    border-radius: 4px;
-    border: 1px solid #e8e8ee;
-    padding: 0 16px;
-    margin-top: 20px;
-}
-
-.tag-options-mark {
+.form-tag-box .right .max-class-num-mask {
     display: none;
     position: absolute;
     top: 0;
-    left: 0;
-    bottom: 0;
     right: 0;
-    margin: 0 auto;
-    text-align: center;
-    color: #999aaa;
-    line-height: 160px;
-    background-color: #ffffffe6;
+    bottom: 0;
+    left: 0;
+    z-index: 2000;
+    background-color: hsla(0, 0%, 100%, .9);
 }
-
-/* 分类的头部 */
-.tag-options .tag-options-tit {
+.form-tag-box .right .max-class-num-mask .show-content{
+    position: absolute;
+    /* margin-top: -21px; */
+    width: 100%;
+    text-align: center;
+}
+/* .max-class-num-mask .show-content i {
+  font-size: 20px;
+  color: #e33e33;
+} */
+.max-class-num-mask .show-content p {
+    color: #999aaa;
+    font-size: 14px;
+    margin: 3px 0;
+}
+.form-tag-box .right .tag-options-content {
+    position: relative;
+    height: 160px;
+    margin-top: 8px;
+    border-radius: 4px;
+    border: 1px solid #e8e8ee;
+    padding: 0 16px;
+}
+.tag-options-content .tag-options-text {
     height: 36px;
     line-height: 36px;
     border-bottom: 1px solid #e8e8ee;
 }
-
-.tag-options .tag-options-tit span {
+.tag-options-content .tag-options-text :nth-child(1){
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
+    font-weight: 400px;
     color: #555666;
 }
-
-/* #二级标题样式 */
-/* .tag-options .tag-options-tit span:last-child {
+.tag-options-content .tag-options-text :nth-child(2) {
+    font-weight: 400;
+    font-size: 14px;
     color: #ccccd8;
-    } */
-
-/* 分类的选项 */
-.tag-options-box {
+}
+.tag-options-list {
+    padding: 8px 8px 0 0;
+    width: 454px;
+    max-height: 117px;
+    background: #fff;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.tag-options-list li {
     float: left;
     height: 21px;
     line-height: 21px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    margin: 2px 16px 8px 0;
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #606266;
+    margin: 0 16px 8px 0;
 }
-
-/* 选择框的文字 */
-.tag-options-box .tag-options-lable {
+.source-input {
+    width: 404px;
+    height: 32px;
+    border-radius: 4px;
+    background: #fafafa;
+    border: 1px solid #ddd;
     padding-left: 10px;
-    user-select: none;
+    color: #4d4d4d;
 }
-
-.tag-options-box .spanValue {
-    cursor: default;
+.form-tag-box a {
+    padding: 20px 0;
+    font-size: 14px;
+    margin-left: 9px;
 }
-
-/* 添加分类 */
-.icon-remove-active {
-    background-color: #3399ea;
-    color: #fff;
+.modal-content .article-type {
+    width: 50%;
 }
-
-/* 底部 */
-.modal-button-bar {
-    margin-top: 1.8em;
+.form-tag-box select {
+    height: 32px;
+    width: 177px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #999;
+}
+.form-tag-box .must {
+    margin: 0 8px;
+    font-size: 12px;
+    color: #ca0c16;
+}
+.copyright_warning {
+    margin-top: 8px;
+    padding-left: 80px;
+    font-size: 14px;
+    color: #999aaa;
+}
+.copyright_warning i {
+    display: inline-block;
+    margin-left: 13px;
+    width: 14px;
+    height: 14px;
+    background: url("../images/warning1.png") no-repeat;
+    vertical-align: -2px;
+}
+.switch-box {
+    line-height: 28px;
+}
+.switch-box li {
+    float: left;
+    height: 24px;
+    font-size: 14px;
+    margin-right: 20px;
+    color: #555666;
+}
+.form-tag-box .tag-help {
+    font-size: 14px;
+}
+.form-tag-box .icon-help {
+    display: inline-block;
+    margin-left: 13px;
+    width: 14px;
+    height: 14px;
+    background: url("../images/help.png") no-repeat;
+    vertical-align: -2px;
+}
+.modal-bottom {
+    margin-top: 1.75rem;
     text-align: right;
 }
-
-.modal-button-bar .btn {
-    background-image: none;
-    outline: none;
-    border: 0;
-    border-radius: 4px;
+.button {
     color: #333;
     background-color: transparent;
-    display: inline-block;
-    height: auto;
     padding: 6px 12px;
-    margin-bottom: 0;
-    font-size: .875em;
+    font-size: 14px;
     font-weight: 400;
-    line-height: 1.4;
-}
-
-.modal-button-bar .btn:hover {
     cursor: pointer;
 }
-
-.modal-button-bar .btn-save {
+.btn-blue {
     color: #3399ea;
 }
-
-.modal-button-bar .btn-publish {
+.btn-red {
+.btn-red {
     padding: 6px;
     background: #fcecea;
-    border-radius: 4px;
     color: #e33e33;
 }
-
-/* .btn-active 按钮处于当前状态 */
-.modal-button-bar .btn-save:hover,
-.modal-button-bar .btn-cancel:hover,
-.btn-active {
-    /* color: #333; */
-    background-color: rgba(0, 0, 0, .05);
+.mask {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: hsla(0, 0%, 63%, .5);
+    /* overflow: auto; */
 }
