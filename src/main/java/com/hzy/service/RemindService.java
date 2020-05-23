@@ -15,8 +15,21 @@ public class RemindService {
     public int addRemind(Remind remind) {
         return remindMapper.addRemind(remind);
     }
-    public List<Remind> selectRemindByToId(int toId) {
-        return remindMapper.selectRemindByToId(toId);
+    /**
+     * 查询用户所有未读的点赞通知
+     * @param toId
+     * @return
+     */
+    public List<Remind> selectLikeRemindByToId(int toId) {
+        return remindMapper.selectLikeRemindByToId(toId);
+    }
+    /**
+     * 查询用户所有未读的评论通知
+     * @param toId
+     * @return
+     */
+    public List<Remind> selectCommentRemindByToId(int toId) {
+        return remindMapper.selectCommentRemindByToId(toId);
     }
     public int updateRemindByRemindId(int remindId) {
         return remindMapper.updateRemindByRemindId(remindId);

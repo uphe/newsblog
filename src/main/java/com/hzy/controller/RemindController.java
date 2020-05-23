@@ -1,7 +1,5 @@
 package com.hzy.controller;
 
-import com.hzy.pojo.Notice;
-import com.hzy.pojo.ReadNotice;
 import com.hzy.pojo.Remind;
 import com.hzy.pojo.User;
 import com.hzy.service.RemindService;
@@ -11,36 +9,50 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 import java.util.List;
 
 @Controller
+@RequestMapping("/msg")
 public class RemindController {
     @Autowired
     private RemindService remindService;
 
+    /**
+     * 这里的to意思是通过控制器到达like.html页面
+     * @param model
+     * @param session
+     * @return
+     */
     @RequestMapping("/toLike")
     public String toLike(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        List<Remind> remindList = remindService.selectRemindByToId(user.getUserId());
+        List<Remind> likeRemindList = remindService.selectLikeRemindByToId(user.getUserId());
         model.addAttribute("user",user);
-        model.addAttribute("remindList",remindList);
-        return "like";
+        model.addAttribute("likeRemindList",likeRemindList);
+        return "msg/like";
     }
     @RequestMapping("/toLikeDetail")
     public String toNoticeDetail(int remindId, HttpSession session) {
         User user = (User) session.getAttribute("user");
         remindService.updateRemindByRemindId(remindId);
-//        ReadNotice readNotice = new ReadNotice();
-//
-//        readNotice.setNoticeId(noticeId);
-//        readNotice.setUserId(user.getUserId());
-//        Date date = new Date();
-//        date.setTime(date.getTime() + 24*60*60*1000*7);
-//        readNotice.setExpirationTime(date);
-//
-//        readNoticeService.addReadNotice(readNotice);
-        return "redirect:/toLike";
+
+        return "redirect:/msg/toLike";
+    }
+
+    @RequestMapping("/toComment")
+    public String toComment(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        List<Remind> commentRemindList = remindService.selectCommentRemindByToId(user.getUserId());
+        model.addAttribute("user",user);
+        model.addAttribute("commentRemindList", commentRemindList);
+        return "msg/comment";
+    }
+    @RequestMapping("/toCommentDetail")
+    public String toCommentDetail(int remindId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        remindService.updateRemindByRemindId(remindId);
+
+        return "redirect:/msg/toComment";
     }
 
 }

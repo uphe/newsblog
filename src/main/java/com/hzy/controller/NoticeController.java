@@ -1,6 +1,5 @@
 package com.hzy.controller;
 
-import com.hzy.pojo.Blog;
 import com.hzy.pojo.Notice;
 import com.hzy.pojo.ReadNotice;
 import com.hzy.pojo.User;
@@ -18,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
+@RequestMapping("/msg")
 public class NoticeController {
     @Autowired
     private NoticeService noticeService;
@@ -26,7 +26,7 @@ public class NoticeController {
 
     @RequestMapping("/toEditorNotice")
     public String toEditorNotice() {
-        return "editorNotice";
+        return "msg/editorNotice";
     }
 
     @PostMapping(path = "/noticeEditormd")
@@ -55,7 +55,7 @@ public class NoticeController {
         List<Notice> noticeList = noticeService.selectNoticeByUserId(user.getUserId());
         model.addAttribute("user",user);
         model.addAttribute("noticeList",noticeList);
-        return "notice";
+        return "msg/notice";
     }
     @RequestMapping("/toNoticeDetail")
     public String toNoticeDetail(int noticeId, HttpSession session) {
@@ -70,6 +70,6 @@ public class NoticeController {
         readNotice.setExpirationTime(date);
 
         readNoticeService.addReadNotice(readNotice);
-        return "redirect:/toNotice";
+        return "redirect:/msg/toNotice";
     }
 }

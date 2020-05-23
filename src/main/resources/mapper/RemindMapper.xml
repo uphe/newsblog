@@ -7,9 +7,13 @@
         insert into remind(remindContent,fromId,toId,blogId,createDate,state,remindType)
         values (#{remindContent},#{fromId},#{toId},#{blogId},#{createDate},#{state},#{remindType})
     </insert>
-    <select id="selectRemindByToId" parameterType="_int" resultType="Remind">
+    <select id="selectCommentRemindByToId" parameterType="_int" resultType="Remind">
         select * from remind
-        where toId = #{toId} and state = 0
+        where toId = #{toId} and state = 0 and remindType = 1;
+    </select>
+    <select id="selectLikeRemindByToId" parameterType="_int" resultType="Remind">
+        select * from remind
+        where toId = #{toId} and state = 0 and remindType = 0;
     </select>
     <update id="updateRemindByRemindId" parameterType="_int">
         update remind set state = 1

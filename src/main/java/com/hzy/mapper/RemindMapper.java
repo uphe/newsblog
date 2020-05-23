@@ -9,7 +9,8 @@ import java.util.List;
 @Repository
 public interface RemindMapper {
     int addRemind(Remind remind);
-    List<Remind> selectRemindByToId(int toId);
+    List<Remind> selectCommentRemindByToId(int toId);
+    public List<Remind> selectLikeRemindByToId(int toId);
     int updateRemindByRemindId(int remindId);
     int updateRemindByFromIdAndBlogIdAndRemindType(int fromId, int blogId, int remindType);
     /**

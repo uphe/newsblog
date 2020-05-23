@@ -11,14 +11,13 @@
 <!-- 主体部分 -->
 <div class="w">
     <!-- 主体 -->
-    <div th:each="notice : ${noticeList}" class="container-fluid bd">
+    <div th:each="commentRemind : ${commentRemindList}" class="container-fluid bd">
         <!-- 行 -->
         <div class="row border_bottom">
             <!-- 文字部分 -->
             <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
                 <div class="bd_text">
-                    <a th:href="@{/toNoticeDetail(noticeId=${notice.noticeId})}" th:text="${notice.noticeTitle}"></a>
-                    <em th:text="${notice.noticeContent}"></em>
+                    <a th:href="@{/msg/toCommentDetail(remindId=${commentRemind.remindId})}" th:text="${commentRemind.getRemindContent()}"></a>
                 </div>
 
             </div>

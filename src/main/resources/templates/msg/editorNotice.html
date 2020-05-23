@@ -30,16 +30,14 @@
             <div class="small-2 columns">
                 <ul class="button-group">
                     <!--                        <li><button  class="button  tiny save">保存</button></li>-->
-<!--                                            <li><input id="input" class="button  tiny send  success" type="button" value="发送"></li>-->
-                    <button id="input" class="show-post-article-btn">发布公告</button>
+                    <li><input id="input" class="button  tiny send  success" type="button" value="发布公告"></li>
+<!--                    <button id="input" class="show-post-article-btn">发布公告</button>-->
                 </ul>
             </div>
         </div>
     </div>
 </div>
 <!--</form>-->
-
-<!--<button class="show-post-article-btn">发布文章</button>-->
 
 <div id="test-editor">
     <textarea style="display:none;"></textarea>
@@ -63,7 +61,7 @@
 
         $("#input").click(function () {
             $.post({
-                url: "/noticeEditormd",
+                url: "/msg/noticeEditormd",
                 data: {
                     title: $("#title").val(),
                     // typeString: 1,// 此处需要异步获取类型id
