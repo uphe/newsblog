@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import redis.clients.jedis.Jedis;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @SpringBootTest
 class NewsblogApplicationTests {
@@ -35,16 +33,22 @@ class NewsblogApplicationTests {
 
     @Test
     void contextLoads() {
-//        Remind remind = new Remind();
-//        remind.setFromId(1);
-//        remind.setToId(2);
-//        remind.setBlogId(1);
-//        remind.setRemindContent("hello");
-//        remind.setCreateDate(new Date());
-//        remind.setState(0);
-//        System.out.println(remindMapper.addRemind(remind));
-//        System.out.println(remindMapper.selectRemindByToId(2));
-//        remindMapper.updateRemindByRemindId(4);
-//        remindMapper.updateRemindByToId(2);
+        List<Comment> commentList = commentMapper.selectChildCommentByCommentId(1);
+        System.out.println(commentList);
+        Map<Comment,Object> map = new HashMap<>();
+        for (Comment comment : commentList) {
+            List<Comment> list = commentMapper.selectChildCommentByCommentId(comment.getCommentId());
+            if (list != null) {
+                for (Comment comment1 : list) {
+                    List<Comment> list1 = commentMapper.selectChildCommentByCommentId(comment1.getCommentId());
+                    if (list1 != null) {
+                        list.addAll(list1);
+                    }
+                }
+            }
+            System.out.println(list);
+            map.put(comment,list);
+            System.out.println(map);
+        }
     }
 }

@@ -302,33 +302,13 @@
                 <div class="tag-options-content">
                     <div class="tag-options-text">
                         <span>最多选择3个分类</span>
-                        <span>#为二级分类</span>
+<!--                        <span>#为二级分类</span>-->
                     </div>
                     <div class="tag-options-list clearfix">
-                        <ul>
+                        <ul  th:each="type : ${typeList}">
                             <li>
                                 <input type="checkbox" class="checkbox">
-                                <span>HTML</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checkbox">
-                                <span>CSS</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checkbox">
-                                <span>JavaScript</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checkbox">
-                                <span>DOM</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checkbox">
-                                <span>BOM</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checkbox">
-                                <span>jquery</span>
+                                <span th:text="${type.getTypeName()}"></span>
                             </li>
                         </ul>
                     </div>

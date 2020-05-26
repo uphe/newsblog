@@ -56,6 +56,17 @@
         <span th:text="${map.get('comment').getCreateDate()}"></span>
         <br>
         <span th:text="${map.get('comment').getContent()}"></span>
+
+        <div  th:if="${map.get('allMap')} != null" th:each="map1 : ${map.get('allMap').values()}">
+            <img th:src="${map1.get('user').getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>
+            <div>
+                <span th:text="${map1.get('comment').getCreateDate()}"></span>
+                <br><br>
+                <span th:text="${map1.get('comment').getContent()}"></span>
+            </div>
+
+        </div>
+
     </div>
 </div>
 <script type="text/javascript">
@@ -69,7 +80,8 @@ $(function () {
             data: {
                 content: $("#content").val(),
                 userId: userId,
-                blogId: blogId
+                blogId: blogId,
+                parentId: -1//
             },
             success: function () {
                 console.log("success");

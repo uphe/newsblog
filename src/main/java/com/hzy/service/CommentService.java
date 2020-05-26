@@ -11,8 +11,8 @@ import org.apache.ibatis.annotations.Arg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class CommentService {
@@ -45,6 +45,39 @@ public class CommentService {
     public List<Comment> selectCommentByBlogId(int blogId){
         return commentMapper.selectCommentByBlogId(blogId);
     }
+    public List<Comment> selectChildCommentByCommentId(int commentId) {
 
+        // 遍历回复评论，并封装到list中
+        List<Comment> list = commentMapper.selectChildCommentByCommentId(commentId);
+        List<Comment> allList = new ArrayList<>();
+        allList.addAll(list);
+
+        // 这里用队列实现
+        Queue<List<Comment>> listQueue = new LinkedBlockingQueue<>();
+        listQueue.add(list);
+        while (!listQueue.isEmpty()) {
+            List<Comment> list1 = listQueue.remove();
+            if (!list1.isEmpty()) {
+                for (Comment comment1 : list1) {
+                    List<Comment> list2 = commentMapper.selectChildCommentByCommentId(comment1.getCommentId());
+                    if (!list2.isEmpty()) {
+                        listQueue.add(list2);
+                        allList.addAll(list2);
+                    }
+                }
+            }
+        }
+
+//                // 感觉是遍历中的集合不能被合并
+//                for (Comment comment1 : allList) {
+//                    List<Comment> list1 = commentService.selectChildCommentByCommentId(comment1.getCommentId());
+//                    if (!list1.isEmpty()) {
+//                            allList.addAll(list1);
+//
+//                        }
+//                    }
+        return allList;
+
+    }
 
 }
