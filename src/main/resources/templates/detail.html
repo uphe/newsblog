@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>详情</title>
+    <link rel="stylesheet" href="css/comment.css">
     <!-- 头部导航 -->
     <div th:replace="~{header :: myhead}"></div>
 </head>
@@ -15,6 +16,9 @@
         <!-- 文字部分 -->
         <div class="col-lg-1 col-md-2 col-xs-2 bd_text">
             <div class="bd_text">
+                <!-- 获取用户id -->
+                <input th:if="${user} != null" type="hidden" id="userId" th:value="${user.getUserId()}">
+                <!--获取博客id-->
                 <input type="hidden" id="blogId" th:value="${blog.getBlogId()}">
                 <h1 th:text="${blog.title}"></h1>
                 <p th:utext="${blog.article}"></p>
@@ -23,114 +27,222 @@
     </div>
 </div>
 
-<div th:if="${user} != null" class="row">
-    <div class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px">头像</div>
-    <div class="col-md-8 ">
-        <span>评论</span>
-        <textarea type="text" class="form-control " id="content" placeholder="想对作者说点什么" style="height: 70px" ></textarea>
-        <div style="display: none" id="selectcode">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <button href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加代码片段<span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li id="HTML"><a href="#">HTML</a></li>
-                        <li id="CSS"><a href="#">CSS</a></li>
-                        <li id="JS"><a href="#">JS</a></li>
-                        <li id="JAVA"><a href="#">JAVA</a></li>
-                        <li id="PYTHON"><a href="#">PYTHON</a></li>
-                        <li id="PLAIN"><a href="#">其它</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <button id="send" style="float: right;background: red;opacity: 0.7;color: whitesmoke">发表评论</button>
-        </div>
-    </div>
-
-</div>
 <div th:if="${user} == null" class="row">
     <a th:href="@{/toLogin}" type="button">请先登录</a>
 </div>
-<div th:if="${mapMap} != null" th:each="map : ${mapMap.values()}" class="row">
-    <img th:src="${map.get('user').getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>
-    <div style="background: antiquewhite;height: 50px" class="col-md-8 ">
-        <span th:text="${map.get('comment').getCreateDate()}"></span>
-        <br>
-        <span th:text="${map.get('comment').getContent()}"></span>
 
-        <div  th:if="${map.get('allMap')} != null" th:each="map1 : ${map.get('allMap').values()}">
-            <img th:src="${map1.get('user').getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>
-            <div>
-                <span th:text="${map1.get('comment').getCreateDate()}"></span>
-                <br><br>
-                <span th:text="${map1.get('comment').getContent()}"></span>
-            </div>
-
+<div class="comment-box" >
+    <!-- 单独的一个评论框 -->
+    <div th:if="${user} != null"  class="comment-edit-box clearfix">
+        <div class="user-img">
+            <img th:src="${user.getHeadUrl()}"></img>
         </div>
+        <textarea class="comment-content" placeholder="优质评论可以帮助作者获得更高权重"></textarea>
+        <input type="button" class="bt-comment-show" value="评论">
+    </div>
 
+    <!-- 评论回复列表 -->
+    <div th:if="${mapMap} != null" th:each="map : ${mapMap.values()}" class="comment-list-container">
+        <div class="comment-list-box">
+            <ul class="comment-list">
+                <li class="comment-line-box">
+                    <img th:src="${map.get('user').getHeadUrl()}"></img>
+                    <div class="right-box clearfix">
+                        <span th:text="${map.get('user').getUsername()}" class="name"></span>
+                        <span>:</span>
+                        <span th:text="${map.get('comment').getContent()}" class="new-comment"></span>
+                        <span th:text="${map.get('comment').getCreateDate()}" class="date"></span>
+                        <input type="hidden" id="parentId" th:value="${map.get('comment').getCommentId()}">
+                        <div class="new-opt-box">
+                            <span id="btn-reply" class="btn-reply">回复</span>
+                            <span class="close-reply">收起评论</span>
+                            <span th:if="${map.get('allMap').size()} != 0" class="read-reply">查看回复</span>
+                        </div>
+                        <div th:if="${map.get('allMap').size()} != 0" th:each="map1 : ${map.get('allMap').values()}" class="reply-box clearfix">
+                            <img th:src="${map1.get('user').getHeadUrl()}"></img>
+                            <div class="right-box ">
+                                <div class="new-info-box">
+                                    <span th:text="${map1.get('user').getUsername()}" class="name"></span>
+                                    <span class="text">回复</span>
+                                    <span th:text="${map1.get('user1').getUsername()}" class="nick-name"></span>
+                                    <span>:</span>
+                                    <span th:text="${map1.get('comment').getContent()}" class="new-comment"></span>
+                                    <span th:text="${map1.get('comment').getCreateDate()}" class="date"></span>
+                                    <input type="hidden" id="parentId1" th:value="${map1.get('comment').getCommentId()}">
+                                    <div class="new-opt-box">
+                                        <span id="btn-reply1" class="btn-reply">回复</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
-<script type="text/javascript">
-$(function () {
-    var userId = $("#userId").val();
-    var blogId = $("#blogId").val();
-    $("#send").click(function () {
-        $.post({
-            url: "/detail",
-            dataType: "json",
-            data: {
-                content: $("#content").val(),
-                userId: userId,
-                blogId: blogId,
-                parentId: -1//
-            },
-            success: function () {
-                console.log("success");
-                location.href = "/toDetail?blogId="+blogId
 
-                // 下面可以异步
-                //getid(id).innerHTML = datastr; 这个是原生js的写法
-                //$("#"+id).html(datastr); //这个是jquery写法
-            },
-            error: function () {
-                console.log("error");
+<script>
+    $(function () {
+        var content;
+        var parentId = -1;
+        // 展开评论
+        $(".read-reply").on("click", function() {
+            $(this).siblings().show()
+            $(this).hide()
+            $(this).parents(".right-box").find(".reply-box").show();
+        })
+        ///收起评论
+        $(".close-reply").on("click", function() {
+            $(this).siblings(".read-reply").show()
+            $(this).hide();
+            $(this).siblings(".btn-reply").hide();
+            $(this).parents(".right-box").find(".reply-box").hide();
+        })
+        $(".bt-comment-show").click(function () {
+            if ($(".comment-content").val() == '') {
+                alert("请输入评论内容！");
+            } else {
+                content = $(".comment-content").val();
+                var userId = $("#userId").val();
+                var blogId = $("#blogId").val();
+                $.post({
+                    url: "/detail",
+                    dataType: "json",
+                    data: {
+                        content: content,
+                        userId: userId,
+                        blogId: blogId,
+                        parentId: parentId
+                    },
+                    success: function () {
+                        console.log("success");
+                        location.href = "/toDetail?blogId="+blogId
+                    },
+                    error: function () {
+                        console.log("error");
+                    }
+                });
+                $(".comment-content").val('');
             }
         })
-    });
-});
-
-
-
-
-    var code=document.getElementById("selectcode");
-    var content=document.getElementById("content");
-    var html=document.getElementById("HTML");
-    var css=document.getElementById("CSS");
-    var js=document.getElementById("JS");
-    var java=document.getElementById("JAVA");
-    var python=document.getElementById("PYTHON");
-    var plain=document.getElementById("PLAIN");
-    content.onfocus=function(){
-        code.style.display="block";
-    };
-    html.onclick=function(){
-        content.value=content.value+"[code=html]" + "\n\n"+ "[/code]";
-    };
-    css.onclick=function(){
-        content.value=content.value+"[code=css]" + "\n\n"+ "[/code]";
-    };
-    js.onclick=function(){
-        content.value=content.value+"[code=javascript]" + "\n\n"+ "[/code]";
-    };
-    java.onclick=function(){
-        content.value=content.value+"[code=java]" + "\n\n"+ "[/code]";
-    };
-    python.onclick=function(){
-        content.value=content.value+"[code=python]" + "\n\n"+ "[/code]";
-    };
-    plain.onclick=function(){
-        content.value=content.value+"[code=plain] "+ "\n\n"+ "[/code]";
-    }
-
+        $(".comment-list").on("click", "#btn-reply", function () {
+            $(".comment-content").focus();
+            parentId = $(this).parent().siblings('#parentId').val();
+        })
+        $(".comment-list").on("click", "#btn-reply1", function () {
+            $(".comment-content").focus();
+            parentId = $(this).parent().siblings('#parentId1').val();
+        })
+    })
 </script>
+
+
+<!--<div th:if="${user} != null" class="row">-->
+<!--    <div class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px">头像</div>-->
+<!--    <div class="col-md-8 ">-->
+<!--        <span>评论</span>-->
+<!--        <textarea type="text" class="form-control " id="content" placeholder="想对作者说点什么" style="height: 70px" ></textarea>-->
+<!--        <div style="display: none" id="selectcode">-->
+<!--            <ul class="nav navbar-nav">-->
+<!--                <li class="dropdown">-->
+<!--                    <button href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">添加代码片段<span class="caret"></span></button>-->
+<!--                    <ul class="dropdown-menu">-->
+<!--                        <li id="HTML"><a href="#">HTML</a></li>-->
+<!--                        <li id="CSS"><a href="#">CSS</a></li>-->
+<!--                        <li id="JS"><a href="#">JS</a></li>-->
+<!--                        <li id="JAVA"><a href="#">JAVA</a></li>-->
+<!--                        <li id="PYTHON"><a href="#">PYTHON</a></li>-->
+<!--                        <li id="PLAIN"><a href="#">其它</a></li>-->
+<!--                    </ul>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--            <button id="send" style="float: right;background: red;opacity: 0.7;color: whitesmoke">发表评论</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div th:if="${mapMap} != null" th:each="map : ${mapMap.values()}" class="row">-->
+<!--    <img th:src="${map.get('user').getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>-->
+<!--    <div style="background: antiquewhite;height: 50px" class="col-md-8 ">-->
+<!--        <span th:text="${map.get('comment').getCreateDate()}"></span>-->
+<!--        <br>-->
+<!--        <span th:text="${map.get('comment').getContent()}"></span>-->
+
+<!--        <div  th:if="${map.get('allMap')} != null" th:each="map1 : ${map.get('allMap').values()}">-->
+<!--            <img th:src="${map1.get('user').getHeadUrl()}" class="col-md-1 col-md-offset-1" style="background: red ;width: 50px;height: 50px"></img>-->
+<!--            <div>-->
+<!--                <span th:text="${map1.get('comment').getCreateDate()}"></span>-->
+<!--                <br><br>-->
+<!--                <span th:text="${map1.get('comment').getContent()}"></span>-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--    </div>-->
+<!--</div>-->
+<!--<script type="text/javascript">-->
+<!--$(function () {-->
+<!--    var userId = $("#userId").val();-->
+<!--    var blogId = $("#blogId").val();-->
+<!--    $("#send").click(function () {-->
+<!--        $.post({-->
+<!--            url: "/detail",-->
+<!--            dataType: "json",-->
+<!--            data: {-->
+<!--                content: $("#content").val(),-->
+<!--                userId: userId,-->
+<!--                blogId: blogId,-->
+<!--                parentId: -1//-->
+<!--            },-->
+<!--            success: function () {-->
+<!--                console.log("success");-->
+<!--                location.href = "/toDetail?blogId="+blogId-->
+
+<!--                // 下面可以异步-->
+<!--                //getid(id).innerHTML = datastr; 这个是原生js的写法-->
+<!--                //$("#"+id).html(datastr); //这个是jquery写法-->
+<!--            },-->
+<!--            error: function () {-->
+<!--                console.log("error");-->
+<!--            }-->
+<!--        })-->
+<!--    });-->
+<!--});-->
+
+
+
+
+<!--    var code=document.getElementById("selectcode");-->
+<!--    var content=document.getElementById("content");-->
+<!--    var html=document.getElementById("HTML");-->
+<!--    var css=document.getElementById("CSS");-->
+<!--    var js=document.getElementById("JS");-->
+<!--    var java=document.getElementById("JAVA");-->
+<!--    var python=document.getElementById("PYTHON");-->
+<!--    var plain=document.getElementById("PLAIN");-->
+<!--    content.onfocus=function(){-->
+<!--        code.style.display="block";-->
+<!--    };-->
+<!--    html.onclick=function(){-->
+<!--        content.value=content.value+"[code=html]" + "\n\n"+ "[/code]";-->
+<!--    };-->
+<!--    css.onclick=function(){-->
+<!--        content.value=content.value+"[code=css]" + "\n\n"+ "[/code]";-->
+<!--    };-->
+<!--    js.onclick=function(){-->
+<!--        content.value=content.value+"[code=javascript]" + "\n\n"+ "[/code]";-->
+<!--    };-->
+<!--    java.onclick=function(){-->
+<!--        content.value=content.value+"[code=java]" + "\n\n"+ "[/code]";-->
+<!--    };-->
+<!--    python.onclick=function(){-->
+<!--        content.value=content.value+"[code=python]" + "\n\n"+ "[/code]";-->
+<!--    };-->
+<!--    plain.onclick=function(){-->
+<!--        content.value=content.value+"[code=plain] "+ "\n\n"+ "[/code]";-->
+<!--    }-->
+
+<!--</script>-->
 </body>
 </html>

@@ -103,10 +103,13 @@ public class BlogController {
                     for (Comment comment1 : allList) {
                         Map<String,Object> map1 = new HashMap<>();
                         User user1 = userService.selectUserById(comment1.getUserId());
+
+                        Comment comment2 = commentService.selectCommentByCommentId(comment1.getParentId());
+                        User user2 = userService.selectUserById(comment2.getUserId());
                         map1.put("user",user1);
+                        map1.put("user1",user2);
                         map1.put("comment",comment1);
                         allMap.put("map" + j ++, map1);
-                        System.out.println(allMap);
                     }
                 }
 

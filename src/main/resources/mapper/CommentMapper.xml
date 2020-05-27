@@ -17,4 +17,8 @@
         where parentId = #{commentId}
         order by createDate desc
     </select>
+    <select id="selectCommentByCommentId" resultType="Comment">
+        select * from comment
+        where commentId = #{commentId}
+    </select>
 </mapper>

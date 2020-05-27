@@ -12,4 +12,5 @@ public interface CommentMapper {
     int addComment(Comment comment);
     List<Comment> selectCommentByBlogId(int blogId);
     List<Comment> selectChildCommentByCommentId(int commentId);
+    Comment selectCommentByCommentId(int commentId);
 }

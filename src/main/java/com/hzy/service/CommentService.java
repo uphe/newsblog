@@ -45,6 +45,9 @@ public class CommentService {
     public List<Comment> selectCommentByBlogId(int blogId){
         return commentMapper.selectCommentByBlogId(blogId);
     }
+    public Comment selectCommentByCommentId(int commentId) {
+        return commentMapper.selectCommentByCommentId(commentId);
+    }
     public List<Comment> selectChildCommentByCommentId(int commentId) {
 
         // 遍历回复评论，并封装到list中
@@ -60,6 +63,7 @@ public class CommentService {
             if (!list1.isEmpty()) {
                 for (Comment comment1 : list1) {
                     List<Comment> list2 = commentMapper.selectChildCommentByCommentId(comment1.getCommentId());
+
                     if (!list2.isEmpty()) {
                         listQueue.add(list2);
                         allList.addAll(list2);
