@@ -125,14 +125,33 @@
                 });
                 $(".comment-content").val('');
             }
-        })
+        });
         $(".comment-list").on("click", "#btn-reply", function () {
             $(".comment-content").focus();
             parentId = $(this).parent().siblings('#parentId').val();
-        })
+        });
         $(".comment-list").on("click", "#btn-reply1", function () {
             $(".comment-content").focus();
             parentId = $(this).parent().siblings('#parentId1').val();
+        });
+
+        // :hover .btn-reply
+        // $('.comment-line-box>.right-box').hover(function () {
+        //     $(this).children('.right-box').children('.new-opt-box').children('.btn-reply').show();
+        // },function () {
+        //     $('.btn-reply').hide();
+        // })
+        // // .reply-box:hover .btn-reply
+        // $('.reply-box .new-info-box').hover(function () {
+        //     $(this).children('.btn-reply').show();
+        // },function () {
+        //     $(this).children('.btn-reply').hide();
+        // })
+
+        $(".comment-line-box").hover(function() {
+            $(this).children(".right-box").children(".new-opt-box").children(".btn-reply").show()
+        }, function() {
+            $(this).children(".right-box").children(".new-opt-box").children(".btn-reply").hide()
         })
     })
 </script>
