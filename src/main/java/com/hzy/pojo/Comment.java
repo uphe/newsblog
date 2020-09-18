@@ -1,5 +1,7 @@
 package com.hzy.pojo;
 
+import com.hzy.utils.DateUtil;
+
 import java.util.Date;
 
 /**
@@ -31,8 +33,8 @@ public class Comment {
         this.content = content;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getCreateDate() {
+        return DateUtil.formatDate(createDate);
     }
 
     public void setCreateDate(Date createDate) {

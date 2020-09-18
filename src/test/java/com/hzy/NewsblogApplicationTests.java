@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import redis.clients.jedis.Jedis;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @SpringBootTest
 class NewsblogApplicationTests {
@@ -31,24 +33,51 @@ class NewsblogApplicationTests {
     @Autowired
     private RemindMapper remindMapper;
 
+    volatile int goods = 100;
+    String secKillGoods = "secKillGoods:1";
+    final ReentrantLock lock = new ReentrantLock();
+    final Jedis jedis = new Jedis("39.106.231.3", 6379);
     @Test
     void contextLoads() {
-        List<Comment> commentList = commentMapper.selectChildCommentByCommentId(1);
-        System.out.println(commentList);
-        Map<Comment,Object> map = new HashMap<>();
-        for (Comment comment : commentList) {
-            List<Comment> list = commentMapper.selectChildCommentByCommentId(comment.getCommentId());
-            if (list != null) {
-                for (Comment comment1 : list) {
-                    List<Comment> list1 = commentMapper.selectChildCommentByCommentId(comment1.getCommentId());
-                    if (list1 != null) {
-                        list.addAll(list1);
-                    }
-                }
-            }
-            System.out.println(list);
-            map.put(comment,list);
-            System.out.println(map);
+
+        jedis.set("goods","100");
+        for (int i = 0; i < 105; i++) {
+            int temp = i;
+            new Thread(()->{
+                getSecKillGoods(temp);
+            }).start();
         }
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (jedis.exists(secKillGoods)) {
+
+            Set<String> setValues = jedis.smembers(secKillGoods);
+            System.out.println(setValues.size());
+
+        }
+        jedis.expire(secKillGoods,1);
+
+    }
+    public void getSecKillGoods(int userId) {
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            if (goods > 0) {
+                if (jedis.sismember(secKillGoods, String.valueOf(userId))) {
+                    System.out.println("您已购买成功");
+                } else {
+                    jedis.sadd(secKillGoods, String.valueOf(userId));
+                    goods --;
+                }
+            } else {
+                System.out.println("商品已卖完");
+            }
+        } finally {
+            lock.unlock();
+        }
+
     }
 }

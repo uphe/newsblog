@@ -20,9 +20,9 @@ public class JedisUtil {
 //        // 最小空闲链接数
 //        config.setMinIdle(2);
 //        // 获得连接池
-//        jedisPool = new JedisPool(config, "39.106.231.3", 6379);
+//        jedisPool = new JedisPool(config, "127.0.0.1", 6379);
         // 不写配置项，用默认的（最大连接数默认是8，最大空闲数是8，最小空闲数是0，等待时间是-1，也就是一直等）
-        jedisPool = new JedisPool("39.106.231.3", 6379);
+        jedisPool = new JedisPool("127.0.0.1", 6379);
     }
 
     public static Jedis getJedis() {
