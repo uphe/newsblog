@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.hzy</groupId>
     <artifactId>newsblog</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
     <name>newsblog</name>
     <description>Demo project for Spring Boot</description>
 
