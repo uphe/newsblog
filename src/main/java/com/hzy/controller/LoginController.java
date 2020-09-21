@@ -30,6 +30,7 @@ public class LoginController {
         return "login";
     }
 
+//    @RequestMapping("/login")
     @RequestMapping("/login")
     public String login(Model model, HttpSession session,
                         HttpServletResponse response,

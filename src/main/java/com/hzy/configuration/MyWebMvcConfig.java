@@ -4,11 +4,12 @@ import com.hzy.interceptor.IndexInterceptor;
 import com.hzy.interceptor.WriteInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration //注入到Spring
-public class WebConfiguration implements WebMvcConfigurer {
+public class MyWebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private IndexInterceptor indexInterceptor;
     @Autowired
@@ -25,5 +26,17 @@ public class WebConfiguration implements WebMvcConfigurer {
 
         registry.addInterceptor(writeInterceptor)
                 .addPathPatterns("/toWrite","/editormd");
+    }
+
+    /**
+     * 配置跨域访问
+     * @param registry
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedHeaders("*")
+                .allowedMethods("*");
     }
 }
