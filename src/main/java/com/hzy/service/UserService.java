@@ -38,7 +38,7 @@ public class UserService {
         user.setSalt(salt);
         user.setPassword(MD5Utils.MD5(password + salt));
         // 设置默认头像
-        user.setHeadUrl("https://raw.githubusercontent.com/uphe/newsblog/master/src/main/resources/static/img/default.png");
+        user.setHeadUrl(FileUtils.HOST_PORT+"img/default.png");
         userMapper.addUser(user);
 
         return null;

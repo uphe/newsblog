@@ -11,20 +11,12 @@ import com.hzy.service.UserService;
 import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import javax.servlet.http.HttpSession;
-@Controller
+@RestController
 public class BlogController {
     @Autowired
     private BlogService blogService;
@@ -44,7 +36,7 @@ public class BlogController {
         return "write";
     }
 
-    @PostMapping(path = "/editormd")
+    @PostMapping("/editormd")
     @ResponseBody
     public String Editor(String title, String editormd,
                          @RequestParam(value = "typeString",defaultValue = "") String typeString,
@@ -70,76 +62,83 @@ public class BlogController {
         return "";
     }
 
-    @RequestMapping("/toDetail")
-    public String toDetail(Model model,HttpSession session,int blogId) {
+    @RequestMapping("/detail/{blogId}")
+    public Map<String, Map<String, Object>> toDetail(HttpSession session,@PathVariable("blogId") int blogId) {
+        Map<String, Map<String, Object>> mapMap = new LinkedHashMap<>();
 
         blogService.updateHitCountByBlogId(blogId);// 每点击一次，点击量加1
         Blog blog = blogService.selectBlogById(blogId);
 
+        Map<String, Object> map0 = new HashMap<>();
         // 下面是从数据库中获取到博客，然后转化为html传到前端
         String markdownString = blog.getArticle();
         String html = MarkDownUtil.mdToHtml(markdownString);
         blog.setArticle(html);
-        model.addAttribute("blog", blog);
+//        model.addAttribute("blog", blog);
+        map0.put("blog",blog);
+//         这是获取到当前登录的用户，并将该用户信息传递到前端
+//        User user = (User) session.getAttribute("user");
+//        model.addAttribute("user",user);
 
-        // 这是获取到当前登录的用户，并将该用户信息传递到前端
-        User user = (User) session.getAttribute("user");
-        model.addAttribute("user",user);
+        User user = userService.selectUserById(blog.getUserId());
+        map0.put("user", user);
+        mapMap.put("map0",map0);
 
         // 下面是评论的信息，包括评论博客的评论和回复用户的评论
         List<Comment> commentList = commentService.selectCommentByBlogId(blogId);
+
         if (commentList != null) {
-            Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
-            int i = 0;
+            int i = 1;
             // 此处遍历的评论集合属于一级评论，即评论博客的评论
             for (Comment comment : commentList) {
                 user = userService.selectUserById(comment.getUserId());
                 Map<String,Object> map = new HashMap<>();
+                // selectChildCommentByCommentId通过队列的形式把所有的回复封装到了allList里
                 List<Comment> allList = commentService.selectChildCommentByCommentId(comment.getCommentId());
 
-                Map<String,Map<String,Object>> allMap = new LinkedHashMap<>();
+                Map<String,Map<String,Object>> slaveMap = new LinkedHashMap<>();
+
+                // 判断是否有回复信息，如果有，就遍历回复的评论把用户信息和评论信息绑定到一起
                 if (!allList.isEmpty()) {
                     int j = 0;
                     for (Comment comment1 : allList) {
                         Map<String,Object> map1 = new HashMap<>();
-                        User user1 = userService.selectUserById(comment1.getUserId());
 
-                        Comment comment2 = commentService.selectCommentByCommentId(comment1.getParentId());
-                        User user2 = userService.selectUserById(comment2.getUserId());
+                        User user1 = userService.selectUserById(comment1.getUserId());
                         map1.put("user",user1);
-                        map1.put("user1",user2);
                         map1.put("comment",comment1);
-                        allMap.put("map" + j ++, map1);
+                        slaveMap.put("map" + j ++, map1);
                     }
                 }
+                Map<String, Object> masterMap = new HashMap<>();
+                masterMap.put("user", user);
+                masterMap.put("comment",comment);
 
-                map.put("user",user);
-                map.put("comment",comment);
-                map.put("allMap", allMap);
+                map.put("masterMap",masterMap);
+                map.put("slaveMap", slaveMap);
 
                 mapMap.put("map" + i ++,map);
             }
-            model.addAttribute("mapMap",mapMap);
+//            model.addAttribute("mapMap",mapMap);
         }
 
-        return "detail";
+        return mapMap;
     }
 
-    @RequestMapping("/detail")
-    @ResponseBody
-    public String Detail(String content,int userId,int blogId,int parentId, Model model){
-        if (userId == 0) {
-            System.out.println("请先登录");
-        }
-        Comment comment = new Comment();
-        comment.setBlogId(blogId);
-        comment.setContent(content);
-        comment.setUserId(userId);
-        comment.setCreateDate(new Date());
-        comment.setParentId(parentId);// parentId代表被回复的评论id
-        commentService.addComment(comment);
-        blogService.updateCommentCountByBlogId(blogService.selectBlogById(blogId).getCommentCount() + 1,blogId);
-        return "{\"msg\":\"success\"}";
-    }
+//    @RequestMapping("/detail")
+//    public String Detail(String content,int userId,int blogId,int parentId){
+//        if (userId == 0) {
+//            System.out.println("请先登录");
+//        }
+//        Comment comment = new Comment();
+//        comment.setBlogId(blogId);
+//        comment.setContent(content);
+//        comment.setUserId(userId);
+//        comment.setCreateDate(new Date());
+//        comment.setParentId(parentId);// parentId代表被回复的评论id
+//        commentService.addComment(comment);
+//        blogService.updateCommentCountByBlogId(blogService.selectBlogById(blogId).getCommentCount() + 1,blogId);
+//        return "{\"msg\":\"success\"}";
+//    }
 
 }
