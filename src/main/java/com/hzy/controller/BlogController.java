@@ -63,35 +63,34 @@ public class BlogController {
     }
 
     @RequestMapping("/detail/{blogId}")
-    public Map<String, Map<String, Object>> toDetail(HttpSession session,@PathVariable("blogId") int blogId) {
-        Map<String, Map<String, Object>> mapMap = new LinkedHashMap<>();
+    public Map<String, Object> detail(@PathVariable("blogId") int blogId) {
 
         blogService.updateHitCountByBlogId(blogId);// 每点击一次，点击量加1
         Blog blog = blogService.selectBlogById(blogId);
 
-        Map<String, Object> map0 = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         // 下面是从数据库中获取到博客，然后转化为html传到前端
         String markdownString = blog.getArticle();
         String html = MarkDownUtil.mdToHtml(markdownString);
         blog.setArticle(html);
-//        model.addAttribute("blog", blog);
-        map0.put("blog",blog);
-//         这是获取到当前登录的用户，并将该用户信息传递到前端
-//        User user = (User) session.getAttribute("user");
-//        model.addAttribute("user",user);
-
         User user = userService.selectUserById(blog.getUserId());
-        map0.put("user", user);
-        mapMap.put("map0",map0);
+        map.put("blog",blog);
+        map.put("user", user);
 
+        return map;
+    }
+
+    @RequestMapping("/comment/{blogId}")
+    public Map<String, Map<String,Object>> comment(@PathVariable("blogId") int blogId) {
+        Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
         // 下面是评论的信息，包括评论博客的评论和回复用户的评论
         List<Comment> commentList = commentService.selectCommentByBlogId(blogId);
 
         if (commentList != null) {
-            int i = 1;
+            int i = 0;
             // 此处遍历的评论集合属于一级评论，即评论博客的评论
             for (Comment comment : commentList) {
-                user = userService.selectUserById(comment.getUserId());
+                User user = userService.selectUserById(comment.getUserId());
                 Map<String,Object> map = new HashMap<>();
                 // selectChildCommentByCommentId通过队列的形式把所有的回复封装到了allList里
                 List<Comment> allList = commentService.selectChildCommentByCommentId(comment.getCommentId());
@@ -119,9 +118,7 @@ public class BlogController {
 
                 mapMap.put("map" + i ++,map);
             }
-//            model.addAttribute("mapMap",mapMap);
         }
-
         return mapMap;
     }
 

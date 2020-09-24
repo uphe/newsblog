@@ -1,5 +1,8 @@
 package com.hzy.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /**
@@ -14,6 +17,11 @@ public class Blog {
     private int likeCount;
     private int hitCount;
     private int commentCount;
+
+    // 入参日期格式化
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    // 出参日期格式化
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate;
     private int userId;
     private String typeString;
