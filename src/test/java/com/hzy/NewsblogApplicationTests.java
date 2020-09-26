@@ -13,13 +13,10 @@ import redis.clients.jedis.Jedis;
 class NewsblogApplicationTests {
 
     @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private CollectMapper collectMapper;
+    private BlogMapper blogMapper;
 
     @Test
     void contextLoads() {
-        System.out.println(collectMapper.selectCollectBlogByUserId(1));
-
+        System.out.println(blogMapper.selectLikeCountSumByUserId(1));
     }
 }

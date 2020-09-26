@@ -25,6 +25,11 @@ public class CommentService {
     @Autowired
     private RemindService remindService;
 
+    /**
+     * 添加评论
+     * @param comment
+     * @return
+     */
     public int addComment(Comment comment) {
         int fromId = comment.getUserId();
         Blog blog = blogMapper.selectBlogById(comment.getBlogId());

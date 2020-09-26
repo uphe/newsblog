@@ -7,4 +7,19 @@
         select * from blog
         where blogId in (select blogId from collect where userId = #{userId})
     </select>
+
+    <select id="selectCollectCountByBlogId" resultType="_int">
+        select count(*) from collect
+        where blog = #{blogId}
+    </select>
+
+    <insert id="addCollectBlog">
+        insert into collect(userId,blogId)
+        values (#{userId},#{blogId})
+    </insert>
+
+    <delete id="deleteCollectBlogByCollectId">
+        delete from collect
+        where collectId = #{collectId}
+    </delete>
 </mapper>

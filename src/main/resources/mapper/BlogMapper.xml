@@ -36,4 +36,19 @@
         update blog set likeCount = #{likeCount}
         where blogId = #{blogId}
     </update>
+
+    <select id="selectHitCountSumByUserId" resultType="_int">
+        select sum(hitCount) from blog
+        where userId = #{userId}
+    </select>
+
+    <select id="selectBlogCountSumByUserId" resultType="_int">
+        select count(*) from blog
+        where userId = #{userId}
+    </select>
+
+    <select id="selectLikeCountSumByUserId" resultType="_int">
+        select count(*) from blog
+        where userId = #{userId}
+    </select>
 </mapper>

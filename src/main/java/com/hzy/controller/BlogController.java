@@ -4,10 +4,7 @@ import com.hzy.pojo.Blog;
 import com.hzy.pojo.Comment;
 import com.hzy.pojo.Type;
 import com.hzy.pojo.User;
-import com.hzy.service.BlogService;
-import com.hzy.service.CommentService;
-import com.hzy.service.TypeService;
-import com.hzy.service.UserService;
+import com.hzy.service.*;
 import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,10 @@ public class BlogController {
     private CommentService commentService;
     @Autowired
     private TypeService typeService;
+    @Autowired
+    private FollowService followService;
+    @Autowired
+    private CollectService collectService;
 
     @RequestMapping("/toWrite")
     public String toWrite(Model model, HttpSession session) {
@@ -122,6 +123,24 @@ public class BlogController {
         return mapMap;
     }
 
+    @RequestMapping("/userinfo/{userId}")
+    public Map<String,Object> selectHitCountSumByUserId(@PathVariable("userId") int userId) {
+        Map<String,Object> map = new HashMap<>();
+        User user = userService.selectUserById(userId);
+        int blogCountSum = blogService.selectBlogCountSumByUserId(userId);
+        int hitCountSum = blogService.selectHitCountSumByUserId(userId);
+        int followCount = followService.selectFollowCountByUserId(userId);
+        int fansCount = followService.selectFansCountByUserId(userId);
+        int likeCount = blogService.selectLikeCountSumByUserId(userId);
+        map.put("user",user);
+        map.put("blogCountSum",blogCountSum);
+        map.put("hitCountSum",hitCountSum);
+        map.put("followCount",followCount);
+        map.put("fansCount",fansCount);
+        map.put("likeCount",likeCount);
+
+        return map;
+    }
 //    @RequestMapping("/detail")
 //    public String Detail(String content,int userId,int blogId,int parentId){
 //        if (userId == 0) {
