@@ -84,6 +84,11 @@ public class UserService {
         return JSONUtils.getJSONString(0,"注册成功");
     }
 
+
+    public User selectUserById(int userId) {
+        return userMapper.selectUserById(userId);
+    }
+
     /**
      * 保存到文件中的图片只有图片名，保存到数据库中的文件是文件的全URL路径
      * @param file
