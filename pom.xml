@@ -30,6 +30,11 @@
             <artifactId>jedis</artifactId>
             <version>3.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.10.3</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -56,7 +61,7 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.1</version>
         </dependency>
-        <!--动态加载跟新的class，编译加载修改的静态文件-->
+        <!--动态加载更新的class，编译加载修改的静态文件-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -70,11 +75,20 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- 连接数据库 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!--redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- 单元测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

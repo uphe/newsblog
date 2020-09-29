@@ -1,15 +1,23 @@
 package com.hzy.service;
 
 import com.hzy.mapper.BlogMapper;
+import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Blog;
+import com.hzy.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BlogService {
     @Autowired
     private BlogMapper blogMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 发布博客
@@ -103,5 +111,28 @@ public class BlogService {
      */
     public int selectLikeCountSumByUserId(int userId) {
         return blogMapper.selectLikeCountSumByUserId(userId);
+    }
+
+    /**
+     * 根据用户id获取博客，如果id为0，则获取全部博客
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public Map<String, Map<String,Object>> getBlog(int userId, int offset, int limit) {
+        List<Blog> blogList = blogMapper.selectBlogByUserIdAndOffset(userId, offset, limit);
+        Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
+        int i = 0;
+        for (Blog blog : blogList) {
+            User user = userMapper.selectUserById(blog.getUserId());
+            //HashMap是有无序的
+            //LinkedHashMap 和 TreeMap 是有序的,存取顺序
+            Map<String,Object> map = new HashMap<>();
+            map.put("blog",blog);
+            map.put("user",user);
+            mapMap.put("map" + i++,map);
+        }
+        return mapMap;
     }
 }

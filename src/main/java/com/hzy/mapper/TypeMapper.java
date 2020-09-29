@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface TypeMapper {
     int addType(Type type);
+    int addBatchType(List<Type> types);
     List<Type> selectTypeByUserId(int userId);
+
 }

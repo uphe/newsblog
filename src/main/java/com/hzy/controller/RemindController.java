@@ -17,12 +17,6 @@ public class RemindController {
     @Autowired
     private RemindService remindService;
 
-    /**
-     * 这里的to意思是通过控制器到达like.html页面
-     * @param model
-     * @param session
-     * @return
-     */
     @RequestMapping("/toLike")
     public String toLike(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");

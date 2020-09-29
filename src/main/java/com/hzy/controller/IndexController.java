@@ -5,13 +5,13 @@ import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.UserService;
+import com.hzy.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -21,18 +21,16 @@ import java.util.List;
 
 
 @RestController
-public class IndexController extends CommonMethod{
+public class IndexController{
     @Autowired
     private  UserService userService;
     @Autowired
     private BlogService blogService;
 
     @RequestMapping({"/","/index","/index.html"})
-    public Map<String,Map<String,Object>> index(HttpSession session, Model model) {
-        if (session != null && session.getAttribute("user") != null) {
-            model.addAttribute("user",session.getAttribute("user"));
-        }
-        Map<String,Map<String,Object>> userBlogs =  getBlog(0,0,40);
+    public Map<String,Map<String,Object>> index() {
+
+        Map<String,Map<String,Object>> userBlogs =  blogService.getBlog(0,0,40);
 
         return  userBlogs;
     }

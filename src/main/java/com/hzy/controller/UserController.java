@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class UserController extends CommonMethod{
-    @Autowired
-    private UserService userService;
+public class UserController{
     @Autowired
     private BlogService blogService;
     /*
@@ -26,7 +24,7 @@ public class UserController extends CommonMethod{
      * */
     @RequestMapping(path = {"/user/{userId}"})
     public Map<String, Map<String,Object>> userIndex(@PathVariable("userId") int userId) {
-        Map<String,Map<String,Object>> userBlogs =  getBlog(userId,0,40);
+        Map<String,Map<String,Object>> userBlogs = blogService.getBlog(userId,0,40);
         return userBlogs;
     }
 }
