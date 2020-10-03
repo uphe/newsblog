@@ -1,7 +1,7 @@
 package com.hzy.utils;
 
 public class FileUtils {
-    public static String HOST_PORT = "http://127.0.0.1:8080/";
+    public static String HOST_PORT = "http://127.0.0.1:8081/";
     public static String IMAGE_DIR = "C:/upload/";
     public static String[] IMAGE_EXT = new String[] {"png","bmp","jpg","jpeg","gif"};
 

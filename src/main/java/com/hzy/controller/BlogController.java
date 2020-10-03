@@ -9,12 +9,10 @@ import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
 import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @RestController
 public class BlogController {
@@ -32,15 +30,6 @@ public class BlogController {
     private FollowService followService;
     @Autowired
     private CollectService collectService;
-
-    @RequestMapping("/toWrite")
-    public String toWrite(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        List<Type> typeList = typeService.selectTypeByUserId(user.getUserId());
-        model.addAttribute("user", user);
-        model.addAttribute("typeList", typeList);
-        return "write";
-    }
 
     @PostMapping("/editormd")
     public String Editor(@RequestBody BlogVO blogVO,
