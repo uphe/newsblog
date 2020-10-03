@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class JWTUtils {
     private static String SIGN = "TOKEN!@FE123";
+    private static final int LOGIN_TIME = 14;
 
     /**
      * 传入payload信息，生成token，默认保存7天
@@ -22,13 +23,29 @@ public class JWTUtils {
      */
     public static String getToken(Map<String, String> map) {
 
+
         JWTCreator.Builder builder = JWT.create();
         map.forEach((k,v) -> {
             builder.withClaim(k,v);
         });
 
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DATE,7);
+        instance.add(Calendar.DATE, LOGIN_TIME);
+        builder.withExpiresAt(instance.getTime());
+        return builder.sign(Algorithm.HMAC256(SIGN));
+    }
+
+    /**
+     * 生成token，默认保存7天
+     * @return
+     */
+    public static String getToken() {
+
+        JWTCreator.Builder builder = JWT.create();
+
+        Calendar instance = Calendar.getInstance();
+        instance.add(Calendar.DATE, LOGIN_TIME);
+//        instance.add(Calendar.SECOND,1);
         builder.withExpiresAt(instance.getTime());
         return builder.sign(Algorithm.HMAC256(SIGN));
     }

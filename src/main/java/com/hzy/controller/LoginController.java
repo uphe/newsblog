@@ -38,4 +38,15 @@ public class LoginController {
         return userService.register(username,password);
     }
 
+    @RequestMapping("/islogin/{token}")
+    public String isLogin(@PathVariable("token") String token) {
+
+        try {
+            JWTUtils.verify(token);
+            return JWTUtils.getToken();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return "";
+    }
 }

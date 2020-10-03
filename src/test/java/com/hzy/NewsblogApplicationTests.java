@@ -4,28 +4,33 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.hzy.mapper.BlogMapper;
+import com.hzy.pojo.Blog;
+import com.hzy.utils.JWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 class NewsblogApplicationTests {
 
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private BlogMapper blogMapper;
 
     @Test
     void contextLoads() {
-        Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DAY_OF_WEEK,1);
-        String token = JWT.create()
-                .withClaim("userId","1")
-                .withClaim("username","root")// payload
-                .withExpiresAt(instance.getTime())// 指定令牌过期时间
-                .sign(Algorithm.HMAC256("FFIEUHIH"));// 签名
+        Map<String,String> map = new HashMap<>();
+        map.put("userId","1");
+        map.put("username","root");
+        String token = JWTUtils.getToken(map);
         System.out.println(token);
     }
 
@@ -33,8 +38,21 @@ class NewsblogApplicationTests {
     void myTest() {
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256("FFIEUHIH")).build();
 
-        DecodedJWT verify = jwtVerifier.verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDE0MzQyNDQsInVzZXJJZCI6IjEiLCJ1c2VybmFtZSI6InJvb3QifQ.kxn2NOUJmNPAVRijF7K0jKBSuBHgZwhN_gesiPZfKUc");
-        System.out.println(verify.getClaim("userId").asString());
+        DecodedJWT verify = jwtVerifier.verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDI5MDA5MzAsInVzZXJJZCI6IjEiLCJ1c2VybmFtZSI6InJvb3QifQ.8dGTiJE0zqqZ7ARHCrqbNGcQURuGdNNilcsF6Dj7vyw");
+        System.out.println(verify.getClaim("userId").asInt());
         System.out.println(verify.getClaim("username").asString());
+    }
+
+    @Test
+    void blogTest() {
+        Blog blog = new Blog();
+        blog.setTitle("hello");
+        blog.setArticle("hello");
+        blog.setSummary("summary");
+        blog.setCreateDate(new Date());
+        blog.setUserId(1);
+        System.out.println(blog.getBlogId());
+        blogMapper.addBlog(blog);
+        System.out.println(blog.getBlogId());
     }
 }

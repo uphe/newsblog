@@ -1,10 +1,10 @@
 package com.hzy.controller;
 
-import com.hzy.pojo.Blog;
-import com.hzy.pojo.Comment;
-import com.hzy.pojo.Type;
-import com.hzy.pojo.User;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.hzy.pojo.*;
 import com.hzy.service.*;
+import com.hzy.utils.JSONUtils;
+import com.hzy.utils.JWTUtils;
 import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 @RestController
 public class BlogController {
     @Autowired
@@ -23,6 +25,8 @@ public class BlogController {
     private CommentService commentService;
     @Autowired
     private TypeService typeService;
+    @Autowired
+    private LabelService labelService;
     @Autowired
     private FollowService followService;
     @Autowired
@@ -38,29 +42,57 @@ public class BlogController {
     }
 
     @PostMapping("/editormd")
-    @ResponseBody
-    public String Editor(String title, String editormd,
-                         @RequestParam(value = "typeString",defaultValue = "") String typeString,
-                         @RequestParam(value = "labelString",defaultValue = "") String labelString,
-                         HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(editormd) && user != null) {
+    public String Editor(String title, String article, String summary,
+                         @RequestParam(value = "types") List<String> types,
+                         @RequestParam(value = "labels") List<String> labels,
+                         HttpServletRequest request) {
+
+        String token = request.getHeader("token");
+        DecodedJWT decodedJWT = JWTUtils.getToken(token);
+        int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+
+        if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(article)) {
             Blog blog = new Blog();
-            blog.setArticle(editormd);
+            blog.setArticle(article);
             blog.setCreateDate(new Date());
-            if (editormd.length() > 50) {
-                blog.setSummary(editormd.substring(0,50));
+            if (StringUtils.isNotEmpty(summary)) {
+                blog.setSummary(summary);
             } else {
-                blog.setSummary(editormd);
+                if (article.length() > 50) {
+                    blog.setSummary(article.substring(0,50));
+                } else {
+                    blog.setSummary(article);
+                }
             }
             blog.setTitle(title);
-            blog.setUserId(user.getUserId());
-            // 这里如果没有分离或标签，默认是空串
-            blog.setTypeString(typeString);
-            blog.setLabelString(labelString);
+            blog.setUserId(userId);
             blogService.addBlog(blog);
+
+            if (types != null) {
+                List<Type> typeList = new ArrayList<>();
+                for (String s : types) {
+                    Type type = new Type();
+                    type.setBlogId(blog.getBlogId());
+                    type.setUserId(userId);
+                    type.setTypeName(s);
+                    typeList.add(type);
+                }
+                typeService.addBatchType(typeList);
+            }
+            if (labels != null) {
+                List<Label> labelList = new ArrayList<>();
+                for (String s : labels) {
+                    Label label = new Label();
+                    label.setBlogId(blog.getBlogId());
+                    label.setUserId(userId);
+                    label.setLabelName(s);
+                    labelList.add(label);
+                }
+                labelService.addBatchLabel(labelList);
+            }
+            return JSONUtils.getJSONString(0,"success");
         }
-        return "";
+        return JSONUtils.getJSONString(-1,"error");
     }
 
     @RequestMapping("/detail/{blogId}")
