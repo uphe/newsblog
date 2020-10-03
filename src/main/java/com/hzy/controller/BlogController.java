@@ -7,6 +7,7 @@ import com.hzy.utils.JSONUtils;
 import com.hzy.utils.JWTUtils;
 import com.hzy.utils.MarkDownUtil;
 import com.hzy.utils.StringUtils;
+import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,14 +43,18 @@ public class BlogController {
     }
 
     @PostMapping("/editormd")
-    public String Editor(String title, String article, String summary,
-                         @RequestParam(value = "types") List<String> types,
-                         @RequestParam(value = "labels") List<String> labels,
+    public String Editor(@RequestBody BlogVO blogVO,
                          HttpServletRequest request) {
 
         String token = request.getHeader("token");
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+
+        String title = blogVO.getTitle();
+        String article = blogVO.getArticle();
+        String summary = blogVO.getSummary();
+        List<String> types = blogVO.getTypes();
+        List<String> labels = blogVO.getLabels();
 
         if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(article)) {
             Blog blog = new Blog();
