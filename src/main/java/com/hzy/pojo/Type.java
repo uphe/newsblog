@@ -4,6 +4,7 @@ public class Type {
     private int typeId;
     private String typeName;
     private int userId;
+    private int blogId;
 
     public int getTypeId() {
         return typeId;
@@ -29,12 +30,21 @@ public class Type {
         this.userId = userId;
     }
 
+    public int getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
+    }
+
     @Override
     public String toString() {
         return "Type{" +
                 "typeId=" + typeId +
                 ", typeName='" + typeName + '\'' +
                 ", userId=" + userId +
+                ", blogId=" + blogId +
                 '}';
     }
 }

@@ -1,6 +1,10 @@
 package com.hzy.utils;
 
 public class StringUtils {
+
+    private static String SPLIT = ":";
+    private static String LIKE = "LIKE";
+
     public static boolean isEmpty(String str) {
         if (str == null || str.trim().equals("")) {
             return true;
@@ -13,5 +17,9 @@ public class StringUtils {
             return true;
         }
         return false;
+    }
+
+    public static String getLikeKey(int blogId) {
+        return LIKE + SPLIT + String.valueOf(blogId);
     }
 }

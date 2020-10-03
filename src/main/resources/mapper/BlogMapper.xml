@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzy.mapper.BlogMapper">
-    <insert id="addBlog" parameterType="Blog">
+    <insert id="addBlog" useGeneratedKeys="true" keyProperty="blogId" parameterType="Blog">
         insert into Blog(title,article,summary,createDate,userId,typeString,labelString)
         values (#{title},#{article},#{summary},#{createDate},#{userId},#{typeString},#{labelString})
     </insert>
@@ -36,4 +36,19 @@
         update blog set likeCount = #{likeCount}
         where blogId = #{blogId}
     </update>
+
+    <select id="selectHitCountSumByUserId" resultType="_int">
+        select sum(hitCount) from blog
+        where userId = #{userId}
+    </select>
+
+    <select id="selectBlogCountSumByUserId" resultType="_int">
+        select count(*) from blog
+        where userId = #{userId}
+    </select>
+
+    <select id="selectLikeCountSumByUserId" resultType="_int">
+        select count(*) from blog
+        where userId = #{userId}
+    </select>
 </mapper>

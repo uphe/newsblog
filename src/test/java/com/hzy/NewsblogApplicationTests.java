@@ -1,83 +1,58 @@
 package com.hzy;
 
-import com.hzy.mapper.*;
-import com.hzy.pojo.*;
-import com.hzy.utils.JedisUtil;
-import com.hzy.utils.MD5Utils;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.hzy.mapper.BlogMapper;
+import com.hzy.pojo.Blog;
+import com.hzy.utils.JWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import redis.clients.jedis.Jedis;
+import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 class NewsblogApplicationTests {
 
     @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
     private BlogMapper blogMapper;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private TicketMapper ticketMapper;
-    @Autowired
-    private CommentMapper commentMapper;
-    @Autowired
-    private TypeMapper typeMapper;
-    @Autowired
-    private NoticeMapper noticeMapper;
-    @Autowired
-    private ReadNoticeMapper readNoticeMapper;
-    @Autowired
-    private RemindMapper remindMapper;
 
-    volatile int goods = 100;
-    String secKillGoods = "secKillGoods:1";
-    final ReentrantLock lock = new ReentrantLock();
-    final Jedis jedis = new Jedis("39.106.231.3", 6379);
     @Test
     void contextLoads() {
-
-        jedis.set("goods","100");
-        for (int i = 0; i < 105; i++) {
-            int temp = i;
-            new Thread(()->{
-                getSecKillGoods(temp);
-            }).start();
-        }
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (jedis.exists(secKillGoods)) {
-
-            Set<String> setValues = jedis.smembers(secKillGoods);
-            System.out.println(setValues.size());
-
-        }
-        jedis.expire(secKillGoods,1);
-
+        Map<String,String> map = new HashMap<>();
+        map.put("userId","1");
+        map.put("username","root");
+        String token = JWTUtils.getToken(map);
+        System.out.println(token);
     }
-    public void getSecKillGoods(int userId) {
-        final ReentrantLock lock = this.lock;
-        lock.lock();
-        try {
-            if (goods > 0) {
-                if (jedis.sismember(secKillGoods, String.valueOf(userId))) {
-                    System.out.println("您已购买成功");
-                } else {
-                    jedis.sadd(secKillGoods, String.valueOf(userId));
-                    goods --;
-                }
-            } else {
-                System.out.println("商品已卖完");
-            }
-        } finally {
-            lock.unlock();
-        }
 
+    @Test
+    void myTest() {
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256("FFIEUHIH")).build();
+
+        DecodedJWT verify = jwtVerifier.verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDI5MDA5MzAsInVzZXJJZCI6IjEiLCJ1c2VybmFtZSI6InJvb3QifQ.8dGTiJE0zqqZ7ARHCrqbNGcQURuGdNNilcsF6Dj7vyw");
+        System.out.println(verify.getClaim("userId").asInt());
+        System.out.println(verify.getClaim("username").asString());
+    }
+
+    @Test
+    void blogTest() {
+        Blog blog = new Blog();
+        blog.setTitle("hello");
+        blog.setArticle("hello");
+        blog.setSummary("summary");
+        blog.setCreateDate(new Date());
+        blog.setUserId(1);
+        System.out.println(blog.getBlogId());
+        blogMapper.addBlog(blog);
+        System.out.println(blog.getBlogId());
     }
 }

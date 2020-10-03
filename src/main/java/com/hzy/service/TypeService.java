@@ -14,6 +14,9 @@ public class TypeService {
     public int addType(Type type) {
         return typeMapper.addType(type);
     }
+    public int addBatchType(List<Type> types) {
+        return typeMapper.addBatchType(types);
+    }
     public List<Type> selectTypeByUserId(int userId) {
         return typeMapper.selectTypeByUserId(userId);
     }

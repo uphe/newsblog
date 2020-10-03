@@ -1,15 +1,8 @@
-package com.hzy.pojo;
+package com.hzy.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.List;
 
-import java.util.Date;
-
-/**
- * 这是博客表，主要存储博客的一些信息，这里又博客的id，标题，文章，摘要
- * 点赞数，点击量，评论数，创建时间，创建者id，类别，标签
- */
-public class Blog {
+public class BlogVO {
     private int blogId;
     private String title;
     private String article;
@@ -17,15 +10,8 @@ public class Blog {
     private int likeCount;
     private int hitCount;
     private int commentCount;
-
-    // 入参日期格式化
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    // 出参日期格式化
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createDate;
-    private int userId;
-    private String typeString;
-    private String labelString;
+    private List<String> types;
+    private List<String> labels;
 
     public int getBlogId() {
         return blogId;
@@ -83,41 +69,25 @@ public class Blog {
         this.commentCount = commentCount;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public List<String> getTypes() {
+        return types;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setTypes(List<String> types) {
+        this.types = types;
     }
 
-    public int getUserId() {
-        return userId;
+    public List<String> getLabels() {
+        return labels;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getTypeString() {
-        return typeString;
-    }
-
-    public void setTypeString(String typeString) {
-        this.typeString = typeString;
-    }
-
-    public String getLabelString() {
-        return labelString;
-    }
-
-    public void setLabelString(String labelString) {
-        this.labelString = labelString;
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
     }
 
     @Override
     public String toString() {
-        return "Blog{" +
+        return "BlogVO{" +
                 "blogId=" + blogId +
                 ", title='" + title + '\'' +
                 ", article='" + article + '\'' +
@@ -125,10 +95,8 @@ public class Blog {
                 ", likeCount=" + likeCount +
                 ", hitCount=" + hitCount +
                 ", commentCount=" + commentCount +
-                ", createDate=" + createDate +
-                ", userId=" + userId +
-                ", typeString='" + typeString + '\'' +
-                ", labelString='" + labelString + '\'' +
+                ", types=" + types +
+                ", labels=" + labels +
                 '}';
     }
 }

@@ -4,8 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzy.mapper.TypeMapper">
     <insert id="addType" parameterType="Type">
-        insert into newsblog.type(typeName,userId)
-        values (#{typeName},#{userId})
+        insert into newsblog.type(typeName,userId,blogId)
+        values (#{typeName},#{userId},#{blogId})
+    </insert>
+
+    <insert id="addBatchType" parameterType="Type">
+        insert into newsblog.type(typeName,userId,blogId)
+        values
+        <foreach collection="list" item="type" separator=",">
+            (#{type.typeName},#{type.userId},#{type.blogId})
+        </foreach>
     </insert>
 
     <select id="selectTypeByUserId" resultType="Type">

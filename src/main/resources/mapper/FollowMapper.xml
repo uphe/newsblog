@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.FollowMapper">
+
+    <select id="selectFollowUserByUserId" resultType="User">
+        select * from user
+        where userId in (select followUserId from follow where userId = #{userId})
+    </select>
+
+    <select id="selectUserByFollowUserId" resultType="User">
+        select * from user
+        where userId in (select userId from follow where followUserId = #{followUserId})
+    </select>
+
+    <insert id="addFollowUser">
+        insert into follow(userId, followUserId)
+        values (#{userId}, #{followUserId})
+    </insert>
+
+    <delete id="deleteFollowUserByFollowId">
+        delete from follow
+        where followId = #{followId}
+    </delete>
+
+    <select id="selectFollowCountByUserId" resultType="_int">
+        select count(*) from follow
+        where userId = #{userId}
+    </select>
+
+    <select id="selectFansCountByUserId" resultType="_int">
+        select count(*) from follow
+        where followUserId = #{followUserId}
+    </select>
+</mapper>
