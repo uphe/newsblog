@@ -1,5 +1,7 @@
 package com.hzy.service;
 
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hzy.controller.LoginController;
 import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.User;
@@ -7,12 +9,14 @@ import com.hzy.utils.FileUtils;
 import com.hzy.utils.JSONUtils;
 import com.hzy.utils.JWTUtils;
 import com.hzy.utils.MD5Utils;
+import jdk.nashorn.internal.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -49,13 +53,7 @@ public class UserService {
         }
 
         // 将用户的信息封装到token中
-        Map<String, String> payload = new HashMap<>();
-        payload.put("userId",String.valueOf(user.getUserId()));
-        payload.put("username",user.getUsername());
-        payload.put("headUrl",user.getHeadUrl());
-        payload.put("userType",String.valueOf(user.getUserType()));
-
-        String token = JWTUtils.getToken(payload);
+        String token = JWTUtils.getToken(user);
         response.addHeader("token",token);
 
         return JSONUtils.getJSONString(0, "登录成功");
@@ -92,10 +90,9 @@ public class UserService {
     /**
      * 保存到文件中的图片只有图片名，保存到数据库中的文件是文件的全URL路径
      * @param file
-     * @param session
      * @return
      */
-    public String saveImage (MultipartFile file, HttpSession session) {
+    public String saveImage (MultipartFile file) {
         // System.out.println(file.getOriginalFilename());// java.jpg
         int doPos = file.getOriginalFilename().lastIndexOf(".");
         if (doPos < 0) {
@@ -117,11 +114,9 @@ public class UserService {
             logger.info("上传图片失败" + e.getMessage());
             e.printStackTrace();
         }
-        String url = FileUtils.HOST_PORT + "getImage?fileName=" + fileName;
-        User user = (User) session.getAttribute("user");
-        user.setHeadUrl(url);
-        userMapper.updateUser(user);
-        return url;
+        String fileUrl = FileUtils.HOST_PORT + "getImage?fileName=" + fileName;
+
+        return fileUrl;
     }
 
     public void getImage(String fileName, HttpServletResponse response) {
@@ -130,5 +125,15 @@ public class UserService {
         } catch (IOException e) {
             logger.error("图片读取错误" + e.getMessage());
         }
+    }
+
+    public void updateUserByHeadUrl(String headUrl, HttpServletRequest request, HttpServletResponse response) {
+        String token = request.getHeader("token");
+        DecodedJWT decodedJWT = JWTUtils.getToken(token);
+        User user = userMapper.selectUserById(Integer.valueOf(decodedJWT.getClaim("userId").asString()));
+        user.setHeadUrl(headUrl);
+        userMapper.updateUser(user);
+        String newToken = JWTUtils.getToken(user);
+        response.setHeader("token", newToken);
     }
 }

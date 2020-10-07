@@ -1,12 +1,15 @@
 package com.hzy.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.UserService;
+import com.hzy.utils.JSONUtils;
 import com.hzy.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +38,17 @@ public class IndexController{
         return  userBlogs;
     }
 
+    @RequestMapping("/personalization")
+    public Map<String,Map<String, Object>> personalization(HttpServletRequest request) {
+        String token = request.getHeader("token");
+
+        DecodedJWT decodedJWT = JWTUtils.getToken(token);
+        int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+        Map<String, Map<String, Object>> personalizationBlog = blogService.getPersonalizationBlog(userId, 0, 40);
+
+        return personalizationBlog;
+    }
+
     @RequestMapping("/toEditor")
     public String toEditor(Model model,HttpSession session) {
         model.addAttribute("user",session.getAttribute("user"));
@@ -42,23 +56,23 @@ public class IndexController{
     }
 
     @PostMapping("/uploadImage")
-    public String uploadImage(@RequestParam("file") MultipartFile file, HttpSession session) {
-        String fileUrl = userService.saveImage(file,session);
-
-        //return "index";
-        return "redirect:/";
+    public String uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+        String fileUrl = userService.saveImage(file);
+        if (fileUrl != null) {
+            userService.updateUserByHeadUrl(fileUrl,request,response);
+            return JSONUtils.getJSONString(0,fileUrl);
+        }
+        return JSONUtils.getJSONString(-1,"error");
     }
 
     @PostMapping("/uploadEditorImage")
     @ResponseBody
-    public JSONObject uploadEditorImage(@RequestParam("editormd-image-file") MultipartFile file, HttpSession session) {
-        String fileUrl = userService.saveImage(file,session);
-        //给editormd进行回调
-        JSONObject res = new JSONObject();
-        res.put("url",fileUrl);
-        res.put("success", 1);
-        res.put("message", "upload success!");
-        return res;
+    public String uploadEditorImage(@RequestParam("editormd-image-file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+        String fileUrl = userService.saveImage(file);
+        if (fileUrl != null) {
+            return JSONUtils.getJSONString(0,"success");
+        }
+        return JSONUtils.getJSONString(-1,"error");
     }
 
     @GetMapping("/getImage")

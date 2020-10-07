@@ -23,8 +23,7 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/toWrite","/editormd");
-//                .addPathPatterns("/");
+                .addPathPatterns("/editormd/**", "/like/**", "/uploadImage/**");
     }
 
 

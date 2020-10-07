@@ -17,15 +17,12 @@ public class Blog {
     private int likeCount;
     private int hitCount;
     private int commentCount;
-
     // 入参日期格式化
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     // 出参日期格式化
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate;
     private int userId;
-    private String typeString;
-    private String labelString;
 
     public int getBlogId() {
         return blogId;
@@ -99,22 +96,6 @@ public class Blog {
         this.userId = userId;
     }
 
-    public String getTypeString() {
-        return typeString;
-    }
-
-    public void setTypeString(String typeString) {
-        this.typeString = typeString;
-    }
-
-    public String getLabelString() {
-        return labelString;
-    }
-
-    public void setLabelString(String labelString) {
-        this.labelString = labelString;
-    }
-
     @Override
     public String toString() {
         return "Blog{" +
@@ -127,8 +108,6 @@ public class Blog {
                 ", commentCount=" + commentCount +
                 ", createDate=" + createDate +
                 ", userId=" + userId +
-                ", typeString='" + typeString + '\'' +
-                ", labelString='" + labelString + '\'' +
                 '}';
     }
 }

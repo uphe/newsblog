@@ -41,9 +41,10 @@ public class LoginController {
         return userService.register(username,password);
     }
 
-    @RequestMapping("/islogin/{token}")
-    public String isLogin(@PathVariable("token") String token, HttpServletResponse response) {
+    @RequestMapping("/islogin")
+    public String isLogin(HttpServletResponse response, HttpServletRequest request) {
         try {
+            String token = request.getHeader("token");
             JWTUtils.verify(token);
             DecodedJWT decodedJWT = JWTUtils.getToken(token);
 

@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzy.mapper.BlogMapper">
     <insert id="addBlog" useGeneratedKeys="true" keyProperty="blogId" parameterType="Blog">
-        insert into Blog(title,article,summary,createDate,userId,typeString,labelString)
-        values (#{title},#{article},#{summary},#{createDate},#{userId},#{typeString},#{labelString})
+        insert into Blog(title,article,summary,createDate,userId)
+        values (#{title},#{article},#{summary},#{createDate},#{userId})
     </insert>
     <select id="selectBlogById" resultType="Blog">
         select * from blog

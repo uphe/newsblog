@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LabelService {
@@ -17,5 +18,8 @@ public class LabelService {
     }
     public int addBatchLabel(List<Label> labels) {
         return labelMapper.addBatchLabel(labels);
+    }
+    public List<Map<String, Object>> selectLabelByUserId(int userId) {
+        return labelMapper.selectLabelByUserId(userId);
     }
 }

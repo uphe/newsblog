@@ -14,4 +14,14 @@
             (#{label.labelName},#{label.userId},#{label.blogId})
         </foreach>
     </insert>
+    
+<!--    <resultMap id="selectMap" type="LabelMap">-->
+<!--        <result property="labelName" column="la"-->
+<!--    </resultMap>-->
+
+    <select id="selectLabelByUserId" resultType="map">
+        SELECT labelName, COUNT(labelName) as labelCount
+        FROM label WHERE userId = #{userId}
+        GROUP BY labelName LIMIT 0,5
+    </select>
 </mapper>

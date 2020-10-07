@@ -32,8 +32,7 @@ public class BlogController {
     private CollectService collectService;
 
     @PostMapping("/editormd")
-    public String Editor(@RequestBody BlogVO blogVO,
-                         HttpServletRequest request) {
+    public String Editor(@RequestBody BlogVO blogVO, HttpServletRequest request) {
 
         String token = request.getHeader("token");
         DecodedJWT decodedJWT = JWTUtils.getToken(token);

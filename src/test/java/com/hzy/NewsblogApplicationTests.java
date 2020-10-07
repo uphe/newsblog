@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hzy.mapper.BlogMapper;
+import com.hzy.mapper.LabelMapper;
 import com.hzy.pojo.Blog;
 import com.hzy.utils.JWTUtils;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ class NewsblogApplicationTests {
     private RedisTemplate redisTemplate;
     @Autowired
     private BlogMapper blogMapper;
+    @Autowired
+    private LabelMapper labelMapper;
 
     @Test
     void contextLoads() {
@@ -45,14 +48,6 @@ class NewsblogApplicationTests {
 
     @Test
     void blogTest() {
-        Blog blog = new Blog();
-        blog.setTitle("hello");
-        blog.setArticle("hello");
-        blog.setSummary("summary");
-        blog.setCreateDate(new Date());
-        blog.setUserId(1);
-        System.out.println(blog.getBlogId());
-        blogMapper.addBlog(blog);
-        System.out.println(blog.getBlogId());
+        System.out.println(labelMapper.selectLabelByUserId(1));
     }
 }

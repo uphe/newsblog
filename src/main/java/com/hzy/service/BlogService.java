@@ -1,6 +1,7 @@
 package com.hzy.service;
 
 import com.hzy.mapper.BlogMapper;
+import com.hzy.mapper.LabelMapper;
 import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
@@ -18,6 +19,8 @@ public class BlogService {
     private BlogMapper blogMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private LabelMapper labelMapper;
 
     /**
      * 发布博客
@@ -133,6 +136,25 @@ public class BlogService {
             map.put("user",user);
             mapMap.put("map" + i++,map);
         }
+        return mapMap;
+    }
+
+    /**
+     * 内容推荐算法，根据用户个人喜欢，进行个性化的推荐
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public Map<String, Map<String, Object>> getPersonalizationBlog(int userId, int offset, int limit) {
+        Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
+
+        List<Map<String, Object>> maps = labelMapper.selectLabelByUserId(userId);
+        for (Map<String, Object> map : maps) {
+
+        }
+
+
         return mapMap;
     }
 }
