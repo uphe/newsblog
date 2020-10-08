@@ -13,6 +13,9 @@ public class BlogVO {
     private List<String> types;
     private List<String> labels;
 
+    private String username;
+    private String headUrl;
+
     public int getBlogId() {
         return blogId;
     }
@@ -85,6 +88,22 @@ public class BlogVO {
         this.labels = labels;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
     @Override
     public String toString() {
         return "BlogVO{" +
@@ -97,6 +116,8 @@ public class BlogVO {
                 ", commentCount=" + commentCount +
                 ", types=" + types +
                 ", labels=" + labels +
+                ", username='" + username + '\'' +
+                ", headUrl='" + headUrl + '\'' +
                 '}';
     }
 }

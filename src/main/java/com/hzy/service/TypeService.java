@@ -20,4 +20,12 @@ public class TypeService {
     public List<Type> selectTypeByUserId(int userId) {
         return typeMapper.selectTypeByUserId(userId);
     }
+
+    public List<String> selectTypeNameByUserId(int userId) {
+        return typeMapper.selectTypeNameByUserId(userId);
+    }
+
+    public List<String> selectTypeNameByBlogId(int blogId) {
+        return typeMapper.selectTypeNameByBlogId(blogId);
+    }
 }

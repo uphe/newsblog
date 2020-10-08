@@ -21,5 +21,15 @@
         where userId = #{userId}
     </select>
 
+    <select id="selectTypeNameByUserId" resultType="string">
+        select typeName from newsblog.type
+        where userId = #{userId}
+    </select>
+
+    <select id="selectTypeNameByBlogId" resultType="string">
+        select typeName from newsblog.type
+        where blogId = #{blogId}
+    </select>
+
 
 </mapper>

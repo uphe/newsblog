@@ -1,13 +1,14 @@
 package com.hzy.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 /**
  * 这是博客表，主要存储博客的一些信息，这里又博客的id，标题，文章，摘要
- * 点赞数，点击量，评论数，创建时间，创建者id，类别，标签
+ * 点赞数，点击量，评论数，创建时间，创建者id
  */
 public class Blog {
     private int blogId;
@@ -18,10 +19,11 @@ public class Blog {
     private int hitCount;
     private int commentCount;
     // 入参日期格式化
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     // 出参日期格式化
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createDate;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String createDate;
+//    private Date createDate;
     private int userId;
 
     public int getBlogId() {
@@ -80,11 +82,11 @@ public class Blog {
         this.commentCount = commentCount;
     }
 
-    public Date getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 

@@ -13,4 +13,5 @@ public interface LabelMapper {
     int addLabel(Label label);
     int addBatchLabel(List<Label> labels);
     List<Map<String, Object>> selectLabelByUserId(int userId);
+    List<String> selectLabelNameByBlogId(int blogId);
 }

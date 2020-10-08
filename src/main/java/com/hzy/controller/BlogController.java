@@ -3,11 +3,10 @@ package com.hzy.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hzy.pojo.*;
 import com.hzy.service.*;
-import com.hzy.utils.JSONUtils;
-import com.hzy.utils.JWTUtils;
-import com.hzy.utils.MarkDownUtil;
-import com.hzy.utils.StringUtils;
+import com.hzy.utils.*;
 import com.hzy.vo.BlogVO;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +46,7 @@ public class BlogController {
         if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(article)) {
             Blog blog = new Blog();
             blog.setArticle(article);
-            blog.setCreateDate(new Date());
+            blog.setCreateDate(DateUtil.formatDate(new Date()));
             if (StringUtils.isNotEmpty(summary)) {
                 blog.setSummary(summary);
             } else {
@@ -60,6 +59,8 @@ public class BlogController {
             blog.setTitle(title);
             blog.setUserId(userId);
             blogService.addBlog(blog);
+            blogService.save(blog);
+
 
             if (types != null) {
                 List<Type> typeList = new ArrayList<>();
@@ -165,6 +166,11 @@ public class BlogController {
         map.put("likeCount",likeCount);
 
         return map;
+    }
+
+    @RequestMapping("/search/{msg}")
+    public List<BlogVO> search(@PathVariable("msg") String msg) {
+        return blogService.search(msg);
     }
 //    @RequestMapping("/detail")
 //    public String Detail(String content,int userId,int blogId,int parentId){

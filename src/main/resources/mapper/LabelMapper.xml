@@ -24,4 +24,9 @@
         FROM label WHERE userId = #{userId}
         GROUP BY labelName LIMIT 0,5
     </select>
+
+    <select id="selectLabelNameByBlogId" resultType="string">
+        SELECT labelName
+        FROM label WHERE blogId = #{blogId}
+    </select>
 </mapper>
