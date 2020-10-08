@@ -8,6 +8,7 @@ import com.hzy.service.BlogService;
 import com.hzy.service.UserService;
 import com.hzy.utils.JSONUtils;
 import com.hzy.utils.JWTUtils;
+import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.ui.Model;
@@ -31,9 +32,9 @@ public class IndexController{
     private BlogService blogService;
 
     @RequestMapping({"/","/index","/index.html"})
-    public Map<String,Map<String,Object>> index() {
+    public List<BlogVO> index() {
 
-        Map<String,Map<String,Object>> userBlogs =  blogService.getBlog(0,0,40);
+        List<BlogVO> userBlogs =  blogService.getBlog(0,0,40);
 
         return  userBlogs;
     }

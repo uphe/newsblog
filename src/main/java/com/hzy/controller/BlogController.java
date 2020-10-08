@@ -5,8 +5,6 @@ import com.hzy.pojo.*;
 import com.hzy.service.*;
 import com.hzy.utils.*;
 import com.hzy.vo.BlogVO;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,71 +20,18 @@ public class BlogController {
     @Autowired
     private CommentService commentService;
     @Autowired
-    private TypeService typeService;
-    @Autowired
-    private LabelService labelService;
-    @Autowired
     private FollowService followService;
     @Autowired
-    private CollectService collectService;
+    private ElasticSearchService elasticSearchService;
 
-    @PostMapping("/editormd")
+    @PostMapping("/editor")
     public String Editor(@RequestBody BlogVO blogVO, HttpServletRequest request) {
 
         String token = request.getHeader("token");
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
 
-        String title = blogVO.getTitle();
-        String article = blogVO.getArticle();
-        String summary = blogVO.getSummary();
-        List<String> types = blogVO.getTypes();
-        List<String> labels = blogVO.getLabels();
-
-        if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(article)) {
-            Blog blog = new Blog();
-            blog.setArticle(article);
-            blog.setCreateDate(DateUtil.formatDate(new Date()));
-            if (StringUtils.isNotEmpty(summary)) {
-                blog.setSummary(summary);
-            } else {
-                if (article.length() > 50) {
-                    blog.setSummary(article.substring(0,50));
-                } else {
-                    blog.setSummary(article);
-                }
-            }
-            blog.setTitle(title);
-            blog.setUserId(userId);
-            blogService.addBlog(blog);
-            blogService.save(blog);
-
-
-            if (types != null) {
-                List<Type> typeList = new ArrayList<>();
-                for (String s : types) {
-                    Type type = new Type();
-                    type.setBlogId(blog.getBlogId());
-                    type.setUserId(userId);
-                    type.setTypeName(s);
-                    typeList.add(type);
-                }
-                typeService.addBatchType(typeList);
-            }
-            if (labels != null) {
-                List<Label> labelList = new ArrayList<>();
-                for (String s : labels) {
-                    Label label = new Label();
-                    label.setBlogId(blog.getBlogId());
-                    label.setUserId(userId);
-                    label.setLabelName(s);
-                    labelList.add(label);
-                }
-                labelService.addBatchLabel(labelList);
-            }
-            return JSONUtils.getJSONString(0,"success");
-        }
-        return JSONUtils.getJSONString(-1,"error");
+        return blogService.publishBlog(userId, blogVO);
     }
 
     @RequestMapping("/detail/{blogId}")
@@ -170,22 +115,7 @@ public class BlogController {
 
     @RequestMapping("/search/{msg}")
     public List<BlogVO> search(@PathVariable("msg") String msg) {
-        return blogService.search(msg);
+        return elasticSearchService.search(msg);
     }
-//    @RequestMapping("/detail")
-//    public String Detail(String content,int userId,int blogId,int parentId){
-//        if (userId == 0) {
-//            System.out.println("请先登录");
-//        }
-//        Comment comment = new Comment();
-//        comment.setBlogId(blogId);
-//        comment.setContent(content);
-//        comment.setUserId(userId);
-//        comment.setCreateDate(new Date());
-//        comment.setParentId(parentId);// parentId代表被回复的评论id
-//        commentService.addComment(comment);
-//        blogService.updateCommentCountByBlogId(blogService.selectBlogById(blogId).getCommentCount() + 1,blogId);
-//        return "{\"msg\":\"success\"}";
-//    }
 
 }

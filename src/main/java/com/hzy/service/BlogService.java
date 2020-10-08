@@ -6,8 +6,12 @@ import com.hzy.mapper.LabelMapper;
 import com.hzy.mapper.TypeMapper;
 import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Blog;
+import com.hzy.pojo.Label;
 import com.hzy.pojo.Type;
 import com.hzy.pojo.User;
+import com.hzy.utils.DateUtil;
+import com.hzy.utils.JSONUtils;
+import com.hzy.utils.StringUtils;
 import com.hzy.vo.BlogVO;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
@@ -39,9 +43,7 @@ public class BlogService {
     @Autowired
     private TypeMapper typeMapper;
     @Autowired
-    @Qualifier("restHighLevelClient")
-    private RestHighLevelClient client;
-    private static final String INDEX_NAME = "blog_index";
+    private ElasticSearchService elasticSearchService;
 
     /**
      * 发布博客
@@ -50,6 +52,59 @@ public class BlogService {
      */
     public int addBlog(Blog blog) {
         return blogMapper.addBlog(blog);
+    }
+
+    public String publishBlog(int userId, BlogVO blogVO) {
+
+        String title = blogVO.getTitle();
+        String summary = blogVO.getSummary();
+        String article = blogVO.getArticle();
+        List<String> labels = blogVO.getLabels();
+        List<String> types = blogVO.getTypes();
+
+        if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(article)) {
+            Blog blog = new Blog();
+            blog.setArticle(article);
+            blog.setCreateDate(DateUtil.formatDate(new Date()));
+            if (StringUtils.isNotEmpty(summary)) {
+                blog.setSummary(summary);
+            } else {
+                if (article.length() > 50) {
+                    blog.setSummary(article.substring(0,50));
+                } else {
+                    blog.setSummary(article);
+                }
+            }
+            blog.setTitle(title);
+            blog.setUserId(userId);
+            blogMapper.addBlog(blog);
+            elasticSearchService.save(blog);
+
+            if (types != null) {
+                List<Type> typeList = new ArrayList<>();
+                for (String s : types) {
+                    Type type = new Type();
+                    type.setBlogId(blog.getBlogId());
+                    type.setUserId(userId);
+                    type.setTypeName(s);
+                    typeList.add(type);
+                }
+                typeMapper.addBatchType(typeList);
+            }
+            if (labels != null) {
+                List<Label> labelList = new ArrayList<>();
+                for (String s : labels) {
+                    Label label = new Label();
+                    label.setBlogId(blog.getBlogId());
+                    label.setUserId(userId);
+                    label.setLabelName(s);
+                    labelList.add(label);
+                }
+                labelMapper.addBatchLabel(labelList);
+            }
+            return JSONUtils.getJSONString(0,"success");
+        }
+        return JSONUtils.getJSONString(-1,"error");
     }
 
     /**
@@ -144,20 +199,28 @@ public class BlogService {
      * @param limit
      * @return
      */
-    public Map<String, Map<String,Object>> getBlog(int userId, int offset, int limit) {
-        List<Blog> blogList = blogMapper.selectBlogByUserIdAndOffset(userId, offset, limit);
-        Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
-        int i = 0;
-        for (Blog blog : blogList) {
+    public List<BlogVO> getBlog(int userId, int offset, int limit) {
+        List<Blog> blogs = blogMapper.selectBlogByUserIdAndOffset(userId, offset, limit);
+        List<BlogVO> blogVOS = new ArrayList<>();
+        for (Blog blog : blogs) {
             User user = userMapper.selectUserById(blog.getUserId());
-            //HashMap是有无序的
-            //LinkedHashMap 和 TreeMap 是有序的,存取顺序
-            Map<String,Object> map = new HashMap<>();
-            map.put("blog",blog);
-            map.put("user",user);
-            mapMap.put("map" + i++,map);
+            BlogVO blogVO = new BlogVO();
+
+            blogVO.setUsername((user.getUsername()));
+            blogVO.setHeadUrl(user.getHeadUrl());
+            blogVO.setBlogId(blog.getBlogId());
+            blogVO.setTitle(blog.getTitle());
+            blogVO.setSummary(blog.getSummary());
+            blogVO.setArticle(blog.getArticle());
+            blogVO.setLikeCount(blog.getLikeCount());
+            blogVO.setHitCount(blog.getHitCount());
+            blogVO.setCommentCount(blog.getCommentCount());
+
+            blogVOS.add(blogVO);
         }
-        return mapMap;
+
+
+        return blogVOS;
     }
 
     /**
@@ -177,72 +240,5 @@ public class BlogService {
         return mapMap;
     }
 
-    /**
-     * 将博客保存到es
-     * @param blog
-     */
-    public void save(Blog blog) {
-        IndexRequest request = new IndexRequest(INDEX_NAME);
-//        request.id("1");
-        request.timeout(TimeValue.timeValueSeconds(1));
 
-        // 将数据放入请求json
-        request.source(JSON.toJSONString(blog), XContentType.JSON);
-        // 客户端发送请求
-        try {
-            client.index(request, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<BlogVO> search(String msg) {
-        SearchRequest request = new SearchRequest(INDEX_NAME);
-
-        // 构建搜索条件
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//        // 精确查询
-//        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("name", "欢迎来");
-
-        // 先进行分词，然后进行搜索
-        MatchQueryBuilder termQueryBuilder = QueryBuilders.matchQuery("title", msg);
-
-        searchSourceBuilder.query(termQueryBuilder);
-        searchSourceBuilder.timeout(new TimeValue(10, TimeUnit.SECONDS));
-
-        request.source(searchSourceBuilder);
-        SearchResponse searchResponse = null;
-        try {
-            searchResponse = client.search(request, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<BlogVO> blogVOS = new LinkedList<>();
-
-        for (SearchHit hit : searchResponse.getHits().getHits()) {
-            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-            int userId =Integer.valueOf(sourceAsMap.get("userId").toString());
-            User user = userMapper.selectUserById(userId);
-
-            BlogVO blogVO = new BlogVO();
-            blogVO.setBlogId(Integer.valueOf(sourceAsMap.get("blogId").toString()));
-            blogVO.setArticle(sourceAsMap.get("article").toString());
-            blogVO.setCommentCount(Integer.valueOf(sourceAsMap.get("commentCount").toString()));
-            blogVO.setHitCount(Integer.valueOf(sourceAsMap.get("hitCount").toString()));
-            blogVO.setLikeCount(Integer.valueOf(sourceAsMap.get("likeCount").toString()));
-            blogVO.setTitle(sourceAsMap.get("title").toString());
-            blogVO.setSummary(sourceAsMap.get("summary").toString());
-            blogVO.setUsername(user.getUsername());
-            blogVO.setHeadUrl(user.getHeadUrl());
-
-            List<String> labelList = labelMapper.selectLabelNameByBlogId(blogVO.getBlogId());
-            blogVO.setLabels(labelList);
-
-            List<String> typeList = typeMapper.selectTypeNameByBlogId(blogVO.getBlogId());
-            blogVO.setTypes(typeList);
-
-            blogVOS.add(blogVO);
-        }
-        return blogVOS;
-    }
 }

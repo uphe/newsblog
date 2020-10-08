@@ -4,6 +4,7 @@ import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.UserService;
+import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,8 @@ public class UserController{
      * 默认userId为0，展示是所有用户的文章
      * */
     @RequestMapping(path = {"/user/{userId}"})
-    public Map<String, Map<String,Object>> userIndex(@PathVariable("userId") int userId) {
-        Map<String,Map<String,Object>> userBlogs = blogService.getBlog(userId,0,40);
+    public List<BlogVO> userIndex(@PathVariable("userId") int userId) {
+        List<BlogVO> userBlogs = blogService.getBlog(userId,0,40);
         return userBlogs;
     }
 }
