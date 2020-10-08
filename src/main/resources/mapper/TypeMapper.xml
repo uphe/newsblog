@@ -22,7 +22,7 @@
     </select>
 
     <select id="selectTypeNameByUserId" resultType="string">
-        select typeName from newsblog.type
+        select distinct typeName from newsblog.type
         where userId = #{userId}
     </select>
 

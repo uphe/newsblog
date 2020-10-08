@@ -1,5 +1,6 @@
 package com.hzy.controller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hzy.pojo.Type;
 import com.hzy.service.TypeService;
 import com.hzy.utils.JWTUtils;
@@ -17,7 +18,7 @@ public class TypeController {
     private TypeService typeService;
 
     @RequestMapping("/gettype/{userId}")
-    public List<String> getTypeByUserId(@PathVariable("userId") int userId, HttpServletRequest request) {
+    public List<String> getTypeByUserId(@PathVariable("userId") int userId) {
 
         List<String> types = typeService.selectTypeNameByUserId(userId);
 
