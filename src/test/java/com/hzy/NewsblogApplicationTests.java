@@ -63,7 +63,6 @@ class NewsblogApplicationTests {
 
     @Test
     void blogTest() {
-        System.out.println(labelMapper.selectLabelByUserId(1));
     }
 
 

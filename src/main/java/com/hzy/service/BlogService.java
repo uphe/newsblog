@@ -10,20 +10,10 @@ import com.hzy.pojo.Label;
 import com.hzy.pojo.Type;
 import com.hzy.pojo.User;
 import com.hzy.utils.DateUtil;
+import com.hzy.utils.FileUtils;
 import com.hzy.utils.JSONUtils;
 import com.hzy.utils.StringUtils;
 import com.hzy.vo.BlogVO;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -46,14 +36,89 @@ public class BlogService {
     private ElasticSearchService elasticSearchService;
 
     /**
-     * 发布博客
-     * @param blog
+     * 首页，暂时是根据一年以内的优文推荐，根据点赞*100+访问排序
+     * @param offset
+     * @param limit
      * @return
      */
-    public int addBlog(Blog blog) {
-        return blogMapper.addBlog(blog);
+    public List<BlogVO> getIndexBlogVO(int offset, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectIndexBlogVOByUserIdAndOffset(offset, limit);
+        return blogVOS;
     }
 
+    /**
+     * 最新的文章，根据创建时间进行的排序
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public List<BlogVO> getNewestBlogVO(int offset, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectNewestBlogVOByUserIdAndOffset(offset, limit);
+        return blogVOS;
+    }
+
+    /**
+     * 今日推荐你文章，即是昨天的好文，根据点赞*100+访问进行排序
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public List<BlogVO> getTodayBlogVO(int offset, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectTodayBlogVOByUserIdAndOffset(offset, limit);
+
+        // 反向for循环，把不符合的删除
+        for (int i = blogVOS.size() - 1; i >= 0; i--) {
+            int result = blogVOS.get(i).getArticle().indexOf(FileUtils.GET_IMAGE_DIR);
+            if (result >= 0) {
+                String substring = blogVOS.get(i).getArticle().substring(result, result + FileUtils.GET_IMAGE_DIR.length() + FileUtils.FILENAME_LENGTH);
+                blogVOS.get(i).setHeadUrl(substring);
+            } else {
+                blogVOS.remove(i);
+            }
+        }
+        return blogVOS;
+    }
+
+
+    public List<BlogVO> getDynamicBlogVO(int userId, int offset, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectFollowBlogVOByUserIdAndOffset(userId, offset, limit);
+        return blogVOS;
+    }
+    /**
+     * 内容推荐算法，根据用户个人喜欢，进行个性化的推荐
+     * 具体实现，首先查出用户浏览的标签进行排序，选出前5个
+     * 然后对这5个标签进行查询，每个标签查出40个最近优文
+     * 然后通过权重对查出的所有文章进行筛选，最后展示
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public List<BlogVO> getPersonalizationBlog(int userId, int offset, int limit) {
+        List<BlogVO> blogVOS = new ArrayList<>();
+
+        List<Map<String, Object>> maps = labelMapper.selectLabelByUserId(userId);
+        int sum = 0;
+        for (Map<String, Object> map : maps) {
+            sum += Integer.valueOf(map.get("labelCount").toString());
+        }
+        for (Map<String, Object> map : maps) {
+            String labelName = map.get("labelName").toString();
+            List<BlogVO> blogVOList = blogMapper.selectBlogVOByLabelName(labelName, 0, 40);
+            int t = Integer.valueOf(map.get("labelCount").toString());
+            blogVOS.addAll(blogVOList.subList(0,blogVOList.size() > (t * limit / sum) ? (t * limit / sum) : blogVOList.size()));
+        }
+        return blogVOS;
+    }
+
+
+
+    /**
+     * 发布博客，同时一份放入到es，并以标题进行分词存储
+     * @param userId
+     * @param blogVO
+     * @return
+     */
     public String publishBlog(int userId, BlogVO blogVO) {
 
         String title = blogVO.getTitle();
@@ -80,7 +145,7 @@ public class BlogService {
             blogMapper.addBlog(blog);
             elasticSearchService.save(blog);
 
-            if (types != null) {
+            if (types != null && types.size() > 0) {
                 List<Type> typeList = new ArrayList<>();
                 for (String s : types) {
                     Type type = new Type();
@@ -91,7 +156,7 @@ public class BlogService {
                 }
                 typeMapper.addBatchType(typeList);
             }
-            if (labels != null) {
+            if (labels != null && labels.size() > 0) {
                 List<Label> labelList = new ArrayList<>();
                 for (String s : labels) {
                     Label label = new Label();
@@ -108,14 +173,14 @@ public class BlogService {
     }
 
     /**
-     * 分页查询博客
+     * 查询某个用户的文章
      * @param userId
      * @param offset
      * @param limit
      * @return
      */
-    public List<Blog> selectBlogByUserIdAndOffset (int userId,int offset,int limit) {
-        return blogMapper.selectBlogByUserIdAndOffset(userId,offset,limit);
+    public List<BlogVO> selectBlogByUserIdAndOffset (int userId,int offset,int limit) {
+        return blogMapper.selectBlogVOByUserIdAndOffset(userId,offset,limit);
     }
 
     /**
@@ -191,54 +256,5 @@ public class BlogService {
     public int selectLikeCountSumByUserId(int userId) {
         return blogMapper.selectLikeCountSumByUserId(userId);
     }
-
-    /**
-     * 根据用户id获取博客，如果id为0，则获取全部博客
-     * @param userId
-     * @param offset
-     * @param limit
-     * @return
-     */
-    public List<BlogVO> getBlog(int userId, int offset, int limit) {
-        List<Blog> blogs = blogMapper.selectBlogByUserIdAndOffset(userId, offset, limit);
-        List<BlogVO> blogVOS = new ArrayList<>();
-        for (Blog blog : blogs) {
-            User user = userMapper.selectUserById(blog.getUserId());
-            BlogVO blogVO = new BlogVO();
-
-            blogVO.setUsername((user.getUsername()));
-            blogVO.setHeadUrl(user.getHeadUrl());
-            blogVO.setBlogId(blog.getBlogId());
-            blogVO.setTitle(blog.getTitle());
-            blogVO.setSummary(blog.getSummary());
-            blogVO.setArticle(blog.getArticle());
-            blogVO.setLikeCount(blog.getLikeCount());
-            blogVO.setHitCount(blog.getHitCount());
-            blogVO.setCommentCount(blog.getCommentCount());
-
-            blogVOS.add(blogVO);
-        }
-
-
-        return blogVOS;
-    }
-
-    /**
-     * 内容推荐算法，根据用户个人喜欢，进行个性化的推荐
-     * @param userId
-     * @param offset
-     * @param limit
-     * @return
-     */
-    public Map<String, Map<String, Object>> getPersonalizationBlog(int userId, int offset, int limit) {
-        Map<String,Map<String,Object>> mapMap = new LinkedHashMap<>();
-
-        List<Map<String, Object>> maps = labelMapper.selectLabelByUserId(userId);
-        for (Map<String, Object> map : maps) {
-
-        }
-        return mapMap;
-    }
-
 
 }

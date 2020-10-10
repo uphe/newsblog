@@ -33,30 +33,45 @@ public class IndexController{
 
     @RequestMapping({"/","/index","/index.html"})
     public List<BlogVO> index() {
-
-        List<BlogVO> userBlogs =  blogService.getBlog(0,0,40);
-
-        return  userBlogs;
+        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(0,40);
+        return  blogVOS;
     }
 
     @RequestMapping("/personalization")
-    public Map<String,Map<String, Object>> personalization(HttpServletRequest request) {
+    public List<BlogVO> personalization(HttpServletRequest request) {
         String token = request.getHeader("token");
 
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
-        Map<String, Map<String, Object>> personalizationBlog = blogService.getPersonalizationBlog(userId, 0, 40);
+        List<BlogVO> personalizationBlog = blogService.getPersonalizationBlog(userId, 0, 40);
 
         return personalizationBlog;
     }
 
-    @RequestMapping("/toEditor")
-    public String toEditor(Model model,HttpSession session) {
-        model.addAttribute("user",session.getAttribute("user"));
-        return "editor";
+    @RequestMapping("/newest")
+    public List<BlogVO> newest() {
+
+        List<BlogVO> userBlogs =  blogService.getNewestBlogVO(0,40);
+
+        return  userBlogs;
     }
 
-    @PostMapping("/uploadImage")
+    @RequestMapping("/dynamic")
+    public List<BlogVO> dynamic(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        DecodedJWT decodedJWT = JWTUtils.getToken(token);
+        int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+        List<BlogVO> blogVOS = blogService.getDynamicBlogVO(userId, 0, 40);
+        return blogVOS;
+    }
+
+    @RequestMapping("/todayrecommend")
+    public List<BlogVO> todayRecommend() {
+        List<BlogVO> blogVOS = blogService.getTodayBlogVO(0, 10);
+        return blogVOS;
+    }
+
+    @PostMapping("/uploadimage")
     public String uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
         String fileUrl = userService.saveImage(file);
         if (fileUrl != null) {
@@ -66,18 +81,16 @@ public class IndexController{
         return JSONUtils.getJSONString(-1,"error");
     }
 
-    @PostMapping("/uploadEditorImage")
-    @ResponseBody
-    public String uploadEditorImage(@RequestParam("editormd-image-file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("/uploadeditorimage")
+    public String uploadEditorImage(@RequestParam("editormd-image-file") MultipartFile file) {
         String fileUrl = userService.saveImage(file);
         if (fileUrl != null) {
-            return JSONUtils.getJSONString(0,"success");
+            return JSONUtils.getJSONString(0,fileUrl);
         }
         return JSONUtils.getJSONString(-1,"error");
     }
 
     @GetMapping("/getImage")
-    @ResponseBody
     public void getImage(String fileName, HttpServletResponse response) {
         userService.getImage(fileName,response);
     }

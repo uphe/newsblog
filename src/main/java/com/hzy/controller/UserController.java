@@ -19,13 +19,13 @@ import java.util.Map;
 public class UserController{
     @Autowired
     private BlogService blogService;
+
     /*
-     * 这是查看某个具体用户的文章，并展现出来
-     * 默认userId为0，展示是所有用户的文章
+     * 这是查看某个具体用户的文章
      * */
     @RequestMapping(path = {"/user/{userId}"})
     public List<BlogVO> userIndex(@PathVariable("userId") int userId) {
-        List<BlogVO> userBlogs = blogService.getBlog(userId,0,40);
+        List<BlogVO> userBlogs = blogService.selectBlogByUserIdAndOffset(userId,0,40);
         return userBlogs;
     }
 }

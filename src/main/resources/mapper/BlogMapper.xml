@@ -20,6 +20,53 @@
         order by blogId desc
         limit #{offset},#{limit}
     </select>
+
+    <select id="selectBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
+        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        order by createDate desc
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectNewestBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
+        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        order by createDate desc
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectIndexBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
+        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)
+        order by 100 * likeCount + hitCount DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectFollowBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
+        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        WHERE blog.userId IN (SELECT followUserId FROM follow WHERE userId = #{userId})
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectTodayBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
+        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        WHERE TO_DAYS(NOW())-TO_DAYS(createDate) = 1
+        order by 100 * likeCount + hitCount DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectBlogVOByLabelName" resultType="com.hzy.vo.BlogVO">
+        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)
+        AND blog.blogId IN (SELECT label.blogId FROM label WHERE labelName = #{labelName})
+        ORDER BY 100 * likeCount + hitCount DESC
+        LIMIT #{offset},#{limit}
+    </select>
+
     <select id="selectCommentCountByBlogId" resultType="_int">
         select commentCount from blog
         where blogId = #{blogId}
@@ -51,4 +98,5 @@
         select count(*) from blog
         where userId = #{userId}
     </select>
+
 </mapper>
