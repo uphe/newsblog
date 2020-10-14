@@ -3,6 +3,7 @@ package com.hzy.interceptor;
 import com.hzy.utils.JSONUtils;
 import com.hzy.utils.JWTUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ public class JWTInterceptor implements HandlerInterceptor {
             JWTUtils.verify(token);// 验证令牌，成功直接放行，失败不放行，并返回给前端一个JSON串
             return true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
 
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json;charset=UTF-8");

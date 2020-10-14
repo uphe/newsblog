@@ -64,14 +64,20 @@ public class BlogService {
      * @return
      */
     public List<BlogVO> getTodayBlogVO(int offset, int limit) {
+        limit += 30;
         List<BlogVO> blogVOS = blogMapper.selectTodayBlogVOByUserIdAndOffset(offset, limit);
 
+        int t = 0;
         // 反向for循环，把不符合的删除
         for (int i = blogVOS.size() - 1; i >= 0; i--) {
             int result = blogVOS.get(i).getArticle().indexOf(FileUtils.GET_IMAGE_DIR);
             if (result >= 0) {
                 String substring = blogVOS.get(i).getArticle().substring(result, result + FileUtils.GET_IMAGE_DIR.length() + FileUtils.FILENAME_LENGTH);
                 blogVOS.get(i).setHeadUrl(substring);
+                t ++;
+                if (t == 10) {
+                    break;
+                }
             } else {
                 blogVOS.remove(i);
             }
@@ -80,7 +86,7 @@ public class BlogService {
     }
 
 
-    public List<BlogVO> getDynamicBlogVO(int userId, int offset, int limit) {
+    public List<BlogVO> getFollowBlogVO(int userId, int offset, int limit) {
         List<BlogVO> blogVOS = blogMapper.selectFollowBlogVOByUserIdAndOffset(userId, offset, limit);
         return blogVOS;
     }
@@ -94,7 +100,7 @@ public class BlogService {
      * @param limit
      * @return
      */
-    public List<BlogVO> getPersonalizationBlog(int userId, int offset, int limit) {
+    public List<BlogVO> getRecommendBlogVO(int userId, int offset, int limit) {
         List<BlogVO> blogVOS = new ArrayList<>();
 
         List<Map<String, Object>> maps = labelMapper.selectLabelByUserId(userId);
@@ -173,6 +179,15 @@ public class BlogService {
     }
 
     /**
+     * 通过id查询某一篇博客，即是获取文章详情
+     * @param blogId
+     * @return
+     */
+    public BlogVO getBlogVOByUserId(int blogId) {
+        return blogMapper.selectBlogVOByBlogId(blogId);
+    }
+
+    /**
      * 查询某个用户的文章
      * @param userId
      * @param offset
@@ -183,14 +198,7 @@ public class BlogService {
         return blogMapper.selectBlogVOByUserIdAndOffset(userId,offset,limit);
     }
 
-    /**
-     * 通过id查询某一篇博客
-     * @param blogId
-     * @return
-     */
-    public Blog selectBlogById(int blogId) {
-        return blogMapper.selectBlogById(blogId);
-    }
+
 
     /**
      * 通过博客id查询评论数

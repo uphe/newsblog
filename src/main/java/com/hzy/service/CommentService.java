@@ -7,6 +7,7 @@ import com.hzy.pojo.Blog;
 import com.hzy.pojo.Comment;
 import com.hzy.pojo.Remind;
 import com.hzy.pojo.User;
+import com.hzy.vo.CommentVO;
 import org.apache.ibatis.annotations.Arg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,27 +48,51 @@ public class CommentService {
         remindService.addRemind(remind);
         return commentMapper.addComment(comment);
     }
+
+    public int selectCommentCountByBlogId(int blogId) {
+        return commentMapper.selectCommentCountByBlogId(blogId);
+    }
     public List<Comment> selectCommentByBlogId(int blogId){
         return commentMapper.selectCommentByBlogId(blogId);
     }
-    public Comment selectCommentByCommentId(int commentId) {
-        return commentMapper.selectCommentByCommentId(commentId);
+
+    public List<CommentVO> selectCommentVOByBlogId(int blogId,int offset,int limit) {
+        List<CommentVO> commentVOS = commentMapper.selectParentCommentVOByBlogId(blogId, offset, limit);
+        // 通过父评论找到子评论
+        if (commentVOS != null) {
+            // 此处遍历的评论集合属于一级评论，即评论博客的评论
+            Map<String,Object> map = new LinkedHashMap<>();
+            for (CommentVO commentVO : commentVOS) {
+                // selectChildCommentVOByCommentId通过队列的形式把所有的回复封装到了allList里
+                List<CommentVO> childCommentVOS = selectChildCommentVOByCommentId(commentVO.getCommentId());
+                commentVO.setCommentVOS(childCommentVOS);
+            }
+        }
+        return commentVOS;
     }
-    public List<Comment> selectChildCommentByCommentId(int commentId) {
+
+
+    /**
+     * 通过父评论的id找到其所有子评论
+     * @param commentId
+     * @return
+     */
+    public List<CommentVO> selectChildCommentVOByCommentId(int commentId) {
 
         // 遍历回复评论，并封装到list中
-        List<Comment> list = commentMapper.selectChildCommentByCommentId(commentId);
-        List<Comment> allList = new ArrayList<>();
+        List<CommentVO> list = commentMapper.selectChildCommentVOByCommentId(commentId);
+
+        List<CommentVO> allList = new ArrayList<>();
         allList.addAll(list);
 
         // 这里用队列实现
-        Queue<List<Comment>> listQueue = new LinkedBlockingQueue<>();
+        Queue<List<CommentVO>> listQueue = new LinkedBlockingQueue<>();
         listQueue.add(list);
         while (!listQueue.isEmpty()) {
-            List<Comment> list1 = listQueue.remove();
+            List<CommentVO> list1 = listQueue.remove();
             if (!list1.isEmpty()) {
-                for (Comment comment1 : list1) {
-                    List<Comment> list2 = commentMapper.selectChildCommentByCommentId(comment1.getCommentId());
+                for (CommentVO commentVO : list1) {
+                    List<CommentVO> list2 = commentMapper.selectChildCommentVOByCommentId(commentVO.getCommentId());
 
                     if (!list2.isEmpty()) {
                         listQueue.add(list2);
@@ -76,17 +101,11 @@ public class CommentService {
                 }
             }
         }
-
-//                // 感觉是遍历中的集合不能被合并
-//                for (Comment comment1 : allList) {
-//                    List<Comment> list1 = commentService.selectChildCommentByCommentId(comment1.getCommentId());
-//                    if (!list1.isEmpty()) {
-//                            allList.addAll(list1);
-//
-//                        }
-//                    }
         return allList;
 
+    }
+    public Comment selectCommentByCommentId(int commentId) {
+        return commentMapper.selectCommentByCommentId(commentId);
     }
 
 }

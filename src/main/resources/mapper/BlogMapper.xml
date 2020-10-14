@@ -3,12 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzy.mapper.BlogMapper">
+    <sql id="sqlid">
+        blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,user.userId,username,headUrl
+    </sql>
     <insert id="addBlog" useGeneratedKeys="true" keyProperty="blogId" parameterType="Blog">
         insert into Blog(title,article,summary,createDate,userId)
         values (#{title},#{article},#{summary},#{createDate},#{userId})
     </insert>
     <select id="selectBlogById" resultType="Blog">
         select * from blog
+        where blogId = #{blogId}
+    </select>
+
+    <select id="selectBlogVOByBlogId" resultType="com.hzy.vo.BlogVO">
+        SELECT
+        <include refid="sqlid"/>
+        FROM blog INNER JOIN user ON blog.userId = user.userId
         where blogId = #{blogId}
     </select>
 
@@ -22,21 +32,24 @@
     </select>
 
     <select id="selectBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
-        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        SELECT
+        <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         order by createDate desc
         limit #{offset},#{limit}
     </select>
 
     <select id="selectNewestBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
-        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        SELECT
+        <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         order by createDate desc
         limit #{offset},#{limit}
     </select>
 
     <select id="selectIndexBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
-        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        SELECT
+        <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)
         order by 100 * likeCount + hitCount DESC
@@ -44,22 +57,26 @@
     </select>
 
     <select id="selectFollowBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
-        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        SELECT
+        <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         WHERE blog.userId IN (SELECT followUserId FROM follow WHERE userId = #{userId})
         limit #{offset},#{limit}
     </select>
 
     <select id="selectTodayBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
-        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        SELECT
+        <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
-        WHERE TO_DAYS(NOW())-TO_DAYS(createDate) = 1
+--         WHERE TO_DAYS(NOW())-TO_DAYS(createDate) = 1 -- 这里是今日推荐
+        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)-- 这里是用来测试
         order by 100 * likeCount + hitCount DESC
         limit #{offset},#{limit}
     </select>
 
     <select id="selectBlogVOByLabelName" resultType="com.hzy.vo.BlogVO">
-        SELECT blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,username,headUrl
+        SELECT
+        <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)
         AND blog.blogId IN (SELECT label.blogId FROM label WHERE labelName = #{labelName})

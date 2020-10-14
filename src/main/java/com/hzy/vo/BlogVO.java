@@ -10,9 +10,11 @@ public class BlogVO {
     private int likeCount;
     private int hitCount;
     private int commentCount;
+    private String createDate;
     private List<String> types;
     private List<String> labels;
 
+    private int userId;
     private String username;
     private String headUrl;
 
@@ -72,6 +74,14 @@ public class BlogVO {
         this.commentCount = commentCount;
     }
 
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
     public List<String> getTypes() {
         return types;
     }
@@ -86,6 +96,14 @@ public class BlogVO {
 
     public void setLabels(List<String> labels) {
         this.labels = labels;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -114,8 +132,10 @@ public class BlogVO {
                 ", likeCount=" + likeCount +
                 ", hitCount=" + hitCount +
                 ", commentCount=" + commentCount +
+                ", createDate='" + createDate + '\'' +
                 ", types=" + types +
                 ", labels=" + labels +
+                ", userId=" + userId +
                 ", username='" + username + '\'' +
                 ", headUrl='" + headUrl + '\'' +
                 '}';

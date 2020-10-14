@@ -11,6 +11,7 @@ import java.util.List;
 public interface BlogMapper {
     int addBlog(Blog blog);
     Blog selectBlogById(int blogId);
+    BlogVO selectBlogVOByBlogId(int blogId);
     List<Blog> selectBlogByUserIdAndOffset(int userId,int offset,int limit);
     int selectCommentCountByBlogId(int blogId);
     int updateCommentCountByBlogId(int commentCount, int blogId);

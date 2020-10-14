@@ -31,21 +31,21 @@ public class IndexController{
     @Autowired
     private BlogService blogService;
 
-    @RequestMapping({"/","/index","/index.html"})
-    public List<BlogVO> index() {
-        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(0,40);
+    @RequestMapping({"/hot/{page}"})
+    public List<BlogVO> index(@PathVariable("page") int page) {
+        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(20 * (page - 1),20 * page);
         return  blogVOS;
     }
 
     @RequestMapping("/personalization")
-    public List<BlogVO> personalization(HttpServletRequest request) {
+    public List<BlogVO> recommend(HttpServletRequest request) {
         String token = request.getHeader("token");
 
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
-        List<BlogVO> personalizationBlog = blogService.getPersonalizationBlog(userId, 0, 40);
+        List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(userId, 0, 40);
 
-        return personalizationBlog;
+        return recommendBlogVO;
     }
 
     @RequestMapping("/newest")
@@ -61,7 +61,7 @@ public class IndexController{
         String token = request.getHeader("token");
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
-        List<BlogVO> blogVOS = blogService.getDynamicBlogVO(userId, 0, 40);
+        List<BlogVO> blogVOS = blogService.getFollowBlogVO(userId, 0, 40);
         return blogVOS;
     }
 
@@ -82,7 +82,7 @@ public class IndexController{
     }
 
     @PostMapping("/uploadeditorimage")
-    public String uploadEditorImage(@RequestParam("editormd-image-file") MultipartFile file) {
+    public String uploadEditorImage(@RequestParam("file") MultipartFile file) {
         String fileUrl = userService.saveImage(file);
         if (fileUrl != null) {
             return JSONUtils.getJSONString(0,fileUrl);
