@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.TokenMapper">
+    <insert id="addToken" parameterType="Token">
+        insert into token(token,expired,userId)
+        values (#{token},#{expired},#{userId})
+    </insert>
+    <update id="updateToken">
+        update token
+        set expired = #{expired}
+        where token = #{token}
+    </update>
+    <select id="selectTokenByToken" resultType="Token">
+        select * from token
+        where token = #{token}
+    </select>
+</mapper>

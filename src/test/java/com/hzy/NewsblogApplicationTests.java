@@ -1,17 +1,12 @@
 package com.hzy;
 
 import com.alibaba.fastjson.JSON;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hzy.mapper.BlogMapper;
 import com.hzy.mapper.LabelMapper;
+import com.hzy.mapper.TokenMapper;
 import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
-import com.hzy.utils.JWTUtils;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.ElasticsearchClient;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -27,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.IOException;
-import java.util.*;
 
 @SpringBootTest
 class NewsblogApplicationTests {
@@ -43,28 +37,18 @@ class NewsblogApplicationTests {
     private RestHighLevelClient client;
     private static final String INDEX_NAME = "blog_index";
 
-    @Test
-    void contextLoads() {
-        Map<String,String> map = new HashMap<>();
-        map.put("userId","1");
-        map.put("username","root");
-        String token = JWTUtils.getToken(map);
-        System.out.println(token);
-    }
+    @Autowired
+    private TokenMapper tokenMapper;
 
     @Test
-    void myTest() {
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256("FFIEUHIH")).build();
-
-        DecodedJWT verify = jwtVerifier.verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDI5MDA5MzAsInVzZXJJZCI6IjEiLCJ1c2VybmFtZSI6InJvb3QifQ.8dGTiJE0zqqZ7ARHCrqbNGcQURuGdNNilcsF6Dj7vyw");
-        System.out.println(verify.getClaim("userId").asInt());
-        System.out.println(verify.getClaim("username").asString());
+    void tokenTest() {
+//        Token token = new Token();
+//        token.setToken("abc");
+//        token.setExpired(new Date());
+//        token.setUserId(1);
+//        System.out.println(tokenMapper.addToken(token));
+        System.out.println(tokenMapper.selectTokenByToken("abc"));
     }
-
-    @Test
-    void blogTest() {
-    }
-
 
     /**
      * 创建博客索引

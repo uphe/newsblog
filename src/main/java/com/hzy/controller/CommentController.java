@@ -1,13 +1,10 @@
 package com.hzy.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.hzy.mapper.BlogMapper;
 import com.hzy.pojo.Comment;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.CommentService;
 import com.hzy.utils.JSONUtils;
-import com.hzy.utils.JWTUtils;
 import com.hzy.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @RestController
@@ -34,10 +31,9 @@ public class CommentController {
     }
 
     @RequestMapping("/publishcomment")
-    public String publishComment(@RequestBody Comment comment, HttpServletRequest request) {
-        String token = request.getHeader("token");
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+    public String publishComment(@RequestBody Comment comment, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        int userId = user.getUserId();
 
         comment.setCreateDate(new Date());
         comment.setUserId(userId);

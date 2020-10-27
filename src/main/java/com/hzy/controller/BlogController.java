@@ -1,16 +1,15 @@
 package com.hzy.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hzy.pojo.*;
 import com.hzy.service.*;
 import com.hzy.utils.*;
 import com.hzy.vo.BlogVO;
-import com.hzy.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 public class BlogController {
@@ -26,11 +25,9 @@ public class BlogController {
     private ElasticSearchService elasticSearchService;
 
     @PostMapping("/editor")
-    public String Editor(@RequestBody BlogVO blogVO, HttpServletRequest request) {
-
-        String token = request.getHeader("token");
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+    public String Editor(@RequestBody BlogVO blogVO, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        int userId = user.getUserId();
 
         return blogService.publishBlog(userId, blogVO);
     }

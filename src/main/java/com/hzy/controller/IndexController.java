@@ -1,26 +1,17 @@
 package com.hzy.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.hzy.pojo.Blog;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.UserService;
 import com.hzy.utils.JSONUtils;
-import com.hzy.utils.JWTUtils;
 import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.List;
 
 
@@ -38,13 +29,10 @@ public class IndexController{
     }
 
     @RequestMapping("/recommend/{page}")
-    public List<BlogVO> recommend(@PathVariable("page") int page, HttpServletRequest request) {
-        String token = request.getHeader("token");
-        if(token == null) {
+    public List<BlogVO> recommend(@PathVariable("page") int page, HttpSession session) {
 
-        }
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+        User user = (User) session.getAttribute("user");
+        int userId = user.getUserId();
         List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(userId, 40 * (page - 1), 40);
 
         return recommendBlogVO;
@@ -59,10 +47,9 @@ public class IndexController{
     }
 
     @RequestMapping("/follow/{page}")
-    public List<BlogVO> follow(@PathVariable("page") int page, HttpServletRequest request) {
-        String token = request.getHeader("token");
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
+    public List<BlogVO> follow(@PathVariable("page") int page, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        int userId = user.getUserId();
         List<BlogVO> blogVOS = blogService.getFollowBlogVO(userId, 40 * (page - 1), 40);
         return blogVOS;
     }
@@ -74,10 +61,10 @@ public class IndexController{
     }
 
     @PostMapping("/uploadimage")
-    public String uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
+    public String uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpSession session) {
         String fileUrl = userService.saveImage(file);
         if (fileUrl != null) {
-            userService.updateUserByHeadUrl(fileUrl,request,response);
+            userService.updateUserByHeadUrl(fileUrl, session);
             return JSONUtils.getJSONString(0,fileUrl);
         }
         return JSONUtils.getJSONString(-1,"error");

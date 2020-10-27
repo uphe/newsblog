@@ -1,15 +1,10 @@
 package com.hzy.service;
 
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.hzy.controller.LoginController;
+import com.hzy.mapper.TokenMapper;
 import com.hzy.mapper.UserMapper;
+import com.hzy.pojo.Token;
 import com.hzy.pojo.User;
-import com.hzy.utils.FileUtils;
-import com.hzy.utils.JSONUtils;
-import com.hzy.utils.JWTUtils;
-import com.hzy.utils.MD5Utils;
-import jdk.nashorn.internal.parser.Token;
+import com.hzy.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +29,8 @@ public class UserService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private TokenMapper tokenMapper;
 
     /**
      * 登录业务，并实现保存密码7天
@@ -42,8 +39,8 @@ public class UserService {
      * @param password
      * @return
      */
-    public String login(HttpServletResponse response, String username, String password) {
-
+    public String login(HttpSession session, String username, String password) {
+        logger.info("执行登录功能");
         User user = userMapper.selectUserByName(username);
         if (user == null) {
             return JSONUtils.getJSONString(-1,"该用户不存在");
@@ -51,10 +48,16 @@ public class UserService {
         if (!MD5Utils.MD5(password + user.getSalt()).equals(user.getPassword())) {
             return JSONUtils.getJSONString(-1, "密码错误");
         }
+        Token token = new Token();
+        token.setUserId(user.getUserId());
+        token.setToken(UUID.randomUUID().toString().replaceAll("-",""));
 
-        // 将用户的信息封装到token中
-        String token = JWTUtils.getToken(user);
-        response.addHeader("token",token);
+        Date date = new Date();
+        date.setTime(new Date().getTime() + 1000 * 60 * 60 * 12 * 7);
+        token.setExpired(date);
+
+        tokenMapper.addToken(token);
+        session.setAttribute("user",user);
 
         return JSONUtils.getJSONString(0, "登录成功");
     }
@@ -127,13 +130,10 @@ public class UserService {
         }
     }
 
-    public void updateUserByHeadUrl(String headUrl, HttpServletRequest request, HttpServletResponse response) {
-        String token = request.getHeader("token");
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        User user = userMapper.selectUserById(Integer.valueOf(decodedJWT.getClaim("userId").asString()));
+    public void updateUserByHeadUrl(String headUrl, HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
         user.setHeadUrl(headUrl);
         userMapper.updateUser(user);
-        String newToken = JWTUtils.getToken(user);
-        response.setHeader("token", newToken);
     }
 }
