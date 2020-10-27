@@ -6,10 +6,12 @@ import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Remind;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import java.sql.Struct;
 import java.util.Date;
 
 @Service
@@ -31,6 +33,12 @@ public class LikeService {
      */
     public Long like(int userId,int blogId) {
         SetOperations setOperations = redisTemplate.opsForSet();
+        String changeKey = StringUtils.getChangeKey();
+
+        // 通过一个set集合，来进行统计哪些文章发生了改变，用于定时任务，如果不在集合中，就添加进去
+        if (! setOperations.isMember(changeKey,blogId)) {
+            setOperations.add(StringUtils.getChangeKey(),blogId);
+        }
         // 这是构建博客的likeKey，即区分不同博客的点赞
         String likeKey = StringUtils.getLikeKey(blogId);
 

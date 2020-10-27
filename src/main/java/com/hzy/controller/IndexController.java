@@ -33,35 +33,37 @@ public class IndexController{
 
     @RequestMapping({"/hot/{page}"})
     public List<BlogVO> index(@PathVariable("page") int page) {
-        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(20 * (page - 1),20 * page);
+        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(20 * (page - 1),20);
         return  blogVOS;
     }
 
-    @RequestMapping("/personalization")
-    public List<BlogVO> recommend(HttpServletRequest request) {
+    @RequestMapping("/recommend/{page}")
+    public List<BlogVO> recommend(@PathVariable("page") int page, HttpServletRequest request) {
         String token = request.getHeader("token");
+        if(token == null) {
 
+        }
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
-        List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(userId, 0, 40);
+        List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(userId, 40 * (page - 1), 40);
 
         return recommendBlogVO;
     }
 
-    @RequestMapping("/newest")
-    public List<BlogVO> newest() {
+    @RequestMapping("/newest/{page}")
+    public List<BlogVO> newest(@PathVariable("page") int page) {
 
-        List<BlogVO> userBlogs =  blogService.getNewestBlogVO(0,40);
+        List<BlogVO> userBlogs =  blogService.getNewestBlogVO(40 * (page - 1),40);
 
         return  userBlogs;
     }
 
-    @RequestMapping("/dynamic")
-    public List<BlogVO> dynamic(HttpServletRequest request) {
+    @RequestMapping("/follow/{page}")
+    public List<BlogVO> follow(@PathVariable("page") int page, HttpServletRequest request) {
         String token = request.getHeader("token");
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
-        List<BlogVO> blogVOS = blogService.getFollowBlogVO(userId, 0, 40);
+        List<BlogVO> blogVOS = blogService.getFollowBlogVO(userId, 40 * (page - 1), 40);
         return blogVOS;
     }
 

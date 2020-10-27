@@ -10,6 +10,7 @@ import com.hzy.utils.JSONUtils;
 import com.hzy.utils.JWTUtils;
 import com.hzy.utils.MD5Utils;
 import jdk.nashorn.internal.parser.Token;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
+@Slf4j
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private UserMapper userMapper;
 

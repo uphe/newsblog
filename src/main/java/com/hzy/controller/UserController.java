@@ -30,7 +30,7 @@ public class UserController{
      * */
     @RequestMapping(path = {"/user/{userId}"})
     public List<BlogVO> userIndex(@PathVariable("userId") int userId) {
-        List<BlogVO> userBlogs = blogService.selectBlogByUserIdAndOffset(userId,0,40);
+        List<BlogVO> userBlogs = blogService.getBlogVOByUserIdAndOffset(userId,0,40);
         return userBlogs;
     }
 

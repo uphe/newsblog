@@ -4,6 +4,7 @@ public class StringUtils {
 
     private static String SPLIT = ":";
     private static String LIKE = "LIKE";
+    private static String CHANGE = "CHANGE";
 
     public static boolean isEmpty(String str) {
         if (str == null || str.trim().equals("")) {
@@ -21,5 +22,9 @@ public class StringUtils {
 
     public static String getLikeKey(int blogId) {
         return LIKE + SPLIT + String.valueOf(blogId);
+    }
+
+    public static String getChangeKey() {
+        return CHANGE;
     }
 }

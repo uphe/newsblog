@@ -33,7 +33,8 @@ public class LikeController {
         int userId = Integer.valueOf(decodedJWT.getClaim("userId").asString());
 
         int likeCount = toIntExact(likeService.like(userId, blogId));
-        blogService.updateLikeCountByBlogId(likeCount,blogId);
+        // 这里的持久化通过定时任务来实现
+        // blogService.updateLikeCountByBlogId(likeCount,blogId);
         return JSONUtils.getJSONString(0, "点赞成功");
     }
 }
