@@ -5,6 +5,8 @@ import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Token;
 import com.hzy.pojo.User;
 import com.hzy.utils.*;
+import com.hzy.vo.ResponseVO;
+import com.hzy.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -39,27 +39,25 @@ public class UserService {
      * @param password
      * @return
      */
-    public String login(HttpSession session, String username, String password) {
+    public ResponseVO login(HttpServletResponse response, HttpSession session, String username, String password) {
         logger.info("执行登录功能");
         User user = userMapper.selectUserByName(username);
         if (user == null) {
-            return JSONUtils.getJSONString(-1,"该用户不存在");
+            return new ResponseVO(-1,"用户名不存在");
         }
         if (!MD5Utils.MD5(password + user.getSalt()).equals(user.getPassword())) {
-            return JSONUtils.getJSONString(-1, "密码错误");
+            return new ResponseVO(-1,"密码错误");
         }
         Token token = new Token();
         token.setUserId(user.getUserId());
         token.setToken(UUID.randomUUID().toString().replaceAll("-",""));
-
-        Date date = new Date();
-        date.setTime(new Date().getTime() + 1000 * 60 * 60 * 12 * 7);
-        token.setExpired(date);
+        token.setExpired(DateUtil.afterSevenDay());
 
         tokenMapper.addToken(token);
+        response.setHeader("token",token.getToken());
         session.setAttribute("user",user);
 
-        return JSONUtils.getJSONString(0, "登录成功");
+        return new ResponseVO(0,"登录成功", user);
     }
 
     /**

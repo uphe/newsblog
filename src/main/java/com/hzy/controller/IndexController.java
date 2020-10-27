@@ -25,10 +25,10 @@ public class IndexController{
     @RequestMapping({"/hot/{page}"})
     public List<BlogVO> index(@PathVariable("page") int page) {
         List<BlogVO> blogVOS =  blogService.getIndexBlogVO(20 * (page - 1),20);
-        return  blogVOS;
+        return blogVOS;
     }
 
-    @RequestMapping("/recommend/{page}")
+    @RequestMapping("/user/recommend/{page}")
     public List<BlogVO> recommend(@PathVariable("page") int page, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
@@ -46,7 +46,7 @@ public class IndexController{
         return  userBlogs;
     }
 
-    @RequestMapping("/follow/{page}")
+    @RequestMapping("/user/follow/{page}")
     public List<BlogVO> follow(@PathVariable("page") int page, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();

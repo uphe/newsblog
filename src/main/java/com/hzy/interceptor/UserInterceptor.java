@@ -6,6 +6,7 @@ import com.hzy.pojo.User;
 
 import com.hzy.service.TokenService;
 import com.hzy.service.UserService;
+import com.hzy.utils.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,6 +16,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 
 /*
@@ -33,9 +36,19 @@ public class UserInterceptor implements HandlerInterceptor {
      * 当返回值为true时表示继续向下执行，为false时会中断后续所有操作
      * */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");
+        // 需要跳转到登录
         if (token == null) {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json;charset=UTF-8");
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+                out.write(JSONUtils.getJSONString(-1,"The Token is wrong"));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
             return false;
         }
         Token token1 = tokenService.selectTicketByRandomTicket(token);
@@ -44,6 +57,15 @@ public class UserInterceptor implements HandlerInterceptor {
             HttpSession session = request.getSession();
             session.setAttribute("user",user);
             return true;
+        }
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+            out.write(JSONUtils.getJSONString(-1,"The Token is wrong"));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
         return false;
     }

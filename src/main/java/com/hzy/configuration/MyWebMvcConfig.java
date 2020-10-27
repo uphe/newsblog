@@ -1,6 +1,4 @@
 package com.hzy.configuration;
-
-import com.hzy.interceptor.IndexInterceptor;
 import com.hzy.interceptor.UserInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration //注入到Spring
 public class MyWebMvcConfig implements WebMvcConfigurer {
     @Autowired
-    private IndexInterceptor indexInterceptor;
-    @Autowired
     private UserInterceptor userInterceptor;
 
     /*
@@ -24,11 +20,8 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
      * */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(indexInterceptor)
-                .addPathPatterns("/","/index","index.html");
-
         registry.addInterceptor(userInterceptor)
-                .addPathPatterns("/toWrite","/editormd");
+                .addPathPatterns("/user/**");
     }
 
 
