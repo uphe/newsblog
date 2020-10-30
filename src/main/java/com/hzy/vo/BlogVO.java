@@ -1,8 +1,9 @@
 package com.hzy.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BlogVO {
+public class BlogVO implements Serializable {
     private int blogId;
     private String title;
     private String article;

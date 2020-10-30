@@ -41,9 +41,9 @@ public class IndexController{
     @RequestMapping("/newest/{page}")
     public List<BlogVO> newest(@PathVariable("page") int page) {
 
-        List<BlogVO> userBlogs =  blogService.getNewestBlogVO(40 * (page - 1),40);
+        List<BlogVO> blogVOS =  blogService.getNewestBlogVO(40 * (page - 1),40);
 
-        return  userBlogs;
+        return  blogVOS;
     }
 
     @RequestMapping("/user/follow/{page}")

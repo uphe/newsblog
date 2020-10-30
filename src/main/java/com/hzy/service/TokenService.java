@@ -13,7 +13,7 @@ public class TokenService {
     @Autowired
     private TokenMapper tokenMapper;
 
-    public int addTicket(Token token) {
+    public int addToken(Token token) {
         return tokenMapper.addToken(token);
     }
 
@@ -21,7 +21,7 @@ public class TokenService {
         return tokenMapper.updateToken(randomTicket, expired);
     }
 
-    public Token selectTicketByRandomTicket(String randomTicket) {
-        return tokenMapper.selectTokenByToken(randomTicket);
+    public Token selectTokenByToken(String token) {
+        return tokenMapper.selectTokenByToken(token);
     }
 }

@@ -12,4 +12,5 @@ public interface TokenMapper {
     int addToken(Token token);
     int updateToken(String token, Date expired);
     Token selectTokenByToken(String token);
+    Token selectTokenByUserId(int userId);
 }

@@ -6,7 +6,6 @@ import com.hzy.pojo.Token;
 import com.hzy.pojo.User;
 import com.hzy.utils.*;
 import com.hzy.vo.ResponseVO;
-import com.hzy.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,12 +47,16 @@ public class UserService {
         if (!MD5Utils.MD5(password + user.getSalt()).equals(user.getPassword())) {
             return new ResponseVO(-1,"密码错误");
         }
-        Token token = new Token();
-        token.setUserId(user.getUserId());
-        token.setToken(UUID.randomUUID().toString().replaceAll("-",""));
-        token.setExpired(DateUtil.afterSevenDay());
-
-        tokenMapper.addToken(token);
+        Token token = tokenMapper.selectTokenByUserId(user.getUserId());
+        if (token != null) {
+            tokenMapper.updateToken(token.getToken(),DateUtil.afterSevenDay());
+        } else {
+            token = new Token();
+            token.setUserId(user.getUserId());
+            token.setToken(UUID.randomUUID().toString().replaceAll("-",""));
+            token.setExpired(DateUtil.afterSevenDay());
+            tokenMapper.addToken(token);
+        }
         response.setHeader("token",token.getToken());
         session.setAttribute("user",user);
 

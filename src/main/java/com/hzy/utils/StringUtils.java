@@ -5,6 +5,7 @@ public class StringUtils {
     private static String SPLIT = ":";
     private static String LIKE = "LIKE";
     private static String CHANGE = "CHANGE";
+    private static String TODAY_COMMEND = "TODAY_COMMEND";
 
     public static boolean isEmpty(String str) {
         if (str == null || str.trim().equals("")) {
@@ -26,5 +27,9 @@ public class StringUtils {
 
     public static String getChangeKey() {
         return CHANGE;
+    }
+
+    public static String getTodayCommend() {
+        return TODAY_COMMEND;
     }
 }

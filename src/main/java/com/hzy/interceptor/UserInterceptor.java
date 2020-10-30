@@ -38,26 +38,16 @@ public class UserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");
-        // 需要跳转到登录
-        if (token == null) {
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/json;charset=UTF-8");
-            PrintWriter out = null;
-            try {
-                out = response.getWriter();
-                out.write(JSONUtils.getJSONString(-1,"The Token is wrong"));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+        if (token != null) {
+            Token token1 = tokenService.selectTokenByToken(token);
+            if (token1 != null && token1.getExpired().after(new Date()) && token1.getToken().equals(token)) {
+                User user = userService.selectUserById(token1.getUserId());
+                HttpSession session = request.getSession();
+                session.setAttribute("user",user);
+                return true;
             }
-            return false;
         }
-        Token token1 = tokenService.selectTicketByRandomTicket(token);
-        if (token1 != null && token1.getExpired().after(new Date()) && token1.getToken().equals(token)) {
-            User user = userService.selectUserById(token1.getUserId());
-            HttpSession session = request.getSession();
-            session.setAttribute("user",user);
-            return true;
-        }
+        // 需要跳转到登录
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = null;

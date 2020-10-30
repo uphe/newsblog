@@ -37,17 +37,10 @@ class NewsblogApplicationTests {
     private RestHighLevelClient client;
     private static final String INDEX_NAME = "blog_index";
 
-    @Autowired
-    private TokenMapper tokenMapper;
-
     @Test
-    void tokenTest() {
-//        Token token = new Token();
-//        token.setToken("abc");
-//        token.setExpired(new Date());
-//        token.setUserId(1);
-//        System.out.println(tokenMapper.addToken(token));
-        System.out.println(tokenMapper.selectTokenByToken("abc"));
+    void getBlog() {
+        Blog blog = blogMapper.selectBlogById(1);
+        System.out.println(blog);
     }
 
     /**
@@ -157,51 +150,5 @@ class NewsblogApplicationTests {
         CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
 
         System.out.println(createIndexResponse);
-    }
-
-
-    /**
-     * 将博客保存到es
-     */
-    @Test
-    public void save() {
-        Blog blog = new Blog();
-        blog.setTitle("欢迎您");
-        IndexRequest request = new IndexRequest(INDEX_NAME);
-        request.timeout(TimeValue.timeValueSeconds(1));
-
-        // 将数据放入请求json
-        request.source(JSON.toJSONString(blog), XContentType.JSON);
-        // 客户端发送请求
-        try {
-            client.index(request, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 将用户保存到es
-     */
-    @Test
-    public void saveUser() {
-        User user = new User();
-        user.setUsername("欢迎您");
-        user.setPassword("fdsf");
-        user.setHeadUrl("gfdsg");
-        user.setSalt("fdsaf");
-        user.setUserId(2);
-        user.setUserType(1);
-        IndexRequest request = new IndexRequest("user_index");
-        request.timeout(TimeValue.timeValueSeconds(1));
-
-        // 将数据放入请求json
-        request.source(JSON.toJSONString(user), XContentType.JSON);
-        // 客户端发送请求
-        try {
-            client.index(request, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

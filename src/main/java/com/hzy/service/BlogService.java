@@ -19,11 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -119,7 +121,18 @@ public class BlogService {
      * @return
      */
     public List<BlogVO> getTodayBlogVO(int offset, int limit) {
-        logger.info("执行了今日推荐榜查询");
+        // 先判断redis中是否存在
+        SetOperations setOperations = redisTemplate.opsForSet();
+        Set<BlogVO> members = setOperations.members(StringUtils.getTodayCommend());
+        if (!members.isEmpty()) {
+            logger.info("执行了Redis今日推荐榜查询");
+            List<BlogVO> blogVOS = new ArrayList<>();
+            for (BlogVO member : members) {
+                blogVOS.add(member);
+            }
+            return blogVOS;
+        }
+        logger.info("执行了MySQL今日推荐榜查询");
         limit += 30;
         List<BlogVO> blogVOS = blogMapper.selectTodayBlogVOByUserIdAndOffset(offset, limit);
 
@@ -131,6 +144,7 @@ public class BlogService {
                 String substring = blogVOS.get(i).getArticle().substring(result, result + FileUtils.GET_IMAGE_DIR.length() + FileUtils.FILENAME_LENGTH);
                 blogVOS.get(i).setHeadUrl(substring);
                 t ++;
+                setOperations.add(StringUtils.getTodayCommend(), blogVOS.get(i));
                 if (t == 10) {
                     break;
                 }
@@ -138,6 +152,7 @@ public class BlogService {
                 blogVOS.remove(i);
             }
         }
+        redisTemplate.expire(StringUtils.getTodayCommend(), 1, TimeUnit.DAYS);
         setBlogVOSLikeCount(blogVOS);
         return blogVOS;
     }

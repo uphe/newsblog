@@ -21,7 +21,6 @@ public class CollectController {
     }
 
     @RequestMapping("/add/{userId}/{blogId}")
-
     public int addCollect(@PathVariable("userId") int userId, @PathVariable("blogId") int blogId) {
         return collectService.addCollectBlog(userId, blogId);
     }

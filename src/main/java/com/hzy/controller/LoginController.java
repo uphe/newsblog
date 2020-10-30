@@ -53,10 +53,14 @@ public class LoginController {
     }
 
     @RequestMapping("/islogin")
-    public String isLogin(HttpServletResponse response, HttpServletRequest request) {
+    public String isLogin(HttpServletRequest request) {
+        logger.info("执行了islogin");
         try {
             String token = request.getHeader("token");
-            if (tokenService.selectTicketByRandomTicket(token).getExpired().after(new Date())) {
+            if (token == null) {
+                return JSONUtils.getJSONString(-1,"is not login");
+            }
+            if (tokenService.selectTokenByToken(token).getExpired().after(new Date())) {
                 tokenService.updateToken(token, DateUtil.afterSevenDay());
                 return JSONUtils.getJSONString(0,"is login");
             }
@@ -68,7 +72,7 @@ public class LoginController {
 
     @RequestMapping("/user/logout")
     public String logout(HttpServletRequest request) {
-        logger.info("执行退出操作");
+        logger.info("执行退出登录操作");
         String token = request.getHeader("token");
         tokenService.updateToken(token,new Date());
         return JSONUtils.getJSONString(0,"退出成功");

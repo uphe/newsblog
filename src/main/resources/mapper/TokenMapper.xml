@@ -16,4 +16,8 @@
         select * from token
         where token = #{token}
     </select>
+    <select id="selectTokenByUserId" resultType="Token">
+        select * from token
+        where userId = #{userId}
+    </select>
 </mapper>
