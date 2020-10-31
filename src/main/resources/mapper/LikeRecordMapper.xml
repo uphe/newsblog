@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.LikeRecordMapper">
+    <insert id="addLikeRecord" parameterType="LikeRecord">
+        insert into newsblog.likerecord(userId,blogId,createDate,state)
+        values (#{userId},#{blogId},#{createDate},#{state})
+    </insert>
+    <update id="updateLikeRecord">
+        update likerecord set state = #{state} where likerecord = #{likerecord}
+    </update>
+    <select id="isLike" resultType="LikeRecord">
+        select * from likerecord where userId = #{userId} and blogId = (blogId) and state = 1
+    </select>
+</mapper>

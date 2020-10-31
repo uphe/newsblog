@@ -22,18 +22,18 @@ public class IndexController{
     @Autowired
     private BlogService blogService;
 
-    @RequestMapping({"/hot/{page}"})
-    public List<BlogVO> index(@PathVariable("page") int page) {
-        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(20 * (page - 1),20);
+    @RequestMapping({"/all/hot/{page}"})
+    public List<BlogVO> index(@PathVariable("page") int page, HttpSession session) {
+        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(session, 20 * (page - 1),20);
         return blogVOS;
     }
 
     @RequestMapping("/user/recommend/{page}")
-    public List<BlogVO> recommend(@PathVariable("page") int page, HttpSession session) {
+    public List<BlogVO> recommend( @PathVariable("page") int page, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
-        List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(userId, 40 * (page - 1), 40);
+        List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(session, userId, 40 * (page - 1), 40);
 
         return recommendBlogVO;
     }
@@ -61,7 +61,7 @@ public class IndexController{
     }
 
     @PostMapping("/uploadimage")
-    public String uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpSession session) {
+    public String uploadImage(@RequestParam("file") MultipartFile file, HttpSession session) {
         String fileUrl = userService.saveImage(file);
         if (fileUrl != null) {
             userService.updateUserByHeadUrl(fileUrl, session);

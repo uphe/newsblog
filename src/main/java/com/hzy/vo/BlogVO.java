@@ -18,6 +18,7 @@ public class BlogVO implements Serializable {
     private int userId;
     private String username;
     private String headUrl;
+    private Integer isLike;
 
     public int getBlogId() {
         return blogId;
@@ -123,6 +124,14 @@ public class BlogVO implements Serializable {
         this.headUrl = headUrl;
     }
 
+    public Integer getIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(Integer isLike) {
+        this.isLike = isLike;
+    }
+
     @Override
     public String toString() {
         return "BlogVO{" +
@@ -139,6 +148,7 @@ public class BlogVO implements Serializable {
                 ", userId=" + userId +
                 ", username='" + username + '\'' +
                 ", headUrl='" + headUrl + '\'' +
+                ", isLike=" + isLike +
                 '}';
     }
 }

@@ -1,14 +1,8 @@
 package com.hzy.service;
 
 import com.alibaba.fastjson.JSON;
-import com.hzy.mapper.BlogMapper;
-import com.hzy.mapper.LabelMapper;
-import com.hzy.mapper.TypeMapper;
-import com.hzy.mapper.UserMapper;
-import com.hzy.pojo.Blog;
-import com.hzy.pojo.Label;
-import com.hzy.pojo.Type;
-import com.hzy.pojo.User;
+import com.hzy.mapper.*;
+import com.hzy.pojo.*;
 import com.hzy.utils.DateUtil;
 import com.hzy.utils.FileUtils;
 import com.hzy.utils.JSONUtils;
@@ -24,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
@@ -35,6 +30,8 @@ public class BlogService {
     @Autowired
     private BlogMapper blogMapper;
     @Autowired
+    private LikeRecordMapper likeRecordMapper;
+    @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
     private LabelMapper labelMapper;
@@ -43,17 +40,19 @@ public class BlogService {
     @Autowired
     private ElasticSearchService elasticSearchService;
     private Logger logger = LoggerFactory.getLogger(getClass());
-
     /**
      * 首页，暂时是根据一年以内的优文推荐，根据点赞*100+访问排序
      * @param offset
      * @param limit
      * @return
      */
-    public List<BlogVO> getIndexBlogVO(int offset, int limit) {
+    public List<BlogVO> getIndexBlogVO(HttpSession session, int offset, int limit) {
         logger.info("执行了热榜查询");
         List<BlogVO> blogVOS = blogMapper.selectIndexBlogVOByUserIdAndOffset(offset, limit);
         setBlogVOSLikeCount(blogVOS);
+        if (session.getAttribute("user") != null) {
+            setIsLike(blogVOS);
+        }
         return blogVOS;
     }
 
@@ -67,7 +66,7 @@ public class BlogService {
      * @param limit
      * @return
      */
-    public List<BlogVO> getRecommendBlogVO(int userId, int offset, int limit) {
+    public List<BlogVO> getRecommendBlogVO(HttpSession session, int userId, int offset, int limit) {
         logger.info("执行了推荐榜查询");
         List<BlogVO> blogVOS = new ArrayList<>();
 
@@ -83,6 +82,9 @@ public class BlogService {
             blogVOS.addAll(blogVOList.subList(0,blogVOList.size() > (t * limit / sum) ? (t * limit / sum) : blogVOList.size()));
         }
         setBlogVOSLikeCount(blogVOS);
+        if (session.getAttribute("user") != null) {
+            setIsLike(blogVOS);
+        }
         return blogVOS;
     }
 
@@ -113,7 +115,6 @@ public class BlogService {
         setBlogVOSLikeCount(blogVOS);
         return blogVOS;
     }
-
     /**
      * 今日推荐你文章，即是昨天的好文，根据点赞*100+访问进行排序
      * @param offset
@@ -123,14 +124,16 @@ public class BlogService {
     public List<BlogVO> getTodayBlogVO(int offset, int limit) {
         // 先判断redis中是否存在
         SetOperations setOperations = redisTemplate.opsForSet();
-        Set<BlogVO> members = setOperations.members(StringUtils.getTodayCommend());
-        if (!members.isEmpty()) {
-            logger.info("执行了Redis今日推荐榜查询");
-            List<BlogVO> blogVOS = new ArrayList<>();
-            for (BlogVO member : members) {
-                blogVOS.add(member);
+        if (redisTemplate.hasKey(StringUtils.getTodayCommend())) {
+            Set<BlogVO> members = setOperations.members(StringUtils.getTodayCommend());
+            if (!members.isEmpty()) {
+                logger.info("执行了Redis今日推荐榜查询");
+                List<BlogVO> blogVOS = new ArrayList<>();
+                for (BlogVO member : members) {
+                    blogVOS.add(member);
+                }
+                return blogVOS;
             }
-            return blogVOS;
         }
         logger.info("执行了MySQL今日推荐榜查询");
         limit += 30;
@@ -317,6 +320,18 @@ public class BlogService {
                 if (members != null) {
                     blogVO.setLikeCount(members.size());
                 }
+            }
+        }
+    }
+
+    /**
+     * 对查询出来的博客中，进行判断用户是否已经点赞，1是点过了，0是未点过
+     */
+    private void setIsLike(List<BlogVO> blogVOS) {
+        for (BlogVO blogVO : blogVOS) {
+            LikeRecord likeRecord = likeRecordMapper.isLike(blogVO.getUserId(), blogVO.getBlogId());
+            if (likeRecord != null && likeRecord.getState() == 1) {
+                blogVO.setIsLike(1);
             }
         }
     }

@@ -1,4 +1,5 @@
 package com.hzy.configuration;
+import com.hzy.interceptor.AllInterceptor;
 import com.hzy.interceptor.UserInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MyWebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private UserInterceptor userInterceptor;
-
+    @Autowired
+    private AllInterceptor allInterceptor;
     /*
      * 配置indexInterceptor拦截器的拦截路径，这里只拦截了首页
      * 用于判断用户是否保存了密码
@@ -22,6 +24,8 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(userInterceptor)
                 .addPathPatterns("/user/**");
+        registry.addInterceptor(allInterceptor)
+                .addPathPatterns("/all/**");
     }
 
 

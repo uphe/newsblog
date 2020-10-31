@@ -20,7 +20,7 @@ public class LikeController {
     @Autowired
     private BlogService blogService;
 
-    @RequestMapping("/like/{blogId}")
+    @RequestMapping("/user/like/{blogId}")
     public String like(@PathVariable("blogId") int blogId, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();

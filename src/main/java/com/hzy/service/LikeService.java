@@ -1,8 +1,10 @@
 package com.hzy.service;
 
 import com.hzy.mapper.BlogMapper;
+import com.hzy.mapper.LikeRecordMapper;
 import com.hzy.mapper.RemindMapper;
 import com.hzy.mapper.UserMapper;
+import com.hzy.pojo.LikeRecord;
 import com.hzy.pojo.Remind;
 import com.hzy.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class LikeService {
     private BlogMapper blogMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private LikeRecordMapper likeRecordMapper;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -45,11 +49,15 @@ public class LikeService {
         // 如果是第二次点击，那么就认为是取消点赞
         if (setOperations.isMember(likeKey,String.valueOf(userId))) {
             setOperations.remove(likeKey,String.valueOf(userId));
-
+            // 取消点赞，把点赞记录设置为0
+            LikeRecord likeRecord = likeRecordMapper.isLike(userId, blogId);
+            likeRecordMapper.updateLikeRecord(likeRecord.getLikeRecordId(),0);
             // 这里是标记消息已读（因为点赞已取消）
             remindMapper.updateRemindByFromIdAndBlogIdAndRemindType(userId,blogId,0);
         } else {
             setOperations.add(likeKey,String.valueOf(userId));
+            // 处理点赞记录
+            likeRecordMapper.addLikeRecord(new LikeRecord(userId,blogId));
 
             Remind remind = new Remind();
             remind.setBlogId(blogId);
