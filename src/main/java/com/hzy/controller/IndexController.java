@@ -24,7 +24,12 @@ public class IndexController{
 
     @RequestMapping({"/all/hot/{page}"})
     public List<BlogVO> index(@PathVariable("page") int page, HttpSession session) {
-        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(session, 20 * (page - 1),20);
+        User user = (User) session.getAttribute("user");
+        int userId = -1;
+        if (user != null) {
+            userId = user.getUserId();
+        }
+        List<BlogVO> blogVOS =  blogService.getIndexBlogVO(userId, 20 * (page - 1),20);
         return blogVOS;
     }
 
@@ -33,15 +38,19 @@ public class IndexController{
 
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
-        List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(session, userId, 40 * (page - 1), 40);
+        List<BlogVO> recommendBlogVO = blogService.getRecommendBlogVO(userId, 40 * (page - 1), 40);
 
         return recommendBlogVO;
     }
 
-    @RequestMapping("/newest/{page}")
-    public List<BlogVO> newest(@PathVariable("page") int page) {
-
-        List<BlogVO> blogVOS =  blogService.getNewestBlogVO(40 * (page - 1),40);
+    @RequestMapping("/all/newest/{page}")
+    public List<BlogVO> newest(@PathVariable("page") int page, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        int userId = -1;
+        if (user != null) {
+            userId = user.getUserId();
+        }
+        List<BlogVO> blogVOS =  blogService.getNewestBlogVO(userId, 40 * (page - 1),40);
 
         return  blogVOS;
     }

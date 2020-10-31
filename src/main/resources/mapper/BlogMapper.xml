@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzy.mapper.BlogMapper">
     <sql id="sqlid">
-        blogId,title,summary,article,likeCount,hitCount,commentCount,createDate,user.userId,username,headUrl
+        blog.blogId,title,summary,article,likeCount,hitCount,commentCount,blog.createDate,user.userId,username,headUrl,isLike
     </sql>
     <insert id="addBlog" useGeneratedKeys="true" keyProperty="blogId" parameterType="Blog">
         insert into Blog(title,article,summary,createDate,userId)
@@ -19,6 +19,7 @@
         SELECT
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
+        LEFT JOIN likerecord ON user.userId = likerecord.userId AND blog.blogId = likerecord.blogId
         where blogId = #{blogId}
     </select>
 
@@ -35,7 +36,8 @@
         SELECT
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
-        order by createDate desc
+        LEFT JOIN likerecord ON user.userId = likerecord.userId AND blog.blogId = likerecord.blogId
+        order by blog.createDate desc
         limit #{offset},#{limit}
     </select>
 
@@ -43,7 +45,8 @@
         SELECT
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
-        order by createDate desc
+        LEFT JOIN likerecord ON blog.blogId = likerecord.blogId AND likerecord.userId = #{userId}
+        order by blog.createDate desc
         limit #{offset},#{limit}
     </select>
 
@@ -51,7 +54,8 @@
         SELECT
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
-        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)
+        LEFT JOIN likerecord ON blog.blogId = likerecord.blogId AND likerecord.userId = #{userId}
+        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(blog.createDate)
         order by 100 * likeCount + hitCount DESC
         limit #{offset},#{limit}
     </select>
@@ -60,6 +64,7 @@
         SELECT
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
+        LEFT JOIN likerecord ON blog.blogId = likerecord.blogId AND likerecord.userId = #{userId}
         WHERE blog.userId IN (SELECT followUserId FROM follow WHERE userId = #{userId})
         limit #{offset},#{limit}
     </select>
@@ -68,8 +73,9 @@
         SELECT
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
+        LEFT JOIN likerecord ON user.userId = likerecord.userId AND blog.blogId = likerecord.blogId
 --         WHERE TO_DAYS(NOW())-TO_DAYS(createDate) = 1 -- 这里是今日推荐
-        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)-- 这里是用来测试
+        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(blog.createDate)-- 这里是用来测试
         order by 100 * likeCount + hitCount DESC
         limit #{offset},#{limit}
     </select>
@@ -78,7 +84,8 @@
         SELECT
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
-        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(createDate)
+        LEFT JOIN likerecord ON blog.blogId = likerecord.blogId AND likerecord.userId = #{userId}
+        WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(blog.createDate)
         AND blog.blogId IN (SELECT label.blogId FROM label WHERE labelName = #{labelName})
         ORDER BY 100 * likeCount + hitCount DESC
         LIMIT #{offset},#{limit}

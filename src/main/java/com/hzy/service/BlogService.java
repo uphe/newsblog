@@ -46,13 +46,10 @@ public class BlogService {
      * @param limit
      * @return
      */
-    public List<BlogVO> getIndexBlogVO(HttpSession session, int offset, int limit) {
+    public List<BlogVO> getIndexBlogVO(int userId, int offset, int limit) {
         logger.info("执行了热榜查询");
-        List<BlogVO> blogVOS = blogMapper.selectIndexBlogVOByUserIdAndOffset(offset, limit);
+        List<BlogVO> blogVOS = blogMapper.selectIndexBlogVOByUserIdAndOffset(userId, offset, limit);
         setBlogVOSLikeCount(blogVOS);
-        if (session.getAttribute("user") != null) {
-            setIsLike(blogVOS);
-        }
         return blogVOS;
     }
 
@@ -66,7 +63,7 @@ public class BlogService {
      * @param limit
      * @return
      */
-    public List<BlogVO> getRecommendBlogVO(HttpSession session, int userId, int offset, int limit) {
+    public List<BlogVO> getRecommendBlogVO(int userId, int offset, int limit) {
         logger.info("执行了推荐榜查询");
         List<BlogVO> blogVOS = new ArrayList<>();
 
@@ -77,14 +74,11 @@ public class BlogService {
         }
         for (Map<String, Object> map : maps) {
             String labelName = map.get("labelName").toString();
-            List<BlogVO> blogVOList = blogMapper.selectBlogVOByLabelName(labelName, 0, 40);
+            List<BlogVO> blogVOList = blogMapper.selectBlogVOByLabelName(userId, labelName, 0, 40);
             int t = Integer.valueOf(map.get("labelCount").toString());
             blogVOS.addAll(blogVOList.subList(0,blogVOList.size() > (t * limit / sum) ? (t * limit / sum) : blogVOList.size()));
         }
         setBlogVOSLikeCount(blogVOS);
-        if (session.getAttribute("user") != null) {
-            setIsLike(blogVOS);
-        }
         return blogVOS;
     }
 
@@ -95,9 +89,9 @@ public class BlogService {
      * @param limit
      * @return
      */
-    public List<BlogVO> getNewestBlogVO(int offset, int limit) {
+    public List<BlogVO> getNewestBlogVO(int userId, int offset, int limit) {
         logger.info("执行了最新榜查询");
-        List<BlogVO> blogVOS = blogMapper.selectNewestBlogVOByUserIdAndOffset(offset, limit);
+        List<BlogVO> blogVOS = blogMapper.selectNewestBlogVOByUserIdAndOffset(userId, offset, limit);
         setBlogVOSLikeCount(blogVOS);
         return blogVOS;
     }
@@ -320,18 +314,6 @@ public class BlogService {
                 if (members != null) {
                     blogVO.setLikeCount(members.size());
                 }
-            }
-        }
-    }
-
-    /**
-     * 对查询出来的博客中，进行判断用户是否已经点赞，1是点过了，0是未点过
-     */
-    private void setIsLike(List<BlogVO> blogVOS) {
-        for (BlogVO blogVO : blogVOS) {
-            LikeRecord likeRecord = likeRecordMapper.isLike(blogVO.getUserId(), blogVO.getBlogId());
-            if (likeRecord != null && likeRecord.getState() == 1) {
-                blogVO.setIsLike(1);
             }
         }
     }

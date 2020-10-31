@@ -34,13 +34,14 @@ public class AllInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
+        HttpSession session = request.getSession();
         if (token == null) {
+            session.setAttribute("user", null);
             return true;
         }
         Token token1 = tokenService.selectTokenByToken(token);
         if (token1 != null && token1.getExpired().after(new Date())) {
             User user = userService.selectUserById(token1.getUserId());
-            HttpSession session = request.getSession();
             session.setAttribute("user",user);
         }
         // 这里只是判断一下用户是否保存了密码，如果保存了，就直接给登录上了

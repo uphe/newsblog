@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LikeRecordMapper {
     int addLikeRecord(LikeRecord likeRecord);
-    int updateLikeRecord(@Param("likeRecordId") int likeRecordId,@Param("state") int state);
+    int updateLikeRecord(@Param("likeRecordId") int likeRecordId,@Param("isLike") int isLike);
     LikeRecord isLike(@Param("userId") int userId, @Param("blogId") int blogId);
 }

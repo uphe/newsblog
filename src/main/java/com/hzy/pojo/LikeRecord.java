@@ -7,7 +7,7 @@ public class LikeRecord {
     private Integer userId;
     private Integer blogId;
     private Date createDate;
-    private Integer state;
+    private Integer isLike;
 
     public LikeRecord() {
     }
@@ -16,7 +16,7 @@ public class LikeRecord {
         this.userId = userId;
         this.blogId = blogId;
         this.createDate = new Date();
-        this.state = 1;
+        this.isLike = 1;
     }
 
     public Integer getLikeRecordId() {
@@ -51,12 +51,12 @@ public class LikeRecord {
         this.createDate = createDate;
     }
 
-    public Integer getState() {
-        return state;
+    public Integer getIsLike() {
+        return isLike;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
+    public void setIsLike(Integer isLike) {
+        this.isLike = isLike;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class LikeRecord {
                 ", userId=" + userId +
                 ", blogId=" + blogId +
                 ", createDate=" + createDate +
-                ", state=" + state +
+                ", isLike=" + isLike +
                 '}';
     }
 }
