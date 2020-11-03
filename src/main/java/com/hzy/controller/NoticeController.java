@@ -53,15 +53,15 @@ public class NoticeController {
     @RequestMapping("/msg/noticedetail")
     public ResponseVO<List<Notice>> toNoticeDetail(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        ResponseVO<List<Notice>> responseVO = new ResponseVO<>(0,"查看成功");
+        ResponseVO<List<Notice>> responseVO = new ResponseVO<>(0,"查看公告列表");
         List<Notice> noticeList = noticeService.selectNoticeByUserId(user.getUserId());
         responseVO.setData(noticeList);
         return responseVO;
     }
-    @RequestMapping("/msg/noticedetail/look")
-    public ResponseVO<Notice> toNoticeDetailLook(int noticeId, HttpSession session) {
+    @RequestMapping("/msg/noticedetail/{noticeId}")
+    public ResponseVO<Notice> toNoticeDetailLook(@PathVariable("noticeId") int noticeId, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        ResponseVO<Notice> responseVO = new ResponseVO<>(0,"查看成功");
+        ResponseVO<Notice> responseVO = new ResponseVO<>(0,"查看公告");
         ReadNotice readNotice = new ReadNotice();
 
         readNotice.setNoticeId(noticeId);
