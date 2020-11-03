@@ -4,8 +4,8 @@ import com.hzy.pojo.Comment;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.CommentService;
-import com.hzy.utils.JSONUtils;
 import com.hzy.vo.CommentVO;
+import com.hzy.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,21 +30,15 @@ public class CommentController {
         return commentVOS;
     }
 
-    @RequestMapping("/publishcomment")
-    public String publishComment(@RequestBody Comment comment, HttpSession session) {
+    @RequestMapping("/user/publishcomment")
+    public ResponseVO publishComment(@RequestBody Comment comment, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
 
         comment.setCreateDate(new Date());
         comment.setUserId(userId);
         comment.setStatus(0);
-
-        int result = commentService.addComment(comment);
-
-        if (result > 0) {
-            blogService.updateCommentCountByBlogId(commentService.selectCommentCountByBlogId(comment.getBlogId()), comment.getBlogId());
-            return JSONUtils.getJSONString(0, "success");
-        }
-        return JSONUtils.getJSONString(-1,"error");
+        ResponseVO responseVO = commentService.addComment(comment);
+        return responseVO;
     }
 }

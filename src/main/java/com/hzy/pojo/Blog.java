@@ -18,8 +18,6 @@ public class Blog {
     private int likeCount;
     private int hitCount;
     private int commentCount;
-    // 入参日期格式化
-//    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     // 出参日期格式化
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private String createDate;

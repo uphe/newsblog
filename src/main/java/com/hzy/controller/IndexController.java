@@ -63,7 +63,7 @@ public class IndexController{
         return blogVOS;
     }
 
-    @RequestMapping("/todayrecommend")
+    @RequestMapping("/all/todayrecommend")
     public List<BlogVO> todayRecommend() {
         List<BlogVO> blogVOS = blogService.getTodayBlogVO(0, 10);
         return blogVOS;

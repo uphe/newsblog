@@ -10,5 +10,6 @@ import java.util.List;
 public interface NoticeMapper {
     int addNotice(Notice notice);
     List<Notice> selectNoticeByUserId(int userId);
+    int selectNoticeCountByUserId(int userId);
     Notice selectNoticeByNoticeId(int noticeId);
 }

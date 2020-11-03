@@ -14,6 +14,9 @@ public class NoticeService {
     public int addNotice(Notice notice) {
         return noticeMapper.addNotice(notice);
     }
+    public int selectNoticeCountByUserId(int userId) {
+        return noticeMapper.selectNoticeCountByUserId(userId);
+    }
     public List<Notice> selectNoticeByUserId(int userId) {
         return noticeMapper.selectNoticeByUserId(userId);
     }

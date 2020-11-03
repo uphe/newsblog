@@ -2,13 +2,18 @@ package com.hzy.service;
 
 import com.hzy.mapper.BlogMapper;
 import com.hzy.mapper.CommentMapper;
+import com.hzy.mapper.RemindMapper;
 import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Blog;
 import com.hzy.pojo.Comment;
 import com.hzy.pojo.Remind;
 import com.hzy.pojo.User;
 import com.hzy.vo.CommentVO;
+import com.hzy.vo.ResponseVO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Arg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +21,7 @@ import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
+@Slf4j
 public class CommentService {
     @Autowired
     private CommentMapper commentMapper;
@@ -24,14 +30,16 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private RemindService remindService;
+    private RemindMapper remindMapper;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 添加评论
      * @param comment
      * @return
      */
-    public int addComment(Comment comment) {
+    public ResponseVO addComment(Comment comment) {
+        logger.info("执行评论功能");
         int fromId = comment.getUserId();
         Blog blog = blogMapper.selectBlogById(comment.getBlogId());
         int toId = blog.getUserId();
@@ -45,8 +53,14 @@ public class CommentService {
         remind.setState(0);// 0表示未读
         remind.setBlogId(blogId);
         remind.setCreateDate(new Date());
-        remindService.addRemind(remind);
-        return commentMapper.addComment(comment);
+        remindMapper.addRemind(remind);
+
+        int result = commentMapper.addComment(comment);
+        if (result > 0) {
+            blogMapper.updateCommentCountByBlogId(commentMapper.selectCommentCountByBlogId(comment.getBlogId()), comment.getBlogId());
+            return new ResponseVO(0,"评论成功");
+        }
+        return new ResponseVO(0,"评论失败");
     }
 
     public int selectCommentCountByBlogId(int blogId) {

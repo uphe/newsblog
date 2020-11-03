@@ -37,6 +37,7 @@ public class RedisDataToMySQL {
                 String likeKey = StringUtils.getLikeKey((Integer) blogId);
                 blogService.updateLikeCountByBlogId(Math.toIntExact(setOperations.size(likeKey)),(Integer)blogId);
             }
+            // 做完持久化后，将该key移除
             setOperations.pop(StringUtils.getChangeKey());
         }
         logger.info("结束执行Redis数据持久化到MySQL任务");

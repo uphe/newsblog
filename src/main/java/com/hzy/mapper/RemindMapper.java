@@ -10,13 +10,12 @@ import java.util.List;
 public interface RemindMapper {
     int addRemind(Remind remind);
     List<Remind> selectCommentRemindByToId(int toId);
-    public List<Remind> selectLikeRemindByToId(int toId);
+    List<Remind> selectLikeRemindByToId(int toId);
+    int selectLikeRemindCountByToId(int toId);
+    int selectCommentRemindCountByToId(int toId);
     int updateRemindByRemindId(int remindId);
     int updateRemindByFromIdAndBlogIdAndRemindType(int fromId, int blogId, int remindType);
-    /**
-     * 全部已读
-     * @param toId
-     * @return
-     */
     int updateRemindByToId(int toId);
+    int updateLikeRemindByToId(int toId);
+    int updateCommentRemindByToId(int toId);
 }

@@ -1,5 +1,7 @@
 package com.hzy.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Notice {
@@ -7,7 +9,9 @@ public class Notice {
     private String noticeTitle;
     private String noticeContent;
     private int operatorId;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date publishTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date expirationTime;
 
     public int getNoticeId() {

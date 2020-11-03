@@ -11,6 +11,9 @@ public class ResponseVO<T> {
     public ResponseVO() {
 
     }
+    public ResponseVO(Integer code) {
+        this.code = code;
+    }
     public ResponseVO(Integer code, String msg) {
         this.code = code;
         this.msg = msg;

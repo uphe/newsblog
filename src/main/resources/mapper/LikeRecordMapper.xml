@@ -8,9 +8,12 @@
         values (#{userId},#{blogId},#{createDate},#{isLike})
     </insert>
     <update id="updateLikeRecord">
-        update likerecord set isLike = #{isLike} where likerecord = #{likerecord}
+        update likerecord set isLike = #{isLike} where likeRecordId = #{likeRecordId}
     </update>
+    <delete id="deleteLikeRecordById">
+        delete from likerecord where likeRecordId = #{likeRecordId}
+    </delete>
     <select id="isLike" resultType="LikeRecord">
-        select * from likerecord where userId = #{userId} and blogId = (blogId) and isLike = 1
+        select * from likerecord where userId = #{userId} and blogId = #{blogId} and isLike = 1
     </select>
 </mapper>

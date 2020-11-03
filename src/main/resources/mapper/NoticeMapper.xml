@@ -13,6 +13,12 @@
         and noticeId not in
         (select noticeId from readnotice where userId = #{userId} and expirationTime > now())
     </select>
+    <select id="selectNoticeCountByUserId" parameterType="_int" resultType="_int">
+        select count(*) from notice
+        where expirationTime > now()
+        and noticeId not in
+        (select noticeId from readnotice where userId = #{userId} and expirationTime > now())
+    </select>
     <select id="selectNoticeByNoticeId" parameterType="_int" resultType="Notice">
         select * from notice
         where noticeId = #{noticeId}

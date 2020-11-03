@@ -9,10 +9,18 @@
     </insert>
     <select id="selectCommentRemindByToId" parameterType="_int" resultType="Remind">
         select * from remind
+        where toId = #{toId} and remindType = 1;
+    </select>
+    <select id="selectCommentRemindCountByToId" parameterType="_int" resultType="_int">
+        select count(*) from remind
         where toId = #{toId} and state = 0 and remindType = 1;
     </select>
     <select id="selectLikeRemindByToId" parameterType="_int" resultType="Remind">
         select * from remind
+        where toId = #{toId} and remindType = 0;
+    </select>
+    <select id="selectLikeRemindCountByToId" parameterType="_int" resultType="_int">
+        select count(*) from remind
         where toId = #{toId} and state = 0 and remindType = 0;
     </select>
     <update id="updateRemindByRemindId" parameterType="_int">
@@ -22,6 +30,14 @@
     <update id="updateRemindByToId" parameterType="_int">
         update remind set state = 1
         where toId = #{toId}
+    </update>
+    <update id="updateLikeRemindByToId" parameterType="_int">
+        update remind set state = 1
+        where toId = #{toId} and remindType = 0
+    </update>
+    <update id="updateCommentRemindByToId" parameterType="_int">
+        update remind set state = 1
+        where toId = #{toId} and remindType = 1
     </update>
     <update id="updateRemindByFromIdAndBlogIdAndRemindType" parameterType="_int">
         update remind set state = 2

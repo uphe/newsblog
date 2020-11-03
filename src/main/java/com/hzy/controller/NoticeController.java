@@ -1,66 +1,67 @@
 package com.hzy.controller;
 
+import com.hzy.pojo.Blog;
 import com.hzy.pojo.Notice;
 import com.hzy.pojo.ReadNotice;
 import com.hzy.pojo.User;
 import com.hzy.service.NoticeService;
 import com.hzy.service.ReadNoticeService;
 import com.hzy.utils.StringUtils;
+import com.hzy.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-@Controller
-@RequestMapping("/msg")
+@RestController
 public class NoticeController {
     @Autowired
     private NoticeService noticeService;
     @Autowired
     private ReadNoticeService readNoticeService;
 
-    @RequestMapping("/toEditorNotice")
-    public String toEditorNotice() {
-        return "msg/editorNotice";
-    }
-
-    @PostMapping(path = "/noticeEditormd")
-    @ResponseBody
-    public String noticeEditor(String title, String editormd,
-                               Model model, HttpSession session) {
+    @RequestMapping("/admin/notice")
+    public ResponseVO<List<Notice>> notice(@RequestBody Blog blog, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(editormd) && user != null) {
+        ResponseVO<List<Notice>> responseVO = new ResponseVO<>(-1,"发布公告失败");
+        if (StringUtils.isNotEmpty(blog.getTitle()) && StringUtils.isNotEmpty(blog.getArticle())) {
+            responseVO.setCode(0);
+            responseVO.setMsg("发布公告成功");
             Notice notice = new Notice();
-            notice.setNoticeTitle(title);
-            notice.setNoticeContent(editormd);
+            notice.setNoticeTitle(blog.getTitle());
+            notice.setNoticeContent(blog.getArticle());
             notice.setPublishTime(new Date());
             notice.setOperatorId(user.getUserId());
             Date date = new Date();
             date.setTime(date.getTime() + 1000*24*60*60*7);
             notice.setExpirationTime(date);
             noticeService.addNotice(notice);
-            List<Notice> noticeList = noticeService.selectNoticeByUserId(user.getUserId());
-            model.addAttribute("noticeList",noticeList);
         }
-        return "redirect:/";
+        return responseVO;
     }
-    @RequestMapping("/toNotice")
-    public String toNotice(Model model, HttpSession session) {
+    @RequestMapping("/msg/notice")
+    public ResponseVO<Integer> toNotice(HttpSession session) {
         User user = (User) session.getAttribute("user");
+        ResponseVO<Integer> responseVO = new ResponseVO<>(0,"查看成功");
+        int count = noticeService.selectNoticeCountByUserId(user.getUserId());
+        responseVO.setData(count);
+        return responseVO;
+    }
+    @RequestMapping("/msg/noticedetail")
+    public ResponseVO<List<Notice>> toNoticeDetail(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        ResponseVO<List<Notice>> responseVO = new ResponseVO<>(0,"查看成功");
         List<Notice> noticeList = noticeService.selectNoticeByUserId(user.getUserId());
-        model.addAttribute("user",user);
-        model.addAttribute("noticeList",noticeList);
-        return "msg/notice";
+        responseVO.setData(noticeList);
+        return responseVO;
     }
-    @RequestMapping("/toNoticeDetail")
-    public String toNoticeDetail(int noticeId, HttpSession session) {
+    @RequestMapping("/msg/noticedetail/look")
+    public ResponseVO<Notice> toNoticeDetailLook(int noticeId, HttpSession session) {
         User user = (User) session.getAttribute("user");
-
+        ResponseVO<Notice> responseVO = new ResponseVO<>(0,"查看成功");
         ReadNotice readNotice = new ReadNotice();
 
         readNotice.setNoticeId(noticeId);
@@ -70,6 +71,8 @@ public class NoticeController {
         readNotice.setExpirationTime(date);
 
         readNoticeService.addReadNotice(readNotice);
-        return "redirect:/msg/toNotice";
+        Notice notice = noticeService.selectNoticeByNoticeId(noticeId);
+        responseVO.setData(notice);
+        return responseVO;
     }
 }

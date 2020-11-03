@@ -1,9 +1,7 @@
 package com.hzy.interceptor;
-import ch.qos.logback.classic.turbo.TurboFilter;
 
 import com.hzy.pojo.Token;
 import com.hzy.pojo.User;
-
 import com.hzy.service.TokenService;
 import com.hzy.service.UserService;
 import com.hzy.utils.JSONUtils;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,12 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-/*
- * 配置一个拦截器，并将该拦截器注入到Spring中，该拦截器默认是什么都不拦截
- * 外面需要一个配置类，去配置该拦截器的拦截路径
- * */
 @Component
-public class UserInterceptor implements HandlerInterceptor {
+public class AdminInterceptor implements HandlerInterceptor {
     @Autowired
     private TokenService tokenService;
     @Autowired
@@ -42,9 +35,12 @@ public class UserInterceptor implements HandlerInterceptor {
             Token token1 = tokenService.selectTokenByToken(token);
             if (token1 != null && token1.getExpired().after(new Date()) && token1.getToken().equals(token)) {
                 User user = userService.selectUserById(token1.getUserId());
-                HttpSession session = request.getSession();
-                session.setAttribute("user",user);
-                return true;
+                // 1是管理员
+                if (user.getUserType() == 1 || user.getUserType() == 2) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user",user);
+                    return true;
+                }
             }
         }
         // 需要跳转到登录

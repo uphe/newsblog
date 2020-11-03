@@ -5,6 +5,8 @@ import com.hzy.service.*;
 import com.hzy.utils.*;
 import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -16,7 +18,7 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
     @Autowired
-    private UserService userService;
+    private RedisTemplate redisTemplate;
     @Autowired
     private CommentService commentService;
     @Autowired
@@ -24,18 +26,26 @@ public class BlogController {
     @Autowired
     private ElasticSearchService elasticSearchService;
 
-    @PostMapping("/editor")
+
+    @PostMapping("/user/editor")
     public String Editor(@RequestBody BlogVO blogVO, HttpSession session) {
+
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
 
         return blogService.publishBlog(userId, blogVO);
     }
 
-    @RequestMapping("/detail/{blogId}")
-    public BlogVO detail(@PathVariable("blogId") int blogId) {
+    @RequestMapping("/all/detail/{blogId}")
+    public BlogVO detail(@PathVariable("blogId") int blogId,HttpSession session) {
+//        String readKey = StringUtils.getReadKey(blogId);
+//        SetOperations setOperations = redisTemplate.opsForSet();
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+//            Long add = setOperations.add(readKey, blogId);
+            blogService.updateHitCountByBlogId(blogId);// 点击量加1
+        }
 
-        blogService.updateHitCountByBlogId(blogId);// 每点击一次，点击量加1
         BlogVO blogVO = blogService.getBlogVOByUserId(blogId);
 
         Map<String, Object> map = new HashMap<>();

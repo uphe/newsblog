@@ -20,7 +20,7 @@
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         LEFT JOIN likerecord ON user.userId = likerecord.userId AND blog.blogId = likerecord.blogId
-        where blogId = #{blogId}
+        where blog.blogId = #{blogId}
     </select>
 
     <select id="selectBlogByUserIdAndOffset" resultType="Blog">
