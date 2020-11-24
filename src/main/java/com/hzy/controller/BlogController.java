@@ -36,7 +36,7 @@ public class BlogController {
         return blogService.publishBlog(userId, blogVO);
     }
 
-    @RequestMapping("/all/detail/{blogId}")
+    @GetMapping("/all/detail/{blogId}")
     public BlogVO detail(@PathVariable("blogId") int blogId,HttpSession session) {
 //        String readKey = StringUtils.getReadKey(blogId);
 //        SetOperations setOperations = redisTemplate.opsForSet();
@@ -57,7 +57,7 @@ public class BlogController {
         return blogVO;
     }
 
-    @RequestMapping("/search/{msg}")
+    @GetMapping("/search/{msg}")
     public List<BlogVO> search(@PathVariable("msg") String msg) {
         return elasticSearchService.search(msg);
     }

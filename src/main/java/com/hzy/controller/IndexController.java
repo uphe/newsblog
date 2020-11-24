@@ -22,7 +22,7 @@ public class IndexController{
     @Autowired
     private BlogService blogService;
 
-    @RequestMapping({"/all/hot/{page}"})
+    @GetMapping({"/all/hot/{page}"})
     public List<BlogVO> index(@PathVariable("page") int page, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = -1;
@@ -33,7 +33,7 @@ public class IndexController{
         return blogVOS;
     }
 
-    @RequestMapping("/user/recommend/{page}")
+    @GetMapping("/user/recommend/{page}")
     public List<BlogVO> recommend( @PathVariable("page") int page, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
@@ -43,7 +43,7 @@ public class IndexController{
         return recommendBlogVO;
     }
 
-    @RequestMapping("/all/newest/{page}")
+    @GetMapping("/all/newest/{page}")
     public List<BlogVO> newest(@PathVariable("page") int page, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = -1;
@@ -55,7 +55,7 @@ public class IndexController{
         return  blogVOS;
     }
 
-    @RequestMapping("/user/follow/{page}")
+    @GetMapping("/user/follow/{page}")
     public List<BlogVO> follow(@PathVariable("page") int page, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
@@ -63,7 +63,7 @@ public class IndexController{
         return blogVOS;
     }
 
-    @RequestMapping("/all/todayrecommend")
+    @GetMapping("/all/todayrecommend")
     public List<BlogVO> todayRecommend() {
         List<BlogVO> blogVOS = blogService.getTodayBlogVO(0, 10);
         return blogVOS;

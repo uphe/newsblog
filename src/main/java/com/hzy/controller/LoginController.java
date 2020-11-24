@@ -25,7 +25,7 @@ public class LoginController {
     @Autowired
     private TokenService tokenService;
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public ResponseVO login(HttpServletResponse response, HttpSession session, @RequestBody User usernameAndPassword) {
         if (usernameAndPassword == null) {
             ResponseVO responseVO = new ResponseVO();
@@ -40,7 +40,7 @@ public class LoginController {
         return userService.login(response, session, username, password);
     }
 
-    @RequestMapping(path = "/register")
+    @PostMapping(path = "/register")
     public String register(@RequestBody User usernameAndPassword) {
         if (usernameAndPassword == null) {
             return JSONUtils.getJSONString(-1,"参数不能为空");
@@ -52,7 +52,7 @@ public class LoginController {
         return userService.register(username,password);
     }
 
-    @RequestMapping("/islogin")
+    @GetMapping("/islogin")
     public String isLogin(HttpServletRequest request) {
         logger.info("执行了islogin");
         try {
@@ -70,7 +70,7 @@ public class LoginController {
         return JSONUtils.getJSONString(-1,"is not login");
     }
 
-    @RequestMapping("/user/logout")
+    @GetMapping("/user/logout")
     public String logout(HttpServletRequest request) {
         logger.info("执行退出登录操作");
         String token = request.getHeader("token");

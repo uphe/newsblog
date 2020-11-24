@@ -23,7 +23,7 @@ public class NoticeController {
     @Autowired
     private ReadNoticeService readNoticeService;
 
-    @RequestMapping("/admin/notice")
+    @PostMapping("/admin/notice")
     public ResponseVO<List<Notice>> notice(@RequestBody Blog blog, HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<List<Notice>> responseVO = new ResponseVO<>(-1,"发布公告失败");
@@ -42,7 +42,7 @@ public class NoticeController {
         }
         return responseVO;
     }
-    @RequestMapping("/msg/notice")
+    @GetMapping("/msg/notice")
     public ResponseVO<Integer> toNotice(HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<Integer> responseVO = new ResponseVO<>(0,"查看成功");
@@ -50,7 +50,7 @@ public class NoticeController {
         responseVO.setData(count);
         return responseVO;
     }
-    @RequestMapping("/msg/noticedetail")
+    @GetMapping("/msg/noticedetail")
     public ResponseVO<List<Notice>> toNoticeDetail(HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<List<Notice>> responseVO = new ResponseVO<>(0,"查看公告列表");
@@ -58,7 +58,7 @@ public class NoticeController {
         responseVO.setData(noticeList);
         return responseVO;
     }
-    @RequestMapping("/msg/noticedetail/{noticeId}")
+    @GetMapping("/msg/noticedetail/{noticeId}")
     public ResponseVO<Notice> toNoticeDetailLook(@PathVariable("noticeId") int noticeId, HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<Notice> responseVO = new ResponseVO<>(0,"查看公告");

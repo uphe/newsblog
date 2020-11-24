@@ -7,6 +7,7 @@ import com.hzy.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,13 +20,13 @@ public class RemindController {
     @Autowired
     private RemindService remindService;
 
-    @RequestMapping("/like")
+    @GetMapping("/like")
     public ResponseVO<Integer> like(HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<Integer> responseVO = remindService.selectLikeRemindCountByToId(user.getUserId());
         return responseVO;
     }
-    @RequestMapping("/likedetail")
+    @GetMapping("/likedetail")
     public ResponseVO likeDetail(HttpSession session) {
 
         User user = (User) session.getAttribute("user");
@@ -35,14 +36,14 @@ public class RemindController {
         return responseVO;
     }
 
-    @RequestMapping("/comment")
+    @GetMapping("/comment")
     public ResponseVO<Integer> comment(HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<Integer> responseVO = remindService.selectCommentRemindCountByToId(user.getUserId());
         return responseVO;
     }
 
-    @RequestMapping("/commentdetail")
+    @GetMapping("/commentdetail")
     public ResponseVO commentDetail(HttpSession session) {
 
         User user = (User) session.getAttribute("user");

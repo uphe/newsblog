@@ -7,6 +7,7 @@ import com.hzy.service.FollowService;
 import com.hzy.service.UserService;
 import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,13 +29,13 @@ public class UserController{
     /*
      * 这是查看某个具体用户的文章
      * */
-    @RequestMapping(path = {"/user/{userId}"})
+    @GetMapping(path = {"/user/{userId}"})
     public List<BlogVO> userIndex(@PathVariable("userId") int userId) {
         List<BlogVO> userBlogs = blogService.getBlogVOByUserIdAndOffset(userId,0,40);
         return userBlogs;
     }
 
-    @RequestMapping("/userinfo/{userId}")
+    @GetMapping("/userinfo/{userId}")
     public Map<String,Object> selectHitCountSumByUserId(@PathVariable("userId") int userId) {
         Map<String,Object> map = new HashMap<>();
         User user = userService.selectUserById(userId);

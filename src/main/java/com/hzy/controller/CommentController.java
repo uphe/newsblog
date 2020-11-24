@@ -7,10 +7,7 @@ import com.hzy.service.CommentService;
 import com.hzy.vo.CommentVO;
 import com.hzy.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -22,7 +19,7 @@ public class CommentController {
     @Autowired
     private BlogService blogService;
 
-    @RequestMapping("/comment/{blogId}")
+    @GetMapping("/comment/{blogId}")
     public List<CommentVO> comment(@PathVariable("blogId") int blogId) {
         // 下面是评论的信息，包括评论博客的评论和回复用户的评论
         List<CommentVO> commentVOS = commentService.selectCommentVOByBlogId(blogId,0,10);
@@ -30,7 +27,7 @@ public class CommentController {
         return commentVOS;
     }
 
-    @RequestMapping("/user/publishcomment")
+    @PostMapping("/user/publishcomment")
     public ResponseVO publishComment(@RequestBody Comment comment, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
