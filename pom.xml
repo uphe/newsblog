@@ -21,6 +21,13 @@
 
     <dependencies>
 
+        <!-- 让SpringBootAdmin监控-->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
         <!-- swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
