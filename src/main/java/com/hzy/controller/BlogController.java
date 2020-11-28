@@ -53,7 +53,6 @@ public class BlogController {
         String markdownString = blogVO.getArticle();
         String html = MarkDownUtil.mdToHtml(markdownString);
         blogVO.setArticle(html);
-
         return blogVO;
     }
 
