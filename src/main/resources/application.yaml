@@ -36,4 +36,7 @@ mybatis:
   type-aliases-package: com.hzy.pojo
   mapper-locations: classpath:mapper/*.xml
 
-
+# 整合springdoc
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html # 默认也是这个path
