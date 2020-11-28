@@ -42,7 +42,7 @@ public class BlogController {
 //        SetOperations setOperations = redisTemplate.opsForSet();
         User user = (User) session.getAttribute("user");
         if (user != null) {
-//            Long add = setOperations.add(readKey, blogId);
+            System.out.println("test");
             blogService.updateHitCountByBlogId(blogId);// 点击量加1
         }
 
