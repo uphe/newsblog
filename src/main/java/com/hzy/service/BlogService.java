@@ -3,12 +3,10 @@ package com.hzy.service;
 import com.alibaba.fastjson.JSON;
 import com.hzy.mapper.*;
 import com.hzy.pojo.*;
-import com.hzy.utils.DateUtil;
-import com.hzy.utils.FileUtils;
-import com.hzy.utils.JSONUtils;
-import com.hzy.utils.StringUtils;
+import com.hzy.utils.*;
 import com.hzy.vo.BlogVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,7 +159,10 @@ public class BlogService {
      * @param blogVO
      * @return
      */
-    public String publishBlog(int userId, BlogVO blogVO) {
+    public String publishBlog(BlogVO blogVO, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        int userId = user.getUserId();
+
         String title = blogVO.getTitle();
         String summary = blogVO.getSummary();
         String article = blogVO.getArticle();
@@ -220,8 +221,21 @@ public class BlogService {
      * @param blogId
      * @return
      */
-    public BlogVO getBlogVOByUserId(int blogId) {
-        return blogMapper.selectBlogVOByBlogId(blogId);
+    public BlogVO getBlogVOByUserId(int blogId, HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            blogMapper.updateHitCountByBlogId(blogId);// 点击量加1
+        }
+        BlogVO blogVO = blogMapper.selectBlogVOByBlogId(blogId);
+
+        Map<String, Object> map = new HashMap<>();
+        // 下面是从数据库中获取到博客，然后转化为html传到前端
+        String markdownString = blogVO.getArticle();
+        String html = MarkDownUtil.mdToHtml(markdownString);
+        blogVO.setArticle(html);
+
+        return blogVO;
     }
 
     /**
