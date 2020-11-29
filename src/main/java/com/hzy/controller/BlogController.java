@@ -3,6 +3,7 @@ package com.hzy.controller;
 import com.hzy.pojo.*;
 import com.hzy.service.*;
 import com.hzy.utils.*;
+import com.hzy.vo.BaseResult;
 import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,12 +29,11 @@ public class BlogController {
 
 
     @PostMapping("/user/editor")
-    public String Editor(@RequestBody BlogVO blogVO, HttpSession session) {
+    public BaseResult Editor(@RequestBody BlogVO blogVO, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
-
-        return blogService.publishBlog(userId, blogVO);
+        return BaseResult.ok(blogService.publishBlog(userId, blogVO));
     }
 
     @GetMapping("/all/detail/{blogId}")

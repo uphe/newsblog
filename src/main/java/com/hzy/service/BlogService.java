@@ -209,10 +209,10 @@ public class BlogService {
                 labelMapper.addBatchLabel(labelList);
             }
             logger.info("发布文章成功");
-            return JSONUtils.getJSONString(0,"success");
+            return "success";
         }
         logger.info("发布文章失败");
-        return JSONUtils.getJSONString(-1,"error");
+        return "error";
     }
 
     /**
