@@ -19,6 +19,13 @@
         <openapi.version>1.4.3</openapi.version>
     </properties>
 
+    <repositories><!-- maven仓库 阿里云镜像-->
+        <repository>
+            <id>maven-ali</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <!-- 让SpringBootAdmin监控-->
