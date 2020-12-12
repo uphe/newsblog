@@ -6,6 +6,7 @@ package com.hzy.vo;
  */
 public class BaseResult<T> {
     private static final Integer SUCCESS_CODE = 0;
+    private static final Integer ERROR_CODE = -1;
 
     private Integer code;
 
@@ -44,6 +45,22 @@ public class BaseResult<T> {
 
     public static BaseResult ok(Object result) {
         return new BaseResult(SUCCESS_CODE, result, true);
+    }
+
+    public static BaseResult ok() {
+        return new BaseResult(SUCCESS_CODE, true);
+    }
+
+    public static BaseResult error(Object result) {
+        return new BaseResult(ERROR_CODE, result, false);
+    }
+
+    public static BaseResult error() {
+        return new BaseResult(ERROR_CODE, false);
+    }
+
+    public static BaseResult error(String msg) {
+        return new BaseResult(ERROR_CODE,msg, false);
     }
 
     public Integer getCode() {

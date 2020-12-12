@@ -1,9 +1,9 @@
 package com.hzy.controller;
 
 import com.hzy.dto.BlogDTO;
-import com.hzy.service.*;
+import com.hzy.service.BlogService;
+import com.hzy.service.ElasticSearchService;
 import com.hzy.vo.BaseResult;
-import com.hzy.vo.BlogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +22,18 @@ public class BlogController {
     }
 
     @GetMapping("/all/detail/{blogId}")
-    public BaseResult detail(@PathVariable("blogId") int blogId,HttpSession session) {
-        return BaseResult.ok(blogService.getBlogVOByUserId(blogId,session));
+    public BaseResult detail(@PathVariable("blogId") int blogId, HttpSession session) {
+        return BaseResult.ok(blogService.getBlogVOByUserId(blogId, session));
     }
 
     @GetMapping("/search/{msg}")
     public BaseResult search(@PathVariable("msg") String msg) {
         return BaseResult.ok(elasticSearchService.search(msg));
+    }
+
+    @GetMapping(path = {"/user/{userId}"})
+    public BaseResult userIndex(@PathVariable("userId") int userId) {
+        return blogService.getBlogVOByUserIdAndOffset(userId, 0, 40);
     }
 
 }

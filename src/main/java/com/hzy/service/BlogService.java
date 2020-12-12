@@ -1,25 +1,30 @@
 package com.hzy.service;
 
-import com.alibaba.fastjson.JSON;
 import com.hzy.dto.BlogDTO;
-import com.hzy.mapper.*;
-import com.hzy.pojo.*;
-import com.hzy.utils.*;
+import com.hzy.mapper.BlogMapper;
+import com.hzy.mapper.LabelMapper;
+import com.hzy.mapper.LikeRecordMapper;
+import com.hzy.mapper.TypeMapper;
+import com.hzy.pojo.Blog;
+import com.hzy.pojo.Label;
+import com.hzy.pojo.Type;
+import com.hzy.pojo.User;
+import com.hzy.utils.DateUtil;
+import com.hzy.utils.FileUtils;
+import com.hzy.utils.MarkDownUtil;
+import com.hzy.utils.StringUtils;
+import com.hzy.vo.BaseResult;
 import com.hzy.vo.BlogVO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -156,8 +161,8 @@ public class BlogService {
 
     /**
      * 发布博客，同时一份放入到es，并以标题进行分词存储
-     * @param userId
-     * @param blogVO
+     * @param blogDTO
+     * @param session
      * @return
      */
     public String publishBlog(BlogDTO blogDTO, HttpSession session) {
@@ -246,10 +251,10 @@ public class BlogService {
      * @param limit
      * @return
      */
-    public List<BlogVO> getBlogVOByUserIdAndOffset (int userId,int offset,int limit) {
-        return blogMapper.selectBlogVOByUserIdAndOffset(userId,offset,limit);
+    public BaseResult getBlogVOByUserIdAndOffset (int userId, int offset, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectBlogVOByUserIdAndOffset(userId, offset, limit);
+        return BaseResult.ok(blogVOS);
     }
-
 
 
     /**
