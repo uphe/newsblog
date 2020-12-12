@@ -24,12 +24,13 @@ import java.util.*;
 @Service
 @Slf4j
 public class UserService {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private TokenMapper tokenMapper;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 登录业务，并实现保存密码7天

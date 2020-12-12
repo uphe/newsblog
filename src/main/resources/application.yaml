@@ -15,21 +15,21 @@ spring:
     port: 6379
     password:
   # 被SpringBootAdmin监控
-#  application:
-#    name: newsblog
-#  boot:
-#    admin:
-#      client:
-#        url: http://localhost:8080
-# 这是开发actuator的端点检测，即能获取到该项目的相关信息
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: '*'
-#  endpoint:
-#    health:
-#      show-details: ALWAYS
+  application:
+    name: newsblog
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
+  # 这是开发actuator的端点检测，即能获取到该项目的相关信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
 
 # 整合mybatis
 mybatis:

@@ -1,5 +1,6 @@
 package com.hzy.controller;
 
+import com.hzy.dto.BlogDTO;
 import com.hzy.service.*;
 import com.hzy.vo.BaseResult;
 import com.hzy.vo.BlogVO;
@@ -16,8 +17,8 @@ public class BlogController {
     private ElasticSearchService elasticSearchService;
 
     @PostMapping("/user/editor")
-    public BaseResult publishBlog(@RequestBody BlogVO blogVO, HttpSession session) {
-        return BaseResult.ok(blogService.publishBlog(blogVO, session));
+    public BaseResult publishBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
+        return BaseResult.ok(blogService.publishBlog(blogDTO, session));
     }
 
     @GetMapping("/all/detail/{blogId}")

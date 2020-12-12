@@ -1,6 +1,7 @@
 package com.hzy.service;
 
 import com.alibaba.fastjson.JSON;
+import com.hzy.dto.BlogDTO;
 import com.hzy.mapper.*;
 import com.hzy.pojo.*;
 import com.hzy.utils.*;
@@ -159,15 +160,15 @@ public class BlogService {
      * @param blogVO
      * @return
      */
-    public String publishBlog(BlogVO blogVO, HttpSession session) {
+    public String publishBlog(BlogDTO blogDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
 
-        String title = blogVO.getTitle();
-        String summary = blogVO.getSummary();
-        String article = blogVO.getArticle();
-        List<String> labels = blogVO.getLabels();
-        List<String> types = blogVO.getTypes();
+        String title = blogDTO.getTitle();
+        String summary = blogDTO.getSummary();
+        String article = blogDTO.getArticle();
+        List<String> labels = blogDTO.getLabels();
+        List<String> types = blogDTO.getTypes();
 
         if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(article)) {
             Blog blog = new Blog();
