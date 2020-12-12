@@ -38,7 +38,7 @@ public class AdminInterceptor implements HandlerInterceptor {
                 // 1是管理员
                 if (user.getUserType() == 1 || user.getUserType() == 2) {
                     HttpSession session = request.getSession();
-                    session.setAttribute("user",user);
+                    session.setAttribute("user", user);
                     return true;
                 }
             }
@@ -48,7 +48,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         response.setContentType("application/json;charset=UTF-8");
         try {
             PrintWriter out = response.getWriter();
-            out.write(JSONUtils.getJSONString(-1,"The Token is wrong"));
+            out.write(JSONUtils.getJSONString(-1, "The Token is wrong"));
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

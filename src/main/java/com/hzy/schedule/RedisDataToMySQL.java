@@ -23,7 +23,7 @@ public class RedisDataToMySQL {
     private BlogService blogService;
     private Logger logger = LoggerFactory.getLogger(getClass());
     /**
-     * 定时任务，每两小时持久化一次
+     * 定时任务，每小时持久化一次
      */
     @Scheduled(cron = "0 0 0/1 * * ? ")
     public void redisDataToMySQL() {
