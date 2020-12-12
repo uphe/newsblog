@@ -7,6 +7,7 @@ import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Blog;
 import com.hzy.pojo.Type;
 import com.hzy.pojo.User;
+import com.hzy.vo.BaseResult;
 import com.hzy.vo.BlogVO;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
@@ -67,7 +68,7 @@ public class ElasticSearchService {
      * @param msg
      * @return
      */
-    public List<BlogVO> search(String msg) {
+    public BaseResult search(String msg) {
         SearchRequest request = new SearchRequest(INDEX_NAME);
 
         // 构建搜索条件
@@ -114,6 +115,6 @@ public class ElasticSearchService {
 
             blogVOS.add(blogVO);
         }
-        return blogVOS;
+        return BaseResult.ok(blogVOS);
     }
 }

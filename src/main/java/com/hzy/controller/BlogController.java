@@ -18,17 +18,17 @@ public class BlogController {
 
     @PostMapping("/user/editor")
     public BaseResult publishBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
-        return BaseResult.ok(blogService.publishBlog(blogDTO, session));
+        return blogService.publishBlog(blogDTO, session);
     }
 
     @GetMapping("/all/detail/{blogId}")
     public BaseResult detail(@PathVariable("blogId") int blogId, HttpSession session) {
-        return BaseResult.ok(blogService.getBlogVOByUserId(blogId, session));
+        return blogService.getBlogVOByUserId(blogId, session);
     }
 
     @GetMapping("/search/{msg}")
     public BaseResult search(@PathVariable("msg") String msg) {
-        return BaseResult.ok(elasticSearchService.search(msg));
+        return elasticSearchService.search(msg);
     }
 
     @GetMapping(path = {"/user/{userId}"})

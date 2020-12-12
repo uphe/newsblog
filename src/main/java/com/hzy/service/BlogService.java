@@ -165,7 +165,7 @@ public class BlogService {
      * @param session
      * @return
      */
-    public String publishBlog(BlogDTO blogDTO, HttpSession session) {
+    public BaseResult publishBlog(BlogDTO blogDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
 
@@ -216,10 +216,10 @@ public class BlogService {
                 labelMapper.addBatchLabel(labelList);
             }
             logger.info("发布文章成功");
-            return "success";
+            return BaseResult.ok();
         }
         logger.info("发布文章失败");
-        return "error";
+        return BaseResult.error("发布文章失败");
     }
 
     /**
@@ -227,7 +227,7 @@ public class BlogService {
      * @param blogId
      * @return
      */
-    public BlogVO getBlogVOByUserId(int blogId, HttpSession session) {
+    public BaseResult getBlogVOByUserId(int blogId, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
         if (user != null) {
@@ -241,7 +241,7 @@ public class BlogService {
         String html = MarkDownUtil.mdToHtml(markdownString);
         blogVO.setArticle(html);
 
-        return blogVO;
+        return BaseResult.ok(blogVO);
     }
 
     /**
