@@ -42,3 +42,9 @@ mybatis:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html # 默认也是这个path
+
+# 自定义高级客户端配置
+hzy:
+  elasticsearch:
+    hostname: 127.0.0.1
+    port: 9200

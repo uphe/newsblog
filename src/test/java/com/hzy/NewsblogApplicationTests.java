@@ -1,19 +1,12 @@
 package com.hzy;
 
-import com.alibaba.fastjson.JSON;
 import com.hzy.mapper.BlogMapper;
 import com.hzy.mapper.LabelMapper;
-import com.hzy.mapper.TokenMapper;
-import com.hzy.pojo.Blog;
-import com.hzy.pojo.User;
-import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
 @SpringBootTest
 class NewsblogApplicationTests {
@@ -38,9 +32,10 @@ class NewsblogApplicationTests {
     private static final String INDEX_NAME = "blog_index";
 
     @Test
-    void getBlog() {
-        Blog blog = blogMapper.selectBlogById(1);
-        System.out.println(blog);
+    void myStream() {
+        String str = "my name is 007";
+        Stream.of(str.split(" ")).filter(s -> s.length() > 2)
+                .map(s -> s.length()).forEach(System.out::println);
     }
 
     /**
