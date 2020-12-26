@@ -35,8 +35,6 @@ public class BlogService {
     private LabelMapper labelMapper;
     @Autowired
     private TypeMapper typeMapper;
-    @Autowired
-    private ElasticSearchService elasticSearchService;
 
     /**
      * 首页，暂时是根据一年以内的优文推荐，根据点赞*100+访问排序
@@ -205,7 +203,6 @@ public class BlogService {
             blog.setTitle(title);
             blog.setUserId(userId);
             blogMapper.addBlog(blog);
-            elasticSearchService.save(blog);
 
             if (types != null && types.size() > 0) {
                 List<Type> typeList = new ArrayList<>();

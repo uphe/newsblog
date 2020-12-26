@@ -17,6 +17,9 @@
     <properties>
         <java.version>1.8</java.version>
         <openapi.version>1.4.3</openapi.version>
+        <mybatis.version>2.1.1</mybatis.version>
+        <commonmark.version>0.14.0</commonmark.version>
+        <fastjson.version>1.2.66</fastjson.version>
     </properties>
 
     <repositories><!-- maven仓库 阿里云镜像-->
@@ -27,14 +30,6 @@
     </repositories>
 
     <dependencies>
-
-        <!-- 让SpringBootAdmin监控-->
-        <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-
         <!-- swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -46,39 +41,31 @@
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.14.0</version>
+            <version>${commonmark.version}</version>
         </dependency>
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark-ext-heading-anchor</artifactId>
-            <version>0.14.0</version>
+            <version>${commonmark.version}</version>
         </dependency>
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark-ext-gfm-tables</artifactId>
-            <version>0.14.0</version>
-        </dependency>
-        
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <scope>provided</scope>
+            <version>${commonmark.version}</version>
         </dependency>
 
         <!--JSON-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.66</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <!-- mybatis -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.1</version>
+            <version>${mybatis.version}</version>
         </dependency>
 
         <!-- 连接数据库 -->
@@ -114,23 +101,14 @@
             <artifactId>spring-context-support</artifactId>
         </dependency>
 
-        <!-- 日志 -->
-<!--        <dependency>-->
-<!--            <groupId>log4j</groupId>-->
-<!--            <artifactId>log4j</artifactId>-->
-<!--            <version>1.2.17</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-log4j12</artifactId>-->
-<!--            <version>1.7.21</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>1.7.21</version>-->
-<!--        </dependency>-->
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
+        <!-- Spring WebMVC项目 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -150,6 +128,7 @@
         </dependency>
     </dependencies>
 
+    <!-- maven插件 -->
     <build>
         <plugins>
             <plugin>
