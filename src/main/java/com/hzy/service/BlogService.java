@@ -68,7 +68,6 @@ public class BlogService {
      * @return
      */
     public BaseResult getRecommendBlogVO(int page, HttpSession session) {
-        log.info("执行了推荐榜查询");
         List<BlogVO> blogVOS = new ArrayList<>();
 
         User user = (User) session.getAttribute("user");
@@ -100,8 +99,6 @@ public class BlogService {
      * @return
      */
     public BaseResult getNewestBlogVO(int page, HttpSession session) {
-        log.info("执行了最新榜查询");
-
         User user = (User) session.getAttribute("user");
         int userId = -1;
         if (user != null) {
@@ -121,8 +118,6 @@ public class BlogService {
      * @return
      */
     public BaseResult getFollowBlogVO(int page, HttpSession session) {
-        log.info("执行了关注榜查询");
-
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
 
