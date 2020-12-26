@@ -16,7 +16,6 @@ import java.util.List;
 public class RemindService {
     @Autowired
     private RemindMapper remindMapper;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public int addRemind(Remind remind) {
         return remindMapper.addRemind(remind);
@@ -27,7 +26,6 @@ public class RemindService {
      * @return
      */
     public ResponseVO<List<Remind>> selectLikeRemindByToId(int toId) {
-        logger.info("执行了点赞通知查询（查询用户所有未读的点赞通知）");
         List<Remind> remindList = remindMapper.selectLikeRemindByToId(toId);
         ResponseVO<List<Remind>> responseVO = new ResponseVO<>(0,"提醒成功");
         responseVO.setData(remindList);
@@ -39,7 +37,6 @@ public class RemindService {
      * @return
      */
     public ResponseVO<List<Remind>> selectCommentRemindByToId(int toId) {
-        logger.info("执行了评论通知查询（查询用户所有未读的评论通知）");
         List<Remind> remindList = remindMapper.selectCommentRemindByToId(toId);
         ResponseVO<List<Remind>> responseVO = new ResponseVO<>(0, "提醒成功");
         responseVO.setData(remindList);
@@ -52,7 +49,6 @@ public class RemindService {
      * @return
      */
     public ResponseVO<Integer> selectCommentRemindCountByToId(int toId) {
-        logger.info("执行了评论通知查询（查询用户所有未读的评论通知数量）");
         int count = remindMapper.selectCommentRemindCountByToId(toId);
         ResponseVO<Integer> responseVO = new ResponseVO<>(0, "提醒成功");
         responseVO.setData(count);
@@ -64,7 +60,6 @@ public class RemindService {
      * @return
      */
     public ResponseVO<Integer> selectLikeRemindCountByToId(int toId) {
-        logger.info("执行了用户所有未读的点赞通知数量");
         int count = remindMapper.selectLikeRemindCountByToId(toId);
         ResponseVO<Integer> responseVO = new ResponseVO<>(0, "查询未读点赞数量成功");
         responseVO.setData(count);
@@ -83,7 +78,6 @@ public class RemindService {
      * @return
      */
     public ResponseVO updateRemindByToId(int toId) {
-        logger.info("执行全部已读");
         remindMapper.updateRemindByToId(toId);
         return new ResponseVO(0,"全部已读");
     }
@@ -93,7 +87,6 @@ public class RemindService {
      * @return
      */
     public ResponseVO updateLikeRemindByToId(int toId) {
-        logger.info("执行点赞通知全部已读");
         remindMapper.updateLikeRemindByToId(toId);
         return new ResponseVO(0,"点赞通知全部已读");
     }
@@ -103,7 +96,6 @@ public class RemindService {
      * @return
      */
     public ResponseVO updateCommentRemindByToId(int toId) {
-        logger.info("执行评论通知全部已读");
         remindMapper.updateCommentRemindByToId(toId);
         return new ResponseVO(0,"评论通知全部已读");
     }
