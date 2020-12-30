@@ -171,7 +171,7 @@ public class BlogService {
 
 
     /**
-     * 发布博客，同时一份放入到es，并以标题进行分词存储
+     * 发布博客
      *
      * @param blogDTO
      * @param session
