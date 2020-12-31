@@ -1,6 +1,7 @@
 package com.hzy.mapper;
 
 import com.hzy.pojo.Blog;
+import com.hzy.vo.BaseResult;
 import com.hzy.vo.BlogVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -26,5 +27,6 @@ public interface BlogMapper {
     List<BlogVO> selectTodayBlogVOByUserIdAndOffset(int offset,int limit);
     List<BlogVO> selectIndexBlogVOByUserIdAndOffset(int userId, int offset,int limit);
     List<BlogVO> selectFollowBlogVOByUserIdAndOffset(int userId, int offset,int limit);
+    List<BlogVO> selectBlogVoByTypeNameAndOffset(String typeName, int offset, int limit);
 
 }

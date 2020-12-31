@@ -73,4 +73,9 @@ public class BlogController {
         return elasticSearchService.search(msg);
     }
 
+    @GetMapping("/getBlog/{typeName}")
+    @Operation(summary = "通过类别名获取文章列表")
+    public BaseResult getBlogByTypeName(@PathVariable("typeName") String typeName) {
+        return blogService.getBlogVoByTypeNameAndOffset(typeName, 0, 40);
+    }
 }

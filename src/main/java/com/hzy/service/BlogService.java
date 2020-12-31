@@ -85,6 +85,16 @@ public interface BlogService {
     BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit);
 
     /**
+     * 通过类别名获取文章
+     *
+     * @param typeName
+     * @param offset
+     * @param limit
+     * @return
+     */
+    BaseResult getBlogVoByTypeNameAndOffset(String typeName, int offset, int limit);
+
+    /**
      * 通过博客id查询评论数
      *
      * @param blogId

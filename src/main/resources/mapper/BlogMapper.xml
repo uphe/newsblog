@@ -91,6 +91,14 @@
         LIMIT #{offset},#{limit}
     </select>
 
+    <select id="selectBlogVoByTypeNameAndOffset" resultType="com.hzy.vo.BlogVO">
+        SELECT
+        *
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        INNER JOIN newsblog.type ON blog.blogId = newsblog.type.blogId AND newsblog.type.typeName = #{typeName}
+        LIMIT #{offset}, #{limit}
+    </select>
+
     <select id="selectCommentCountByBlogId" resultType="_int">
         select commentCount from blog
         where blogId = #{blogId}

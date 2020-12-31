@@ -17,9 +17,11 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private AdminInterceptor adminInterceptor;
 
-    /*
+    /**
      * 配置indexInterceptor拦截器的拦截路径
-     * */
+     *
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(userInterceptor)

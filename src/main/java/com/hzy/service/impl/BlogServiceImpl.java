@@ -269,6 +269,12 @@ public class BlogServiceImpl implements BlogService {
         return BaseResult.ok(blogVOS);
     }
 
+    @Override
+    public BaseResult getBlogVoByTypeNameAndOffset(String typeName, int offset, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectBlogVoByTypeNameAndOffset(typeName, offset, limit);
+        return BaseResult.ok(blogVOS);
+    }
+
 
     /**
      * 通过博客id查询评论数
