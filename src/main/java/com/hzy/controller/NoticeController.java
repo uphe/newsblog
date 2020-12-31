@@ -8,6 +8,8 @@ import com.hzy.service.NoticeService;
 import com.hzy.service.ReadNoticeService;
 import com.hzy.utils.StringUtils;
 import com.hzy.vo.ResponseVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @RestController
+@Tag(name = "公告", description = "公告controller")
 public class NoticeController {
     @Autowired
     private NoticeService noticeService;
@@ -24,6 +27,7 @@ public class NoticeController {
     private ReadNoticeService readNoticeService;
 
     @PostMapping("/admin/notice")
+    @Operation(summary = "发布公告")
     public ResponseVO<List<Notice>> notice(@RequestBody Blog blog, HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<List<Notice>> responseVO = new ResponseVO<>(-1,"发布公告失败");
@@ -43,6 +47,7 @@ public class NoticeController {
         return responseVO;
     }
     @GetMapping("/msg/notice")
+    @Operation(summary = "查看公告条数")
     public ResponseVO<Integer> toNotice(HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<Integer> responseVO = new ResponseVO<>(0,"查看成功");
@@ -51,6 +56,7 @@ public class NoticeController {
         return responseVO;
     }
     @GetMapping("/msg/noticedetail")
+    @Operation(summary = "查看公告列表")
     public ResponseVO<List<Notice>> toNoticeDetail(HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<List<Notice>> responseVO = new ResponseVO<>(0,"查看公告列表");
@@ -59,6 +65,7 @@ public class NoticeController {
         return responseVO;
     }
     @GetMapping("/msg/noticedetail/{noticeId}")
+    @Operation(summary = "查看公告详情")
     public ResponseVO<Notice> toNoticeDetailLook(@PathVariable("noticeId") int noticeId, HttpSession session) {
         User user = (User) session.getAttribute("user");
         ResponseVO<Notice> responseVO = new ResponseVO<>(0,"查看公告");
