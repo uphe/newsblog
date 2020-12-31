@@ -16,7 +16,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("newsblog-group")
+                .group("article")
                 .packagesToScan("com.hzy")
                 .pathsToMatch("/**")
                 .build();
@@ -25,9 +25,9 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI publicOpenApi() {
         return new OpenAPI()
-                .info(new Info().title("newsblog")
-                        .description("list newsblog api \n")
+                .info(new Info().title("文章")
+                        .description("list article api \n")
                         .version("v1.0")
-                        .contact(new Contact().name("newsblog")));
+                        .contact(new Contact().name("article")));
     }
 }
