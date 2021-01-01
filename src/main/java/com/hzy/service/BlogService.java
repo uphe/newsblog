@@ -51,8 +51,6 @@ public interface BlogService {
     /**
      * 今日推荐你文章，即是昨天的好文，根据点赞*100+访问进行排序
      *
-     * @param offset
-     * @param limit
      * @return
      */
     BaseResult getTodayBlogVO();

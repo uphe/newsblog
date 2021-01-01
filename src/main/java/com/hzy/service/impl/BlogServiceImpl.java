@@ -127,9 +127,9 @@ public class BlogServiceImpl implements BlogService {
 
     /**
      * 今日推荐你文章，即是昨天的好文，根据点赞*100+访问进行排序
+     * 首先会去redis中取，如果没有就去MySQL中拿，每天推荐10篇
+     * 如果文章中没有图片，那就默认使用用户的头像
      *
-     * @param offset
-     * @param limit
      * @return
      */
     public BaseResult getTodayBlogVO() {
@@ -147,23 +147,16 @@ public class BlogServiceImpl implements BlogService {
             }
         }
         log.info("执行了MySQL今日推荐榜查询");
-        List<BlogVO> blogVOS = blogMapper.selectTodayBlogVOByUserIdAndOffset(0, 40);
+        List<BlogVO> blogVOS = blogMapper.selectTodayBlogVOByUserIdAndOffset(0, 10);
 
-        int t = 0;
-        // 反向for循环，把不符合的删除
         for (int i = blogVOS.size() - 1; i >= 0; i--) {
             int result = blogVOS.get(i).getArticle().indexOf(FileUtils.GET_IMAGE_DIR);
             if (result >= 0) {
                 String substring = blogVOS.get(i).getArticle().substring(result, result + FileUtils.GET_IMAGE_DIR.length() + FileUtils.FILENAME_LENGTH);
                 blogVOS.get(i).setHeadUrl(substring);
-                t++;
-                setOperations.add(StringUtils.getTodayCommend(), blogVOS.get(i));
-                if (t == 10) {
-                    break;
-                }
-            } else {
-                blogVOS.remove(i);
             }
+            setOperations.add(StringUtils.getTodayCommend(), blogVOS.get(i));
+
         }
         redisTemplate.expire(StringUtils.getTodayCommend(), 1, TimeUnit.DAYS);
         setBlogVOSLikeCount(blogVOS);
