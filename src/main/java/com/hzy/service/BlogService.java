@@ -41,9 +41,8 @@ public interface BlogService {
     /**
      * 首页中用户关注的榜单
      *
-     * @param userId
-     * @param offset
-     * @param limit
+     * @param page
+     * @param session
      * @return
      */
     BaseResult getFollowBlogVO(int page, HttpSession session);

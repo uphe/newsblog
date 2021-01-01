@@ -108,12 +108,12 @@ public class BlogServiceImpl implements BlogService {
         return BaseResult.ok(blogVOS);
     }
 
+
     /**
      * 首页中用户关注的榜单
      *
-     * @param userId
-     * @param offset
-     * @param limit
+     * @param page
+     * @param session
      * @return
      */
     public BaseResult getFollowBlogVO(int page, HttpSession session) {
