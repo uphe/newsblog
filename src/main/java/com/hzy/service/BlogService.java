@@ -89,7 +89,7 @@ public interface BlogService {
      * @param limit
      * @return
      */
-    BaseResult getBlogVoByTypeNameAndOffset(String typeName, int offset, int limit);
+    BaseResult getBlogVoByTypeNameAndOffset(String typeName, int page);
 
     /**
      * 通过博客id查询评论数

@@ -24,7 +24,7 @@ public class RedisDataToMySQL {
     /**
      * 定时任务，每小时持久化一次
      */
-    @Scheduled(cron = "0 0 0/1 * * ? ")
+    @Scheduled(cron = "0 0 0/12 * * ? ")
     public void redisDataToMySQL() {
 
         log.info("开始执行Redis数据持久化到MySQL任务");

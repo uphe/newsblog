@@ -263,8 +263,8 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BaseResult getBlogVoByTypeNameAndOffset(String typeName, int offset, int limit) {
-        List<BlogVO> blogVOS = blogMapper.selectBlogVoByTypeNameAndOffset(typeName, offset, limit);
+    public BaseResult getBlogVoByTypeNameAndOffset(String typeName, int page) {
+        List<BlogVO> blogVOS = blogMapper.selectBlogVoByTypeNameAndOffset(typeName, 40 * (page - 1), 40);
         return BaseResult.ok(blogVOS);
     }
 
