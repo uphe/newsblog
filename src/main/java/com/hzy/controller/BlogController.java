@@ -1,6 +1,7 @@
 package com.hzy.controller;
 
 import com.hzy.dto.BlogDTO;
+import com.hzy.dto.TypeDTO;
 import com.hzy.service.BlogService;
 import com.hzy.service.ElasticSearchService;
 import com.hzy.vo.BaseResult;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @RestController
 @Tag(name = "文章", description = "文章相关的controller")
@@ -43,6 +45,12 @@ public class BlogController {
         return blogService.getBlogVOByUserId(blogId, session);
     }
 
+    @PostMapping("/all/getBlogByTypeName")
+    @Operation(summary = "通过类别名获取文章列表")
+    public BaseResult getBlogByTypeName(@RequestBody @Valid TypeDTO typeDTO) {
+        return blogService.getBlogVoByTypeNameAndOffset(typeDTO.getTypeName(), typeDTO.getPage());
+    }
+
     @GetMapping("/user/recommend/{page}")
     @Operation(summary = "推荐榜，传入一个page，返回该页面的数据")
     public BaseResult recommend(@PathVariable("page") int page, HttpSession session) {
@@ -73,9 +81,4 @@ public class BlogController {
         return elasticSearchService.search(msg);
     }
 
-    @GetMapping("/getBlog/{typeName}/{page}")
-    @Operation(summary = "通过类别名获取文章列表")
-    public BaseResult getBlogByTypeName(@PathVariable("typeName") String typeName, @PathVariable("page") int page) {
-        return blogService.getBlogVoByTypeNameAndOffset(typeName, page);
-    }
 }
