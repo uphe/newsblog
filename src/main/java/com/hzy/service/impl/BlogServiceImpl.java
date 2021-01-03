@@ -151,9 +151,12 @@ public class BlogServiceImpl implements BlogService {
 
         for (int i = blogVOS.size() - 1; i >= 0; i--) {
             int result = blogVOS.get(i).getArticle().indexOf(FileUtils.GET_IMAGE_DIR);
+            BlogVO blogVO = blogVOS.get(i);
             if (result >= 0) {
                 String substring = blogVOS.get(i).getArticle().substring(result, result + FileUtils.GET_IMAGE_DIR.length() + FileUtils.FILENAME_LENGTH);
-                blogVOS.get(i).setHeadUrl(substring);
+                blogVO.setBlogUrl(substring);
+            } else {
+                blogVO.setBlogUrl(blogVO.getHeadUrl());
             }
             setOperations.add(StringUtils.getTodayCommend(), blogVOS.get(i));
 

@@ -14,6 +14,7 @@ public class BlogVO implements Serializable {
     private String createDate;
     private List<String> types;
     private List<String> labels;
+    private String blogUrl;
 
     private int userId;
     private String username;
@@ -100,6 +101,14 @@ public class BlogVO implements Serializable {
         this.labels = labels;
     }
 
+    public String getBlogUrl() {
+        return blogUrl;
+    }
+
+    public void setBlogUrl(String blogUrl) {
+        this.blogUrl = blogUrl;
+    }
+
     public int getUserId() {
         return userId;
     }
@@ -145,6 +154,7 @@ public class BlogVO implements Serializable {
                 ", createDate='" + createDate + '\'' +
                 ", types=" + types +
                 ", labels=" + labels +
+                ", blogUrl='" + blogUrl + '\'' +
                 ", userId=" + userId +
                 ", username='" + username + '\'' +
                 ", headUrl='" + headUrl + '\'' +
