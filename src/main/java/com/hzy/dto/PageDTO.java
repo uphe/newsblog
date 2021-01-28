@@ -2,17 +2,16 @@ package com.hzy.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
  * @Author: hzy
- * @Date: 2021/1/2
+ * @Date: 2021/1/28
  */
 @Data
-public class TypeDTO {
-    @NotBlank
-    private String typeName;
+public class PageDTO {
     @NotNull
     private Integer page;
+    @NotNull
+    private Integer limit;
 }

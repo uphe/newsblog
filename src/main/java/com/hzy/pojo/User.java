@@ -1,12 +1,12 @@
 package com.hzy.pojo;
 
 public class User {
-    private int userId;
+    private Integer userId;
     private String username;
     private String password;
     private String salt;
     private String headUrl;
-    private int userType;
+    private Integer userType;
 
     public int getUserId() {
         return userId;

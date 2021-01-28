@@ -18,5 +18,5 @@ public interface ElasticSearchService {
      * @param msg
      * @return
      */
-    BaseResult search(String msg);
+    BaseResult search(String msg, Integer page, Integer limit);
 }

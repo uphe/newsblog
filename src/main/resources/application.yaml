@@ -1,3 +1,6 @@
+project:
+  default-view: redirect:/swagger-ui.html #swagger访问url:localhost:8081/swagger-ui.html
+
 # 配置端口号
 server:
   port: 8081
@@ -22,8 +25,10 @@ mybatis:
 
 # 整合swagger
 springdoc:
+  api-docs:
+    path: /api-docs
   swagger-ui:
-    path: /swagger-ui.html # 默认也是这个path
+    url: ${springdoc.api-docs.path} #查看swagger文档
 
 # 自定义高级客户端配置
 hzy:

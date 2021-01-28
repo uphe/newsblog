@@ -1,6 +1,7 @@
 package com.hzy.controller;
 
 import com.hzy.dto.BlogDTO;
+import com.hzy.dto.SearchDTO;
 import com.hzy.dto.TypeDTO;
 import com.hzy.service.BlogService;
 import com.hzy.service.ElasticSearchService;
@@ -75,10 +76,10 @@ public class BlogController {
         return blogService.getBlogVOByUserIdAndOffset(userId, 0, 40);
     }
 
-    @GetMapping("/search/{msg}")
+    @PostMapping("/all/search")
     @Operation(summary = "通过输入文章标题，进行分词模糊匹配")
-    public BaseResult search(@PathVariable("msg") String msg) {
-        return elasticSearchService.search(msg);
+    public BaseResult search(@RequestBody @Valid SearchDTO searchDTO) {
+        return elasticSearchService.search(searchDTO.getTitle(), searchDTO.getPage(), searchDTO.getLimit());
     }
 
 }

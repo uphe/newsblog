@@ -69,8 +69,9 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
      * @param msg
      * @return
      */
-    public BaseResult search(String msg) {
+    public BaseResult search(String msg, Integer page, Integer limit) {
         SearchRequest request = new SearchRequest(INDEX_NAME);
+
 
         // 构建搜索条件
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -80,9 +81,11 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         // 先进行分词，然后进行搜索
         MatchQueryBuilder termQueryBuilder = QueryBuilders.matchQuery("title", msg);
 
-        searchSourceBuilder.query(termQueryBuilder);
-        searchSourceBuilder.timeout(new TimeValue(10, TimeUnit.SECONDS));
-
+        searchSourceBuilder
+                .query(termQueryBuilder)
+                .timeout(new TimeValue(10, TimeUnit.SECONDS))
+                .from((page - 1) * limit)
+                .size(limit);
         request.source(searchSourceBuilder);
         SearchResponse searchResponse = null;
         try {
