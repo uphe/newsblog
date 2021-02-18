@@ -74,7 +74,7 @@ public class BlogController {
     }
 
     @GetMapping(path = {"/user/{userId}/{sortName}"})
-    @Operation(summary = "通过用户id，返回该用户的文章列表，并通过时间排序")
+    @Operation(summary = "通过用户id，返回该用户的文章列表，并通过传入的字段排序（createDate、hitCount）")
     public BaseResult userIndex(@PathVariable("userId") int userId, @PathVariable("sortName") String sortName) {
         if (HIT_COUNT.equals(sortName)) {
             return blogService.getBlogVOByUserIdSortHitCount(userId, 0, 40);
