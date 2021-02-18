@@ -5,7 +5,6 @@ import com.hzy.mapper.LabelMapper;
 import com.hzy.mapper.TypeMapper;
 import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.Blog;
-import com.hzy.pojo.Type;
 import com.hzy.pojo.User;
 import com.hzy.service.ElasticSearchService;
 import com.hzy.vo.BaseResult;
@@ -47,6 +46,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
     /**
      * 将博客保存到es
+     *
      * @param blog
      */
     public void save(Blog blog) {
@@ -66,6 +66,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
     /**
      * 分词搜索博客，暂时是根据文章标题进行分词
+     *
      * @param msg
      * @return
      */
@@ -97,7 +98,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
         for (SearchHit hit : searchResponse.getHits().getHits()) {
             Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-            int userId =Integer.valueOf(sourceAsMap.get("userId").toString());
+            int userId = Integer.valueOf(sourceAsMap.get("userId").toString());
             User user = userMapper.selectUserById(userId);
 
             BlogVO blogVO = new BlogVO();

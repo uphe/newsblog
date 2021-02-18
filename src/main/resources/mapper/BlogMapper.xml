@@ -37,7 +37,18 @@
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         LEFT JOIN likerecord ON user.userId = likerecord.userId AND blog.blogId = likerecord.blogId
+        WHERE blog.userId = #{userId}
         order by blog.createDate desc
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectBlogVOByUserIdSortHitCount" resultType="com.hzy.vo.BlogVO">
+        SELECT
+        <include refid="sqlid"/>
+        FROM blog INNER JOIN user ON blog.userId = user.userId
+        LEFT JOIN likerecord ON user.userId = likerecord.userId AND blog.blogId = likerecord.blogId
+        WHERE blog.userId = #{userId}
+        order by blog.hitCount desc
         limit #{offset},#{limit}
     </select>
 

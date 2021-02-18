@@ -63,16 +63,18 @@ public interface BlogService {
      */
     BaseResult publishBlog(BlogDTO blogDTO, HttpSession session);
 
+
     /**
      * 通过id查询某一篇博客，即是获取文章详情
      *
      * @param blogId
+     * @param session
      * @return
      */
     BaseResult getBlogVOByUserId(int blogId, HttpSession session);
 
     /**
-     * 查询某个用户的文章
+     * 查询某个用户的文章，通过时间排序
      *
      * @param userId
      * @param offset
@@ -80,6 +82,16 @@ public interface BlogService {
      * @return
      */
     BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit);
+
+    /**
+     * 查询某个用户的文章，通过访问量排序
+     *
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    BaseResult getBlogVOByUserIdSortHitCount(int userId, int offset, int limit);
 
     /**
      * 通过类别名获取文章

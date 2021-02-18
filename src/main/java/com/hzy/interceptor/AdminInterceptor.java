@@ -24,10 +24,15 @@ public class AdminInterceptor implements HandlerInterceptor {
     @Autowired
     private UserService userService;
 
-    /*
+    /**
      * preHandle：在控制器(controller)前执行，返回值表示是否中断后续执行
      * 当返回值为true时表示继续向下执行，为false时会中断后续所有操作
-     * */
+     *
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");

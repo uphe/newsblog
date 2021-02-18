@@ -44,6 +44,7 @@ public class BlogServiceImpl implements BlogService {
      * @param session
      * @return
      */
+    @Override
     public BaseResult getIndexBlogVO(int page, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = -1;
@@ -66,6 +67,7 @@ public class BlogServiceImpl implements BlogService {
      * @param session
      * @return
      */
+    @Override
     public BaseResult getRecommendBlogVO(int page, HttpSession session) {
         List<BlogVO> blogVOS = new ArrayList<>();
 
@@ -97,6 +99,7 @@ public class BlogServiceImpl implements BlogService {
      * @param session
      * @return
      */
+    @Override
     public BaseResult getNewestBlogVO(int page, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = -1;
@@ -116,6 +119,7 @@ public class BlogServiceImpl implements BlogService {
      * @param session
      * @return
      */
+    @Override
     public BaseResult getFollowBlogVO(int page, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
@@ -132,6 +136,7 @@ public class BlogServiceImpl implements BlogService {
      *
      * @return
      */
+    @Override
     public BaseResult getTodayBlogVO() {
         // 先判断redis中是否存在
         SetOperations setOperations = redisTemplate.opsForSet();
@@ -174,6 +179,7 @@ public class BlogServiceImpl implements BlogService {
      * @param session
      * @return
      */
+    @Override
     public BaseResult publishBlog(BlogDTO blogDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
@@ -235,6 +241,7 @@ public class BlogServiceImpl implements BlogService {
      * @param blogId
      * @return
      */
+    @Override
     public BaseResult getBlogVOByUserId(int blogId, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
@@ -260,8 +267,15 @@ public class BlogServiceImpl implements BlogService {
      * @param limit
      * @return
      */
+    @Override
     public BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit) {
         List<BlogVO> blogVOS = blogMapper.selectBlogVOByUserIdAndOffset(userId, offset, limit);
+        return BaseResult.ok(blogVOS);
+    }
+
+    @Override
+    public BaseResult getBlogVOByUserIdSortHitCount(int userId, int offset, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectBlogVOByUserIdSortHitCount(userId, offset, limit);
         return BaseResult.ok(blogVOS);
     }
 

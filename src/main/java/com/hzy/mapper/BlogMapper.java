@@ -23,6 +23,7 @@ public interface BlogMapper {
     int selectLikeCountSumByUserId(int userId);
     List<BlogVO> selectBlogVOByLabelName(int userId, String labelName, int offset, int limit);
     List<BlogVO> selectBlogVOByUserIdAndOffset(int userId,int offset,int limit);
+    List<BlogVO> selectBlogVOByUserIdSortHitCount(int userId,int offset,int limit);
     List<BlogVO> selectNewestBlogVOByUserIdAndOffset(int userId, int offset,int limit);
     List<BlogVO> selectTodayBlogVOByUserIdAndOffset(int offset,int limit);
     List<BlogVO> selectIndexBlogVOByUserIdAndOffset(int userId, int offset,int limit);

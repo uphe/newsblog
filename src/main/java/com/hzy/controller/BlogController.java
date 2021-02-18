@@ -22,6 +22,9 @@ public class BlogController {
     @Autowired
     private ElasticSearchService elasticSearchService;
 
+    private final String CREATE_DATE = "createDate";
+    private final String HIT_COUNT = "hitCount";
+
     @GetMapping({"/all/hot/{page}"})
     @Operation(summary = "首页热榜，通过传入一个page，返回该page的数据（例如传入3，返回第三页的数据）")
     public BaseResult index(@PathVariable("page") int page, HttpSession session) {
@@ -70,10 +73,16 @@ public class BlogController {
         return blogService.publishBlog(blogDTO, session);
     }
 
-    @GetMapping(path = {"/user/{userId}"})
-    @Operation(summary = "通过用户id，返回该用户的文章列表")
-    public BaseResult userIndex(@PathVariable("userId") int userId) {
-        return blogService.getBlogVOByUserIdAndOffset(userId, 0, 40);
+    @GetMapping(path = {"/user/{userId}/{sortName}"})
+    @Operation(summary = "通过用户id，返回该用户的文章列表，并通过时间排序")
+    public BaseResult userIndex(@PathVariable("userId") int userId, @PathVariable("sortName") String sortName) {
+        if (HIT_COUNT.equals(sortName)) {
+            return blogService.getBlogVOByUserIdSortHitCount(userId, 0, 40);
+        } else {
+            // 默认是时间排序
+            return blogService.getBlogVOByUserIdAndOffset(userId, 0, 40);
+        }
+
     }
 
     @PostMapping("/all/search")
