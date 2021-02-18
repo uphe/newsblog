@@ -10,6 +10,13 @@
         insert into Blog(title,article,summary,createDate,userId)
         values (#{title},#{article},#{summary},#{createDate},#{userId})
     </insert>
+
+    <update id="updateBlog" parameterType="com.hzy.dto.BlogDTO">
+        update Blog
+        set title = #{title}, article = #{article}, summary = #{summary}
+        where blogId = #{blogId}
+    </update>
+
     <select id="selectBlogById" resultType="Blog">
         select * from blog
         where blogId = #{blogId}
@@ -85,7 +92,7 @@
         <include refid="sqlid"/>
         FROM blog INNER JOIN user ON blog.userId = user.userId
         LEFT JOIN likerecord ON user.userId = likerecord.userId AND blog.blogId = likerecord.blogId
---         WHERE TO_DAYS(NOW())-TO_DAYS(createDate) = 1 -- 这里是今日推荐
+        -- WHERE TO_DAYS(NOW())-TO_DAYS(createDate) = 1 -- 这里是今日推荐
         WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(blog.createDate)-- 这里是用来测试
         order by 100 * likeCount + hitCount DESC
         limit #{offset},#{limit}

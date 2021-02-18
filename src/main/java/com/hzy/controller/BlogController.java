@@ -4,6 +4,7 @@ import com.hzy.dto.BlogDTO;
 import com.hzy.dto.InfoDTO;
 import com.hzy.dto.SearchDTO;
 import com.hzy.dto.TypeDTO;
+import com.hzy.pojo.Blog;
 import com.hzy.service.BlogService;
 import com.hzy.service.ElasticSearchService;
 import com.hzy.vo.BaseResult;
@@ -93,6 +94,12 @@ public class BlogController {
     @Operation(summary = "发布文章")
     public BaseResult publishBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
         return blogService.publishBlog(blogDTO, session);
+    }
+
+    @PostMapping("/user/update")
+    @Operation(summary = "编辑文章")
+    public BaseResult updateBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
+        return blogService.updateBlog(blogDTO, session);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.hzy.service;
 
 import com.hzy.dto.BlogDTO;
+import com.hzy.pojo.Blog;
 import com.hzy.vo.BaseResult;
 
 import javax.servlet.http.HttpSession;
@@ -55,13 +56,22 @@ public interface BlogService {
     BaseResult getTodayBlogVO();
 
     /**
-     * 发布博客
+     * 发布文章
      *
      * @param blogDTO
      * @param session
      * @return
      */
     BaseResult publishBlog(BlogDTO blogDTO, HttpSession session);
+
+    /**
+     * 编辑文章
+     *
+     * @param blogDTO
+     * @param session
+     * @return
+     */
+    BaseResult updateBlog(BlogDTO blogDTO, HttpSession session);
 
 
     /**

@@ -235,6 +235,22 @@ public class BlogServiceImpl implements BlogService {
         return BaseResult.error("发布文章失败");
     }
 
+
+    /**
+     * 编辑文章
+     *
+     * @param blogDTO
+     * @param session
+     * @return
+     */
+    @Override
+    public BaseResult updateBlog(BlogDTO blogDTO, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        int userId = user.getUserId();
+        blogMapper.updateBlog(blogDTO);
+        return BaseResult.ok();
+    }
+
     /**
      * 通过id查询某一篇博客，即是获取文章详情
      *

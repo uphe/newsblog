@@ -10,6 +10,7 @@ import java.util.List;
  */
 @Data
 public class BlogDTO {
+    private Integer blogId;
     private String title;
     private String summary;
     private String article;
