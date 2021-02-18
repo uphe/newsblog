@@ -56,6 +56,27 @@ public class BlogController {
         return blogService.getBlogVoByTypeNameAndOffset(typeDTO.getTypeName(), typeDTO.getPage());
     }
 
+    @PostMapping(path = {"/all/user"})
+    @Operation(summary = "通过用户id，返回该用户的文章列表，并通过传入的字段排序（createDate、hitCount）,默认排序是createDate")
+    public BaseResult userIndex(@RequestBody @Valid InfoDTO infoDTO) {
+        int userId = infoDTO.getId();
+        int limit = infoDTO.getLimit();
+        int offset = limit * (infoDTO.getPage() - 1);
+
+        if (HIT_COUNT.equals(infoDTO.getSortName())) {
+            return blogService.getBlogVOByUserIdSortHitCount(userId, offset, limit);
+        } else {
+            // 默认是时间排序
+            return blogService.getBlogVOByUserIdAndOffset(userId, offset, limit);
+        }
+    }
+
+    @PostMapping("/all/search")
+    @Operation(summary = "通过输入文章标题，进行分词模糊匹配")
+    public BaseResult search(@RequestBody @Valid SearchDTO searchDTO) {
+        return elasticSearchService.search(searchDTO.getTitle(), searchDTO.getPage(), searchDTO.getLimit());
+    }
+
     @GetMapping("/user/recommend/{page}")
     @Operation(summary = "推荐榜，传入一个page，返回该页面的数据")
     public BaseResult recommend(@PathVariable("page") int page, HttpSession session) {
@@ -72,25 +93,6 @@ public class BlogController {
     @Operation(summary = "发布文章")
     public BaseResult publishBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
         return blogService.publishBlog(blogDTO, session);
-    }
-
-    @PostMapping(path = {"/all/user"})
-    @Operation(summary = "通过用户id，返回该用户的文章列表，并通过传入的字段排序（createDate、hitCount）,默认排序是createDate")
-    public BaseResult userIndex(@RequestBody @Valid InfoDTO infoDTO) {
-        int userId = infoDTO.getId();
-        if (HIT_COUNT.equals(infoDTO.getSortName())) {
-            return blogService.getBlogVOByUserIdSortHitCount(userId, 0, 40);
-        } else {
-            // 默认是时间排序
-            return blogService.getBlogVOByUserIdAndOffset(userId, 0, 40);
-        }
-
-    }
-
-    @PostMapping("/all/search")
-    @Operation(summary = "通过输入文章标题，进行分词模糊匹配")
-    public BaseResult search(@RequestBody @Valid SearchDTO searchDTO) {
-        return elasticSearchService.search(searchDTO.getTitle(), searchDTO.getPage(), searchDTO.getLimit());
     }
 
 }

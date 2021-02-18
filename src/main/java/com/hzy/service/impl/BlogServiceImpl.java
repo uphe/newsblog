@@ -246,7 +246,8 @@ public class BlogServiceImpl implements BlogService {
 
         User user = (User) session.getAttribute("user");
         if (user != null) {
-            blogMapper.updateHitCountByBlogId(blogId);// 点击量加1
+            // 点击量加1
+            blogMapper.updateHitCountByBlogId(blogId);
         }
         BlogVO blogVO = blogMapper.selectBlogVOByBlogId(blogId);
 
