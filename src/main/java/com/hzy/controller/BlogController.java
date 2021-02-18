@@ -1,6 +1,7 @@
 package com.hzy.controller;
 
 import com.hzy.dto.BlogDTO;
+import com.hzy.dto.InfoDTO;
 import com.hzy.dto.SearchDTO;
 import com.hzy.dto.TypeDTO;
 import com.hzy.service.BlogService;
@@ -73,10 +74,11 @@ public class BlogController {
         return blogService.publishBlog(blogDTO, session);
     }
 
-    @GetMapping(path = {"/user/{userId}/{sortName}"})
-    @Operation(summary = "通过用户id，返回该用户的文章列表，并通过传入的字段排序（createDate、hitCount）")
-    public BaseResult userIndex(@PathVariable("userId") int userId, @PathVariable("sortName") String sortName) {
-        if (HIT_COUNT.equals(sortName)) {
+    @PostMapping(path = {"/all/user"})
+    @Operation(summary = "通过用户id，返回该用户的文章列表，并通过传入的字段排序（createDate、hitCount）,默认排序是createDate")
+    public BaseResult userIndex(@RequestBody @Valid InfoDTO infoDTO) {
+        int userId = infoDTO.getId();
+        if (HIT_COUNT.equals(infoDTO.getSortName())) {
             return blogService.getBlogVOByUserIdSortHitCount(userId, 0, 40);
         } else {
             // 默认是时间排序
