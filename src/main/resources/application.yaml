@@ -23,6 +23,10 @@ mybatis:
   type-aliases-package: com.hzy.pojo
   mapper-locations: classpath:mapper/*.xml
 
+# 配置分页插件方言
+pagehelper:
+  helper-dialect: mysql
+
 # 整合swagger
 springdoc:
   api-docs:

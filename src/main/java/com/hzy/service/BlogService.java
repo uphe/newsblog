@@ -27,7 +27,7 @@ public interface BlogService {
      * @param session
      * @return
      */
-    BaseResult getRecommendBlogVO(int page, HttpSession session);
+    BaseResult getRecommendBlogVO(int page, int limit, HttpSession session);
 
 
     /**
@@ -81,7 +81,7 @@ public interface BlogService {
      * @param session
      * @return
      */
-    BaseResult getBlogVOByUserId(int blogId, HttpSession session);
+    BaseResult getBlogVOByBlogId(int blogId, HttpSession session);
 
     /**
      * 查询某个用户的文章，通过时间排序

@@ -68,14 +68,13 @@ public class BlogServiceImpl implements BlogService {
      * @return
      */
     @Override
-    public BaseResult getRecommendBlogVO(int page, HttpSession session) {
+    public BaseResult getRecommendBlogVO(int page, int limit, HttpSession session) {
         List<BlogVO> blogVOS = new ArrayList<>();
 
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
 
-        int offset = 40 * (page - 1);
-        int limit = 40;
+        int offset = limit * (page - 1);
         List<Map<String, Object>> maps = labelMapper.selectLabelByUserId(userId);
         int sum = 0;
         for (Map<String, Object> map : maps) {
@@ -258,7 +257,7 @@ public class BlogServiceImpl implements BlogService {
      * @return
      */
     @Override
-    public BaseResult getBlogVOByUserId(int blogId, HttpSession session) {
+    public BaseResult getBlogVOByBlogId(int blogId, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
         if (user != null) {
@@ -266,7 +265,10 @@ public class BlogServiceImpl implements BlogService {
             blogMapper.updateHitCountByBlogId(blogId);
         }
         BlogVO blogVO = blogMapper.selectBlogVOByBlogId(blogId);
-
+        List<String> types = typeMapper.selectTypeNameByBlogId(blogId);
+        List<String> labels = labelMapper.selectLabelNameByBlogId(blogId);
+        blogVO.setTypes(types);
+        blogVO.setLabels(labels);
         Map<String, Object> map = new HashMap<>();
         // 下面是从数据库中获取到博客，然后转化为html传到前端
         String markdownString = blogVO.getArticle();

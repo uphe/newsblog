@@ -17,6 +17,10 @@
         where blogId = #{blogId}
     </update>
 
+    <select id="selectBlogAll" resultType="Blog">
+        select * from blog
+    </select>
+
     <select id="selectBlogById" resultType="Blog">
         select * from blog
         where blogId = #{blogId}

@@ -16,6 +16,8 @@ public class BaseResult<T> {
 
     private T data;
 
+    private Integer total;
+
     public BaseResult() {
     }
 
@@ -63,6 +65,14 @@ public class BaseResult<T> {
         return new BaseResult(ERROR_CODE,msg, false);
     }
 
+    public static Integer getSuccessCode() {
+        return SUCCESS_CODE;
+    }
+
+    public static Integer getErrorCode() {
+        return ERROR_CODE;
+    }
+
     public Integer getCode() {
         return code;
     }
@@ -71,20 +81,12 @@ public class BaseResult<T> {
         this.code = code;
     }
 
-    public String getMsg() {
+    public String getErrorMessage() {
         return errorMessage;
     }
 
-    public void setMsg(String msg) {
-        this.errorMessage = msg;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public Boolean getSuccess() {
@@ -95,14 +97,30 @@ public class BaseResult<T> {
         this.success = success;
     }
 
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
 
     @Override
     public String toString() {
         return "BaseResult{" +
                 "code=" + code +
-                ", msg='" + errorMessage + '\'' +
+                ", errorMessage='" + errorMessage + '\'' +
                 ", success=" + success +
-                ", result=" + data +
+                ", data=" + data +
+                ", total=" + total +
                 '}';
     }
 }

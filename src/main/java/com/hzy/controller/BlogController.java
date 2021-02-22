@@ -1,10 +1,6 @@
 package com.hzy.controller;
 
-import com.hzy.dto.BlogDTO;
-import com.hzy.dto.InfoDTO;
-import com.hzy.dto.SearchDTO;
-import com.hzy.dto.TypeDTO;
-import com.hzy.pojo.Blog;
+import com.hzy.dto.*;
 import com.hzy.service.BlogService;
 import com.hzy.service.ElasticSearchService;
 import com.hzy.vo.BaseResult;
@@ -48,7 +44,7 @@ public class BlogController {
     @GetMapping("/all/detail/{blogId}")
     @Operation(summary = "文章详情，传入一个文章id，返回该文章的详情内容")
     public BaseResult detail(@PathVariable("blogId") int blogId, HttpSession session) {
-        return blogService.getBlogVOByUserId(blogId, session);
+        return blogService.getBlogVOByBlogId(blogId, session);
     }
 
     @PostMapping("/all/getBlogByTypeName")
@@ -78,10 +74,10 @@ public class BlogController {
         return elasticSearchService.search(searchDTO.getTitle(), searchDTO.getPage(), searchDTO.getLimit());
     }
 
-    @GetMapping("/user/recommend/{page}")
-    @Operation(summary = "推荐榜，传入一个page，返回该页面的数据")
-    public BaseResult recommend(@PathVariable("page") int page, HttpSession session) {
-        return blogService.getRecommendBlogVO(page, session);
+    @GetMapping("/user/recommend")
+    @Operation(summary = "推荐榜，传入一个Page，返回该页面的数据")
+    public BaseResult recommend(@RequestBody @Valid PageDTO pageDTO, HttpSession session) {
+        return blogService.getRecommendBlogVO(pageDTO.getPage(),pageDTO.getLimit(), session);
     }
 
     @GetMapping("/user/follow/{page}")

@@ -1,7 +1,11 @@
 package com.hzy;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hzy.mapper.BlogMapper;
 import com.hzy.mapper.LabelMapper;
+import com.hzy.pojo.Blog;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -15,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
 
 @SpringBootTest
@@ -33,9 +38,10 @@ class NewsblogApplicationTests {
 
     @Test
     void myStream() {
-        String str = "my name is 007";
-        Stream.of(str.split(" ")).filter(s -> s.length() > 2)
-                .map(s -> s.length()).forEach(System.out::println);
+        Page<Object> page = PageHelper.offsetPage(0, 10);
+        List<Blog> blogs = blogMapper.selectBlogAll();
+        System.out.println(page.getTotal());
+        System.out.println(blogs);
     }
 
     /**

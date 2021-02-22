@@ -15,6 +15,8 @@ public interface BlogMapper {
 
     int updateBlog(BlogDTO blogDTO);
 
+    List<Blog> selectBlogAll();
+
     Blog selectBlogById(int blogId);
 
     BlogVO selectBlogVOByBlogId(int blogId);
