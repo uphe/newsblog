@@ -15,7 +15,7 @@ public interface BlogService {
      * @param session
      * @return
      */
-    BaseResult getIndexBlogVO(int page, HttpSession session);
+    BaseResult getIndexBlogVO(int page, int limit, HttpSession session);
 
     /**
      * 内容推荐算法，根据用户个人喜欢，进行个性化的推荐

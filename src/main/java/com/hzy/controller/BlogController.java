@@ -23,10 +23,10 @@ public class BlogController {
     private final String CREATE_DATE = "createDate";
     private final String HIT_COUNT = "hitCount";
 
-    @GetMapping({"/all/hot/{page}"})
-    @Operation(summary = "首页热榜，通过传入一个page，返回该page的数据（例如传入3，返回第三页的数据）")
-    public BaseResult index(@PathVariable("page") int page, HttpSession session) {
-        return blogService.getIndexBlogVO(page, session);
+    @PostMapping({"/all/hot"})
+    @Operation(summary = "首页热榜，通过传入一个page和一个limit，返回该page的limit条数据")
+    public BaseResult index(@RequestBody @Valid PageDTO pageDTO, HttpSession session) {
+        return blogService.getIndexBlogVO(pageDTO.getPage(), pageDTO.getLimit(), session);
     }
 
     @GetMapping("/all/newest/{page}")

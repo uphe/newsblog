@@ -46,13 +46,13 @@ public class BlogServiceImpl implements BlogService {
      * @return
      */
     @Override
-    public BaseResult getIndexBlogVO(int page, HttpSession session) {
+    public BaseResult getIndexBlogVO(int page, int limit, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = -1;
         if (user != null) {
             userId = user.getUserId();
         }
-        List<BlogVO> blogVOS = blogMapper.selectIndexBlogVOByUserIdAndOffset(userId, 20 * (page - 1), 20);
+        List<BlogVO> blogVOS = blogMapper.selectIndexBlogVOByUserIdAndOffset(userId, limit * (page - 1), limit);
         setBlogVOSLikeCount(blogVOS);
 
         return BaseResult.ok(blogVOS);
