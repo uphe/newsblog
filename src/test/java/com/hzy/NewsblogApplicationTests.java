@@ -38,10 +38,7 @@ class NewsblogApplicationTests {
 
     @Test
     void myStream() {
-        Page<Object> page = PageHelper.offsetPage(0, 10);
-        List<Blog> blogs = blogMapper.selectBlogAll();
-        System.out.println(page.getTotal());
-        System.out.println(blogs);
+
     }
 
     /**

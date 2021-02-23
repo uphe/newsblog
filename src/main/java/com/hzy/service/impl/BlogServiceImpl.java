@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -246,7 +247,34 @@ public class BlogServiceImpl implements BlogService {
     public BaseResult updateBlog(BlogDTO blogDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
+        int blogId = blogDTO.getBlogId();
         blogMapper.updateBlog(blogDTO);
+        labelMapper.deleteLabelByBlogId(blogId);
+        List<Label> labels = new ArrayList<>();
+        blogDTO.getLabels().forEach(labelName -> {
+            Label label = new Label();
+
+            label.setUserId(userId);
+            label.setLabelName(labelName);
+            label.setBlogId(blogId);
+
+            labels.add(label);
+        });
+        labelMapper.addBatchLabel(labels);
+
+        typeMapper.deleteTypeByBlogId(blogId);
+        List<Type> types = new ArrayList<>();
+        blogDTO.getTypes().forEach(typeName -> {
+            Type type = new Type();
+
+            type.setTypeName(typeName);
+            type.setUserId(userId);
+            type.setBlogId(blogId);
+
+            types.add(type);
+        });
+        typeMapper.addBatchType(types);
+
         return BaseResult.ok();
     }
 

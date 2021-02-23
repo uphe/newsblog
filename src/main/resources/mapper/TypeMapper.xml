@@ -16,6 +16,11 @@
         </foreach>
     </insert>
 
+    <delete id="deleteTypeByBlogId" parameterType="_int">
+        delete from newsblog.type
+        where blogId = #{blogId}
+    </delete>
+
     <select id="selectTypeByUserId" resultType="Type">
         select * from newsblog.type
         where userId = #{userId}

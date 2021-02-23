@@ -11,7 +11,12 @@ import java.util.Map;
 @Repository
 public interface LabelMapper {
     int addLabel(Label label);
+
     int addBatchLabel(List<Label> labels);
+
+    int deleteLabelByBlogId(int blogId);
+
     List<Map<String, Object>> selectLabelByUserId(int userId);
+
     List<String> selectLabelNameByBlogId(int blogId);
 }

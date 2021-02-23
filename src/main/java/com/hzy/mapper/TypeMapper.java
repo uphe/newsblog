@@ -14,6 +14,8 @@ public interface TypeMapper {
 
     int addBatchType(List<Type> types);
 
+    int deleteTypeByBlogId(int blogId);
+
     List<Type> selectTypeByUserId(int userId);
 
     List<String> selectTypeNameByUserId(int userId);

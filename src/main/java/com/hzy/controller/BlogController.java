@@ -74,8 +74,8 @@ public class BlogController {
         return elasticSearchService.search(searchDTO.getTitle(), searchDTO.getPage(), searchDTO.getLimit());
     }
 
-    @GetMapping("/user/recommend")
-    @Operation(summary = "推荐榜，传入一个Page，返回该页面的数据")
+    @PostMapping("/user/recommend")
+    @Operation(summary = "推荐榜，根据用户个性进行推荐")
     public BaseResult recommend(@RequestBody @Valid PageDTO pageDTO, HttpSession session) {
         return blogService.getRecommendBlogVO(pageDTO.getPage(),pageDTO.getLimit(), session);
     }

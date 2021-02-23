@@ -7,6 +7,7 @@
         insert into newsblog.label(labelName,userId,blogId)
         values (#{labelName},#{userId},#{blogId})
     </insert>
+
     <insert id="addBatchLabel" parameterType="Label">
         insert into newsblog.label(labelName, userId,blogId)
         values
@@ -14,10 +15,11 @@
             (#{label.labelName},#{label.userId},#{label.blogId})
         </foreach>
     </insert>
-    
-<!--    <resultMap id="selectMap" type="LabelMap">-->
-<!--        <result property="labelName" column="la"-->
-<!--    </resultMap>-->
+
+    <delete id="deleteLabelByBlogId" parameterType="_int">
+        delete from newsblog.label
+        where blogId = #{blogId}
+    </delete>
 
     <select id="selectLabelByUserId" resultType="map">
         SELECT labelName, COUNT(labelName) as labelCount
