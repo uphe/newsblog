@@ -1,7 +1,6 @@
 package com.hzy.service;
 
 import com.hzy.dto.BlogDTO;
-import com.hzy.pojo.Blog;
 import com.hzy.vo.BaseResult;
 
 import javax.servlet.http.HttpSession;
@@ -91,17 +90,7 @@ public interface BlogService {
      * @param limit
      * @return
      */
-    BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit);
-
-    /**
-     * 查询某个用户的文章，通过访问量排序
-     *
-     * @param userId
-     * @param offset
-     * @param limit
-     * @return
-     */
-    BaseResult getBlogVOByUserIdSortHitCount(int userId, int offset, int limit);
+    BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit, String sortName);
 
     /**
      * 通过类别名获取文章
@@ -111,7 +100,7 @@ public interface BlogService {
      * @param limit
      * @return
      */
-    BaseResult getBlogVoByTypeNameAndOffset(String typeName, int page);
+    BaseResult getBlogVoByTypeNameAndOffset(String typeName, int page, int limit);
 
     /**
      * 通过博客id查询评论数

@@ -6,6 +6,7 @@
     <sql id="sqlid">
         blog.blogId,title,summary,article,likeCount,hitCount,commentCount,blog.createDate,user.userId,username,headUrl,isLike
     </sql>
+
     <insert id="addBlog" useGeneratedKeys="true" keyProperty="blogId" parameterType="Blog">
         insert into Blog(title,article,summary,createDate,userId)
         values (#{title},#{article},#{summary},#{createDate},#{userId})

@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+/**
+ * @Author: hzy
+ * @Date: 2020/6/12
+ */
 @RestController
 @Tag(name = "文章", description = "文章相关的controller")
 public class BlogController {
@@ -20,29 +24,26 @@ public class BlogController {
     @Autowired
     private ElasticSearchService elasticSearchService;
 
-    private final String CREATE_DATE = "createDate";
-    private final String HIT_COUNT = "hitCount";
-
     @PostMapping({"/all/hot"})
-    @Operation(summary = "首页热榜，通过传入一个page和一个limit，返回该page的limit条数据")
+    @Operation(summary = "首页热榜，返回最热文章")
     public BaseResult index(@RequestBody @Valid PageDTO pageDTO, HttpSession session) {
         return blogService.getIndexBlogVO(pageDTO.getPage(), pageDTO.getLimit(), session);
     }
 
     @GetMapping("/all/newest/{page}")
-    @Operation(summary = "最新发布榜单，传入一个page，返回该page的数据")
+    @Operation(summary = "最新发布榜单，返回最新发布的文章")
     public BaseResult newest(@PathVariable("page") int page, HttpSession session) {
         return blogService.getNewestBlogVO(page, session);
     }
 
     @GetMapping("/all/todayRecommend")
-    @Operation(summary = "今日推荐榜")
+    @Operation(summary = "今日推荐榜，返回今日最热文章")
     public BaseResult todayRecommend() {
         return blogService.getTodayBlogVO();
     }
 
     @GetMapping("/all/detail/{blogId}")
-    @Operation(summary = "文章详情，传入一个文章id，返回该文章的详情内容")
+    @Operation(summary = "文章详情，返回文章的详情内容")
     public BaseResult detail(@PathVariable("blogId") int blogId, HttpSession session) {
         return blogService.getBlogVOByBlogId(blogId, session);
     }
@@ -50,22 +51,13 @@ public class BlogController {
     @PostMapping("/all/getBlogByTypeName")
     @Operation(summary = "通过类别名获取文章列表")
     public BaseResult getBlogByTypeName(@RequestBody @Valid TypeDTO typeDTO) {
-        return blogService.getBlogVoByTypeNameAndOffset(typeDTO.getTypeName(), typeDTO.getPage());
+        return blogService.getBlogVoByTypeNameAndOffset(typeDTO.getTypeName(), typeDTO.getPage(), typeDTO.getLimit());
     }
 
     @PostMapping(path = {"/all/user"})
     @Operation(summary = "通过用户id，返回该用户的文章列表，并通过传入的字段排序（createDate、hitCount）,默认排序是createDate")
     public BaseResult userIndex(@RequestBody @Valid InfoDTO infoDTO) {
-        int userId = infoDTO.getId();
-        int limit = infoDTO.getLimit();
-        int offset = limit * (infoDTO.getPage() - 1);
-
-        if (HIT_COUNT.equals(infoDTO.getSortName())) {
-            return blogService.getBlogVOByUserIdSortHitCount(userId, offset, limit);
-        } else {
-            // 默认是时间排序
-            return blogService.getBlogVOByUserIdAndOffset(userId, offset, limit);
-        }
+        return blogService.getBlogVOByUserIdAndOffset(infoDTO.getId(), infoDTO.getPage(), infoDTO.getLimit(), infoDTO.getSortName());
     }
 
     @PostMapping("/all/search")
@@ -77,7 +69,7 @@ public class BlogController {
     @PostMapping("/user/recommend")
     @Operation(summary = "推荐榜，根据用户个性进行推荐")
     public BaseResult recommend(@RequestBody @Valid PageDTO pageDTO, HttpSession session) {
-        return blogService.getRecommendBlogVO(pageDTO.getPage(),pageDTO.getLimit(), session);
+        return blogService.getRecommendBlogVO(pageDTO.getPage(), pageDTO.getLimit(), session);
     }
 
     @GetMapping("/user/follow/{page}")

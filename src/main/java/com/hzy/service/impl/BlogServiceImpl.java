@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -37,6 +36,7 @@ public class BlogServiceImpl implements BlogService {
     private LabelMapper labelMapper;
     @Autowired
     private TypeMapper typeMapper;
+    private final String HIT_COUNT = "hitCount";
 
     /**
      * 首页，暂时是根据一年以内的优文推荐，根据点赞*100+访问排序
@@ -315,20 +315,21 @@ public class BlogServiceImpl implements BlogService {
      * @return
      */
     @Override
-    public BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit) {
-        List<BlogVO> blogVOS = blogMapper.selectBlogVOByUserIdAndOffset(userId, offset, limit);
+    public BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit, String sortName) {
+        List<BlogVO> blogVOS;
+        if (HIT_COUNT.equals(sortName)) {
+            blogVOS = blogMapper.selectBlogVOByUserIdSortHitCount(userId, offset, limit);
+        } else {
+            // 默认是时间排序
+            blogVOS = blogMapper.selectBlogVOByUserIdAndOffset(userId, offset, limit);
+        }
+
         return BaseResult.ok(blogVOS);
     }
 
     @Override
-    public BaseResult getBlogVOByUserIdSortHitCount(int userId, int offset, int limit) {
-        List<BlogVO> blogVOS = blogMapper.selectBlogVOByUserIdSortHitCount(userId, offset, limit);
-        return BaseResult.ok(blogVOS);
-    }
-
-    @Override
-    public BaseResult getBlogVoByTypeNameAndOffset(String typeName, int page) {
-        List<BlogVO> blogVOS = blogMapper.selectBlogVoByTypeNameAndOffset(typeName, 40 * (page - 1), 40);
+    public BaseResult getBlogVoByTypeNameAndOffset(String typeName, int page, int limit) {
+        List<BlogVO> blogVOS = blogMapper.selectBlogVoByTypeNameAndOffset(typeName, limit * (page - 1), limit);
         return BaseResult.ok(blogVOS);
     }
 

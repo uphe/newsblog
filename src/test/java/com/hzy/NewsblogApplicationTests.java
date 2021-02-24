@@ -38,7 +38,9 @@ class NewsblogApplicationTests {
 
     @Test
     void myStream() {
-
+        Page<Object> page = PageHelper.startPage(1, 10);
+        List<Blog> blogs = blogMapper.selectBlogAll();
+        System.out.println(blogs);
     }
 
     /**
