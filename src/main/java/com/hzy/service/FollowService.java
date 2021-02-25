@@ -1,6 +1,8 @@
 package com.hzy.service;
 
+import com.hzy.pojo.Follow;
 import com.hzy.pojo.User;
+import com.hzy.vo.BaseResult;
 
 import java.util.List;
 
@@ -10,7 +12,9 @@ public interface FollowService {
 
     List<User> selectUserByFollowUserId(int followUserId);
 
-    int addFollowUser(int userId, int followUserId);
+    Follow selectFollowUserByUserIdAndFollowUserId(int userId, int followUserId);
+
+    BaseResult followUser(int userId, int followUserId);
 
     int deleteFollowUserByFollowId(int followId);
 
