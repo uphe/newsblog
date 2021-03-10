@@ -1,5 +1,8 @@
 package com.hzy.pojo;
 
+/**
+ * 关注表
+ */
 public class Follow {
     private Integer followId;
     private Integer userId;

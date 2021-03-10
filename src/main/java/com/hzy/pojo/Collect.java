@@ -1,5 +1,8 @@
 package com.hzy.pojo;
 
+/**
+ * 收藏表，主要记录用户对文章的收藏
+ */
 public class Collect {
     private Integer collectId;
     private Integer userId;

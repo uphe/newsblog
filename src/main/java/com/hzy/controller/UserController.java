@@ -2,14 +2,12 @@ package com.hzy.controller;
 
 import com.hzy.dto.UserDTO;
 import com.hzy.service.UserService;
-import com.hzy.utils.JSONUtils;
 import com.hzy.vo.BaseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +32,7 @@ public class UserController {
         return userService.register(userDTO);
     }
 
+    
     @GetMapping("/isLogin")
     @Operation(summary = "判断是否登录")
     public BaseResult isLogin(HttpServletRequest request) {

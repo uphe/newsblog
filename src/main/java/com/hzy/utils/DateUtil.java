@@ -3,6 +3,10 @@ package com.hzy.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * @Author: hzy
+ * @Date: 2021/3/4
+ */
 public class DateUtil {
 
     private static final long TIME = 1000 * 60 * 60 * 24 * 14;
@@ -14,7 +18,7 @@ public class DateUtil {
 
     public static Date afterSevenDay() {
         Date date = new Date();
-        date.setTime(new Date().getTime() + TIME);
+        date.setTime(System.currentTimeMillis() + TIME);
         return date;
     }
 }
