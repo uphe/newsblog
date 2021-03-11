@@ -173,7 +173,7 @@ public class BlogServiceImpl implements BlogService {
 
 
     /**
-     * 发布博客
+     * 发布文章
      *
      * @param blogDTO
      * @param session

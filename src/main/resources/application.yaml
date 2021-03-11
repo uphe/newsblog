@@ -3,7 +3,7 @@ project:
 
 # 配置端口号
 server:
-  port: 8082
+  port: 8081
 
 # 配置MySQL
 spring:
