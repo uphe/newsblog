@@ -1,6 +1,5 @@
 package com.hzy.mapper;
 
-import com.hzy.dto.BlogDTO;
 import com.hzy.pojo.Blog;
 import com.hzy.vo.BlogVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,10 +9,34 @@ import java.util.List;
 
 @Mapper
 @Repository
+/**
+ * @Author: hzy
+ * @Date: 2020/6/12
+ */
 public interface BlogMapper {
+    /**
+     * 发布文章
+     *
+     * @param blog
+     * @return
+     */
     int addBlog(Blog blog);
 
-    int updateBlog(BlogDTO blogDTO);
+    /**
+     * 修改文章
+     *
+     * @param blog
+     * @return
+     */
+    int updateBlog(Blog blog);
+
+    /**
+     * 删除文章
+     *
+     * @param blogId
+     * @return
+     */
+    int deleteBlogById(int blogId);
 
     List<Blog> selectBlogAll();
 

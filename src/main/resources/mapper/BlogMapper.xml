@@ -12,11 +12,15 @@
         values (#{title},#{article},#{summary},#{createDate},#{userId})
     </insert>
 
-    <update id="updateBlog" parameterType="com.hzy.dto.BlogDTO">
+    <update id="updateBlog" parameterType="com.hzy.pojo.Blog">
         update Blog
         set title = #{title}, article = #{article}, summary = #{summary}
         where blogId = #{blogId}
     </update>
+    <delete id="deleteBlogById">
+        delete from Blog
+        where blogId = #{blogId}
+    </delete>
 
     <select id="selectBlogAll" resultType="Blog">
         select * from blog
@@ -76,7 +80,8 @@
     <select id="selectIndexBlogVOByUserIdAndOffset" resultType="com.hzy.vo.BlogVO">
         SELECT
         <include refid="sqlid"/>
-        FROM blog INNER JOIN user ON blog.userId = user.userId
+        FROM blog
+        INNER JOIN user ON blog.userId = user.userId
         LEFT JOIN likerecord ON blog.blogId = likerecord.blogId AND likerecord.userId = #{userId}
         WHERE DATE_SUB(CURDATE(), INTERVAL 365 DAY) &lt;= date(blog.createDate)
         order by 100 * likeCount + hitCount DESC

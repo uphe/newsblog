@@ -1,10 +1,15 @@
 package com.hzy.service;
 
 import com.hzy.dto.BlogDTO;
+import com.hzy.dto.BlogUpdateDTO;
 import com.hzy.vo.BaseResult;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * @Author: hzy
+ * @Date: 2020/6/12
+ */
 public interface BlogService {
 
     /**
@@ -36,7 +41,7 @@ public interface BlogService {
      * @param session
      * @return
      */
-    BaseResult getNewestBlogVO(int page, HttpSession session);
+    BaseResult getNewestBlogVO(int page, int limit, HttpSession session);
 
     /**
      * 首页中用户关注的榜单
@@ -64,13 +69,21 @@ public interface BlogService {
     BaseResult publishBlog(BlogDTO blogDTO, HttpSession session);
 
     /**
-     * 编辑文章
+     * 修改文章
      *
      * @param blogDTO
      * @param session
      * @return
      */
-    BaseResult updateBlog(BlogDTO blogDTO, HttpSession session);
+    BaseResult updateBlog(BlogUpdateDTO blogUpdateDTO, HttpSession session);
+
+    /**
+     * 删除文章
+     *
+     * @param blogId
+     * @return
+     */
+    BaseResult deleteBlogById(int blogId);
 
 
     /**

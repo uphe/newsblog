@@ -1,13 +1,12 @@
 package com.hzy.service.impl;
 
 import com.hzy.dto.BlogDTO;
+import com.hzy.dto.BlogUpdateDTO;
 import com.hzy.mapper.BlogMapper;
 import com.hzy.mapper.LabelMapper;
 import com.hzy.mapper.TypeMapper;
-import com.hzy.pojo.Blog;
-import com.hzy.pojo.Label;
-import com.hzy.pojo.Type;
-import com.hzy.pojo.User;
+import com.hzy.mapper.VisitMapper;
+import com.hzy.pojo.*;
 import com.hzy.service.BlogService;
 import com.hzy.utils.DateUtil;
 import com.hzy.utils.FileUtils;
@@ -16,10 +15,13 @@ import com.hzy.utils.StringUtils;
 import com.hzy.vo.BaseResult;
 import com.hzy.vo.BlogVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -36,7 +38,11 @@ public class BlogServiceImpl implements BlogService {
     private LabelMapper labelMapper;
     @Autowired
     private TypeMapper typeMapper;
+    @Autowired
+    private VisitMapper visitMapper;
+
     private final String HIT_COUNT = "hitCount";
+    private final int SUMMARY = 50;
 
     /**
      * 首页，暂时是根据一年以内的优文推荐，根据点赞*100+访问排序
@@ -53,6 +59,8 @@ public class BlogServiceImpl implements BlogService {
             userId = user.getUserId();
         }
         List<BlogVO> blogVOS = blogMapper.selectIndexBlogVOByUserIdAndOffset(userId, limit * (page - 1), limit);
+
+
         setBlogVOSLikeCount(blogVOS);
 
         return BaseResult.ok(blogVOS);
@@ -100,7 +108,7 @@ public class BlogServiceImpl implements BlogService {
      * @return
      */
     @Override
-    public BaseResult getNewestBlogVO(int page, HttpSession session) {
+    public BaseResult getNewestBlogVO(int page, int limit, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = -1;
         if (user != null) {
@@ -173,41 +181,42 @@ public class BlogServiceImpl implements BlogService {
 
 
     /**
-     * 发布博客
+     * 发布文章，
      *
      * @param blogDTO
      * @param session
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public BaseResult publishBlog(BlogDTO blogDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
 
+        // 获取文章信息
         String title = blogDTO.getTitle();
         String summary = blogDTO.getSummary();
         String article = blogDTO.getArticle();
         List<String> labels = blogDTO.getLabels();
         List<String> types = blogDTO.getTypes();
 
+
         if (StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(article)) {
             Blog blog = new Blog();
-            blog.setArticle(article);
+            BeanUtils.copyProperties(blogDTO, blog);
             blog.setCreateDate(DateUtil.formatDate(new Date()));
-            if (StringUtils.isNotEmpty(summary)) {
-                blog.setSummary(summary);
-            } else {
-                if (article.length() > 50) {
-                    blog.setSummary(article.substring(0, 50));
+
+            if (StringUtils.isEmpty(summary)) {
+                if (article.length() > SUMMARY) {
+                    blog.setSummary(article.substring(0, SUMMARY));
                 } else {
                     blog.setSummary(article);
                 }
             }
-            blog.setTitle(title);
-            blog.setUserId(userId);
             blogMapper.addBlog(blog);
 
-            if (types != null && types.size() > 0) {
+            // 如果分类非空，那么就插入分类
+            if (!CollectionUtils.isEmpty(types)) {
                 List<Type> typeList = new ArrayList<>();
                 for (String s : types) {
                     Type type = new Type();
@@ -218,7 +227,9 @@ public class BlogServiceImpl implements BlogService {
                 }
                 typeMapper.addBatchType(typeList);
             }
-            if (labels != null && labels.size() > 0) {
+
+            // 如果标签非空，那么就插入标签
+            if (!CollectionUtils.isEmpty(labels)) {
                 List<Label> labelList = new ArrayList<>();
                 for (String s : labels) {
                     Label label = new Label();
@@ -229,7 +240,7 @@ public class BlogServiceImpl implements BlogService {
                 }
                 labelMapper.addBatchLabel(labelList);
             }
-            return BaseResult.ok();
+            return BaseResult.ok("发布成功");
         }
         log.info("发布文章失败");
         return BaseResult.error("发布文章失败");
@@ -237,21 +248,27 @@ public class BlogServiceImpl implements BlogService {
 
 
     /**
-     * 编辑文章
+     * 修改文章
      *
-     * @param blogDTO
+     * @param blogUpdateDTO
      * @param session
      * @return
      */
     @Override
-    public BaseResult updateBlog(BlogDTO blogDTO, HttpSession session) {
+    public BaseResult updateBlog(BlogUpdateDTO blogUpdateDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         int userId = user.getUserId();
-        int blogId = blogDTO.getBlogId();
-        blogMapper.updateBlog(blogDTO);
+        int blogId = blogUpdateDTO.getBlogId();
+
+        Blog blog = new Blog();
+        BeanUtils.copyProperties(blogUpdateDTO, blog);
+
+        blogMapper.updateBlog(blog);
+
+        // 修改文章的时候，会先删除标签，然后再新增标签
         labelMapper.deleteLabelByBlogId(blogId);
         List<Label> labels = new ArrayList<>();
-        blogDTO.getLabels().forEach(labelName -> {
+        blogUpdateDTO.getLabels().forEach(labelName -> {
             Label label = new Label();
 
             label.setUserId(userId);
@@ -262,9 +279,10 @@ public class BlogServiceImpl implements BlogService {
         });
         labelMapper.addBatchLabel(labels);
 
+        // 修改文章的时候，先删除分类，再新增分类
         typeMapper.deleteTypeByBlogId(blogId);
         List<Type> types = new ArrayList<>();
-        blogDTO.getTypes().forEach(typeName -> {
+        blogUpdateDTO.getTypes().forEach(typeName -> {
             Type type = new Type();
 
             type.setTypeName(typeName);
@@ -275,7 +293,19 @@ public class BlogServiceImpl implements BlogService {
         });
         typeMapper.addBatchType(types);
 
-        return BaseResult.ok();
+        return BaseResult.ok("修改成功");
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public BaseResult deleteBlogById(int blogId) {
+        // 删除文章的时候，需要同时删除文章所属分类和标签
+        typeMapper.deleteTypeByBlogId(blogId);
+        labelMapper.deleteLabelByBlogId(blogId);
+
+        blogMapper.deleteBlogById(blogId);
+
+        return BaseResult.ok("删除成功");
     }
 
     /**
@@ -288,8 +318,14 @@ public class BlogServiceImpl implements BlogService {
     public BaseResult getBlogVOByBlogId(int blogId, HttpSession session) {
 
         User user = (User) session.getAttribute("user");
-        if (user != null) {
-            // 点击量加1
+        // 用户第一次点击该文章，那么该文章的点击量加1
+        if (user != null && visitMapper.selectVisitByUserIdAndBlogId(user.getUserId(), blogId) == null) {
+            Visit visit = new Visit();
+            visit.setUserId(user.getUserId());
+            visit.setBlogId(blogId);
+
+            visitMapper.addVisit(visit);
+
             blogMapper.updateHitCountByBlogId(blogId);
         }
         BlogVO blogVO = blogMapper.selectBlogVOByBlogId(blogId);
@@ -297,7 +333,6 @@ public class BlogServiceImpl implements BlogService {
         List<String> labels = labelMapper.selectLabelNameByBlogId(blogId);
         blogVO.setTypes(types);
         blogVO.setLabels(labels);
-        Map<String, Object> map = new HashMap<>();
         // 下面是从数据库中获取到博客，然后转化为html传到前端
         String markdownString = blogVO.getArticle();
         String html = MarkDownUtil.mdToHtml(markdownString);

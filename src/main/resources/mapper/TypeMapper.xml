@@ -26,6 +26,11 @@
         where userId = #{userId}
     </select>
 
+    <select id="selectTypeByBlogId" resultType="com.hzy.pojo.Type">
+        select * from newsblog.type
+        where blogId = #{blogId}
+    </select>
+
     <select id="selectTypeNameByUserId" resultType="string">
         select distinct typeName from newsblog.type
         where userId = #{userId}
@@ -35,6 +40,5 @@
         select typeName from newsblog.type
         where blogId = #{blogId}
     </select>
-
 
 </mapper>

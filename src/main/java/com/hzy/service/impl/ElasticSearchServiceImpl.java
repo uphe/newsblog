@@ -49,6 +49,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
      *
      * @param blog
      */
+    @Override
     public void save(Blog blog) {
         IndexRequest request = new IndexRequest(INDEX_NAME);
         // request.id("1");
@@ -70,6 +71,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
      * @param msg
      * @return
      */
+    @Override
     public BaseResult search(String msg, Integer page, Integer limit) {
         SearchRequest request = new SearchRequest(INDEX_NAME);
 

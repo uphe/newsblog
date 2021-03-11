@@ -18,6 +18,8 @@ public interface TypeMapper {
 
     List<Type> selectTypeByUserId(int userId);
 
+    List<Type> selectTypeByBlogId(int blogId);
+
     List<String> selectTypeNameByUserId(int userId);
 
     List<String> selectTypeNameByBlogId(int blogId);

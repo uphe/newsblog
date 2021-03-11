@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author: hzy
@@ -30,10 +31,10 @@ public class BlogController {
         return blogService.getIndexBlogVO(pageDTO.getPage(), pageDTO.getLimit(), session);
     }
 
-    @GetMapping("/all/newest/{page}")
+    @GetMapping("/all/newest")
     @Operation(summary = "最新发布榜单，返回最新发布的文章")
-    public BaseResult newest(@PathVariable("page") int page, HttpSession session) {
-        return blogService.getNewestBlogVO(page, session);
+    public BaseResult newest(@RequestBody @Valid PageDTO pageDTO, HttpSession session) {
+        return blogService.getNewestBlogVO(pageDTO.getPage(), pageDTO.getLimit(), session);
     }
 
     @GetMapping("/all/todayRecommend")
@@ -44,7 +45,7 @@ public class BlogController {
 
     @GetMapping("/all/detail/{blogId}")
     @Operation(summary = "文章详情，返回文章的详情内容")
-    public BaseResult detail(@PathVariable("blogId") int blogId, HttpSession session) {
+    public BaseResult detail(@PathVariable("blogId") @NotNull int blogId, HttpSession session) {
         return blogService.getBlogVOByBlogId(blogId, session);
     }
 
@@ -61,7 +62,7 @@ public class BlogController {
     }
 
     @PostMapping("/all/search")
-    @Operation(summary = "通过输入文章标题，进行分词模糊匹配")
+    @Operation(summary = "搜索文章")
     public BaseResult search(@RequestBody @Valid SearchDTO searchDTO) {
         return elasticSearchService.search(searchDTO.getTitle(), searchDTO.getPage(), searchDTO.getLimit());
     }
@@ -78,16 +79,22 @@ public class BlogController {
         return blogService.getFollowBlogVO(page, session);
     }
 
-    @PostMapping("/user/editor")
+    @PostMapping("/user/publish")
     @Operation(summary = "发布文章")
-    public BaseResult publishBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
+    public BaseResult publishBlog(@RequestBody @Valid BlogDTO blogDTO, HttpSession session) {
         return blogService.publishBlog(blogDTO, session);
     }
 
     @PostMapping("/user/update")
-    @Operation(summary = "编辑文章")
-    public BaseResult updateBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
-        return blogService.updateBlog(blogDTO, session);
+    @Operation(summary = "修改文章")
+    public BaseResult updateBlog(@RequestBody BlogUpdateDTO blogUpdateDTO, HttpSession session) {
+        return blogService.updateBlog(blogUpdateDTO, session);
+    }
+
+    @GetMapping("/user/deleteBlogById")
+    @Operation(summary = "删除文章")
+    public BaseResult deleteBlogById(@NotNull int blogId) {
+        return blogService.deleteBlogById(blogId);
     }
 
 }

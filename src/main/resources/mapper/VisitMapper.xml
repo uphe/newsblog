@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzy.mapper.VisitMapper">
+
+    <insert id="addVisit">
+        insert into newsblog.visit(userId, blogId)
+        values (#{userId}, #{blogId})
+    </insert>
+
+    <select id="selectVisitByUserIdAndBlogId" resultType="com.hzy.pojo.Visit">
+        select * from visit
+        where userId = #{userId} and blogId = #{blogId}
+    </select>
+</mapper>
