@@ -11,9 +11,21 @@ import java.util.List;
 @Mapper
 @Repository
 public interface FollowMapper {
+    /**
+     * 通过用户id查询他所关注的用户
+     *
+     * @param userId
+     * @return
+     */
     List<User> selectFollowUserByUserId(int userId);
 
-    List<User> selectUserByFollowUserId(int followUserId);
+    /**
+     * 通过用户id查询粉丝
+     *
+     * @param followUserId
+     * @return
+     */
+    List<User> selectFansByUserId(@Param("userId") int userId);
 
     Follow selectFollowUserByUserIdAndFollowUserId(@Param("userId") int userId, @Param("followUserId") int followUserId);
 

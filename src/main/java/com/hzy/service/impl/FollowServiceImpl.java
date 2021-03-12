@@ -18,13 +18,13 @@ public class FollowServiceImpl implements FollowService {
     private FollowMapper followMapper;
 
     @Override
-    public List<User> selectFollowUserByUserId(int userId) {
-        return followMapper.selectFollowUserByUserId(userId);
+    public BaseResult selectFollowUserByUserId(int userId) {
+        return BaseResult.ok(followMapper.selectFollowUserByUserId(userId));
     }
 
     @Override
-    public List<User> selectUserByFollowUserId(int followUserId) {
-        return followMapper.selectUserByFollowUserId(followUserId);
+    public BaseResult selectFansByUserId(int userId) {
+        return BaseResult.ok(followMapper.selectFansByUserId(userId));
     }
 
     @Override

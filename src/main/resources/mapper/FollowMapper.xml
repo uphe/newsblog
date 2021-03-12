@@ -9,9 +9,9 @@
         where userId in (select followUserId from follow where userId = #{userId})
     </select>
 
-    <select id="selectUserByFollowUserId" resultType="User">
+    <select id="selectFansByUserId" resultType="User">
         select * from user
-        where userId in (select userId from follow where followUserId = #{followUserId})
+        where userId in (select userId from follow where followUserId = #{userId})
     </select>
 
     <select id="selectFollowUserByUserIdAndFollowUserId" resultType="Follow">

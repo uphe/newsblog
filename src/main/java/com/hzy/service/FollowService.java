@@ -8,9 +8,21 @@ import java.util.List;
 
 public interface FollowService {
 
-    List<User> selectFollowUserByUserId(int userId);
+    /**
+     * 通过用户id查询他所关注的用户
+     *
+     * @param userId
+     * @return
+     */
+    BaseResult selectFollowUserByUserId(int userId);
 
-    List<User> selectUserByFollowUserId(int followUserId);
+    /**
+     * 通过用户id查询粉丝
+     *
+     * @param userId
+     * @return
+     */
+    BaseResult selectFansByUserId(int userId);
 
     Follow selectFollowUserByUserIdAndFollowUserId(int userId, int followUserId);
 
