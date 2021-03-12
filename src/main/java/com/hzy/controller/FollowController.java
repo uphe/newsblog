@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -27,7 +26,7 @@ public class FollowController {
 
     @PostMapping("/user/followUser")
     @Operation(summary = "关注用户，如果未关注，访问该接口即可关注，如果已关注，访问该接口取消关注")
-    public BaseResult followUser(@RequestBody @Valid FollowDTO followDTO, HttpSession session) {
+    public BaseResult followUser(@RequestBody @Valid FollowDTO followDTO) {
         return followService.followUser(followDTO.getUserId(), followDTO.getFollowUserId());
     }
 

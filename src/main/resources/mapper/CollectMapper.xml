@@ -12,6 +12,10 @@
         select count(*) from collect
         where blog = #{blogId}
     </select>
+    <select id="selectCollectByUserIdAndBlogId" resultType="com.hzy.pojo.Collect">
+        select * from collect
+        where userId = #{userId} and blogId = #{blogId}
+    </select>
 
     <insert id="addCollectBlog">
         insert into collect(userId,blogId)
@@ -20,6 +24,6 @@
 
     <delete id="deleteCollectBlogByCollectId">
         delete from collect
-        where collectId = #{collectId}
+        where userId = #{userId} and blogId = #{blogId}
     </delete>
 </mapper>

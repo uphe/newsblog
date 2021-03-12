@@ -7,12 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Mapper
-@Repository
 /**
  * @Author: hzy
  * @Date: 2020/6/12
  */
+@Mapper
+@Repository
 public interface BlogMapper {
     /**
      * 发布文章

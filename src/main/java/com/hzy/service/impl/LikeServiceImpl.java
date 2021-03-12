@@ -6,16 +6,18 @@ import com.hzy.mapper.RemindMapper;
 import com.hzy.mapper.UserMapper;
 import com.hzy.pojo.LikeRecord;
 import com.hzy.pojo.Remind;
+import com.hzy.pojo.User;
 import com.hzy.service.LikeService;
 import com.hzy.utils.StringUtils;
+import com.hzy.vo.BaseResult;
 import com.hzy.vo.BlogVO;
-import com.hzy.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 @Service
@@ -37,12 +39,14 @@ public class LikeServiceImpl implements LikeService {
      * 当用户点赞时，会把该用户放到该key中，即记录每个用户只能点赞一次，同时可以用于取消点赞功能
      * 还有一个集合是changeKey，用来存放改变的文章，用于定时任务持久化点赞数量（定时将Redis中点赞总数持久化到MySQL）
      *
-     * @param userId
      * @param blogId
+     * @param session
      * @return
      */
-    public ResponseVO like(int userId, int blogId) {
-        ResponseVO responseVO = new ResponseVO(0);
+    public BaseResult like(int blogId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        int userId = user.getUserId();
+
         BlogVO blogVO = new BlogVO();
 
         // 通过RedisTemplate获取操作Set集合的对象
@@ -67,7 +71,6 @@ public class LikeServiceImpl implements LikeService {
 
             // 这里是标记消息已读（因为点赞已取消）
             remindMapper.updateRemindByFromIdAndBlogIdAndRemindType(userId, blogId, 0);
-            responseVO.setMsg("取消点赞成功");
         } else {
             log.info("执行了点赞操作");
             // 点赞，把该用户放到该文章的点赞集合中
@@ -86,11 +89,9 @@ public class LikeServiceImpl implements LikeService {
                     "点赞了" + blogMapper.selectBlogById(blogId).getTitle());
 
             remindMapper.addRemind(remind);
-            responseVO.setMsg("点赞成功");
         }
 
         blogVO.setLikeCount(Math.toIntExact(setOperations.size(likeKey)));
-        responseVO.setData(blogVO);
-        return responseVO;
+        return BaseResult.ok(blogVO);
     }
 }

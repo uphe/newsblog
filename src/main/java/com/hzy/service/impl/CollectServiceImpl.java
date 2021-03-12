@@ -1,5 +1,6 @@
 package com.hzy.service.impl;
 
+import com.hzy.dto.CollectDTO;
 import com.hzy.mapper.CollectMapper;
 import com.hzy.pojo.Blog;
 import com.hzy.service.CollectService;
@@ -15,38 +16,42 @@ public class CollectServiceImpl implements CollectService {
 
     /**
      * 查询某个用户所收藏的文章
+     *
      * @param userId
      * @return
      */
+    @Override
     public List<Blog> selectCollectBlogByUserId(int userId) {
         return collectMapper.selectCollectBlogByUserId(userId);
     }
 
     /**
      * 查询某篇博客被收藏了多少次
+     *
      * @param blogId
      * @return
      */
+    @Override
     public int selectCollectCountByBlogId(int blogId) {
         return collectMapper.selectCollectCountByBlogId(blogId);
     }
 
     /**
      * 添加收藏博客
-     * @param userId
-     * @param blogId
+     *
+     * @param collectDTO
      * @return
      */
-    public int addCollectBlog(int userId, int blogId) {
-        return collectMapper.addCollectBlog(userId, blogId);
-    }
+    @Override
+    public int addCollectBlog(CollectDTO collectDTO) {
+        int userId = collectDTO.getUserId();
+        int blogId = collectDTO.getBlogId();
+        // 如果是第奇数次次点，那就是关注
+        if (collectMapper.selectCollectByUserIdAndBlogId(userId, blogId) != null) {
+            return collectMapper.deleteCollectBlogByCollectId(userId, blogId);
+        } else {
+            return collectMapper.addCollectBlog(userId, blogId);
+        }
 
-    /**
-     * 取消收藏博客
-     * @param collectId
-     * @return
-     */
-    public int deleteCollectBlogByCollectId(int collectId) {
-        return collectMapper.deleteCollectBlogByCollectId(collectId);
     }
 }

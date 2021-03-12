@@ -1,5 +1,6 @@
 package com.hzy.service;
 
+import com.hzy.dto.CollectDTO;
 import com.hzy.pojo.Blog;
 
 import java.util.List;
@@ -25,17 +26,9 @@ public interface CollectService {
     /**
      * 添加收藏博客
      *
-     * @param userId
-     * @param blogId
+     * @param collectDTO
      * @return
      */
-    int addCollectBlog(int userId, int blogId);
+    int addCollectBlog(CollectDTO collectDTO);
 
-    /**
-     * 取消收藏博客
-     *
-     * @param collectId
-     * @return
-     */
-    int deleteCollectBlogByCollectId(int collectId);
 }

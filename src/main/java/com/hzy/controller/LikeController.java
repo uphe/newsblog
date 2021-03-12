@@ -3,6 +3,7 @@ package com.hzy.controller;
 import com.hzy.pojo.User;
 import com.hzy.service.BlogService;
 import com.hzy.service.LikeService;
+import com.hzy.vo.BaseResult;
 import com.hzy.vo.ResponseVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,10 +23,7 @@ public class LikeController {
 
     @GetMapping("/user/like/{blogId}")
     @Operation(summary = "给文章点赞")
-    public ResponseVO like(@PathVariable("blogId") int blogId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        int userId = user.getUserId();
-        ResponseVO responseVO = likeService.like(userId, blogId);
-        return responseVO;
+    public BaseResult like(@PathVariable("blogId") int blogId, HttpSession session) {
+        return likeService.like(blogId, session);
     }
 }
