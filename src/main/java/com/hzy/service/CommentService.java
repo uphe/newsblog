@@ -1,11 +1,17 @@
 package com.hzy.service;
 
+import com.hzy.dto.CommentDTO;
 import com.hzy.pojo.Comment;
+import com.hzy.vo.BaseResult;
 import com.hzy.vo.CommentVO;
-import com.hzy.vo.ResponseVO;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * @Author: hzy
+ * @Date: 2020/6/12
+ */
 public interface CommentService {
 
     /**
@@ -14,13 +20,27 @@ public interface CommentService {
      * @param comment
      * @return
      */
-    ResponseVO addComment(Comment comment);
+    BaseResult addComment(Comment comment, HttpSession session);
+
+    /**
+     * 通过id删除评论
+     *
+     * @param commentId
+     * @return
+     */
+    BaseResult deleteCommentByCommentId(int commentId);
 
     int selectCommentCountByBlogId(int blogId);
 
     List<Comment> selectCommentByBlogId(int blogId);
 
-    List<CommentVO> selectCommentVOByBlogId(int blogId, int offset, int limit);
+    /**
+     * 获取文章评论
+     *
+     * @param commentDTO
+     * @return
+     */
+    BaseResult selectCommentVOByBlogId(CommentDTO commentDTO);
 
 
     /**

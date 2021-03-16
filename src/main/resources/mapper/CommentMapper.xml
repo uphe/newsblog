@@ -4,12 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzy.mapper.CommentMapper">
     <sql id="sqlid">
-        commentId,content,createDate,blogId,status,parentId,user.userId,username,headUrl,userType
+        commentId,content,createDate,blogId,parentId,user.userId,username,headUrl,userType
     </sql>
     <insert id="addComment" parameterType="Comment">
         insert into comment(content,createDate,blogId,userId,parentId)
         values (#{content},#{createDate},#{blogId},#{userId},#{parentId})
     </insert>
+    <delete id="deleteCommentByCommentId">
+        delete from comment
+        where commentId = #{commentId}
+    </delete>
     <select id="selectCommentByBlogId" resultType="Comment">
         select * from comment
         where blogId = #{blogId} and parentId = -1
