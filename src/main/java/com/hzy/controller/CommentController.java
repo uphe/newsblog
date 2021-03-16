@@ -38,7 +38,7 @@ public class CommentController {
         return commentService.deleteCommentByCommentId(commentId);
     }
 
-    @GetMapping("/user/comment")
+    @PostMapping("/user/comment")
     @Operation(summary = "通过文章id获取评论信息")
     public BaseResult comment(@RequestBody @Valid CommentDTO commentDTO) {
         return commentService.selectCommentVOByBlogId(commentDTO);
