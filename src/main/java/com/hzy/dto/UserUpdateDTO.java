@@ -1,17 +1,19 @@
-package com.hzy.pojo;
+package com.hzy.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @Author: hzy
- * @Date: 2021/3/11
+ * @Date: 2021/3/16
  */
 @Data
-public class User {
+public class UserUpdateDTO {
+    @NotNull
     private Integer userId;
+
     private String username;
     private String password;
-    private String salt;
     private String headUrl;
-    private Integer userType;
 }

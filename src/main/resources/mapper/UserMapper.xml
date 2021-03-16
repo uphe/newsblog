@@ -7,16 +7,29 @@
         insert into user(username,password,salt,headUrl)
         values(#{username},#{password},#{salt},#{headUrl})
     </insert>
-    <update id="updateUser" parameterType="User">
+
+    <update id="updateUserByUserId">
         update user
-        set username = #{username},password = #{password},headUrl = #{headUrl}
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="headUrl != null">
+                headUrl = #{headUrl}
+            </if>
+        </set>
         where userId = #{userId}
     </update>
-    <select id="selectUserById" resultType="User">
+
+    <select id="selectUserById" resultType="com.hzy.pojo.User">
         select * from user
         where userId = #{userId}
     </select>
-    <select id="selectUserByName" resultType="User">
+
+    <select id="selectUserByName" resultType="com.hzy.pojo.User">
         select * from user
         where username = #{username}
     </select>

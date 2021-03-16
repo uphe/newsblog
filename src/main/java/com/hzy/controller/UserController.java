@@ -1,6 +1,7 @@
 package com.hzy.controller;
 
 import com.hzy.dto.UserDTO;
+import com.hzy.dto.UserUpdateDTO;
 import com.hzy.service.UserService;
 import com.hzy.vo.BaseResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @RestController
 @Slf4j
@@ -32,7 +34,6 @@ public class UserController {
         return userService.register(userDTO);
     }
 
-    
     @GetMapping("/isLogin")
     @Operation(summary = "判断是否登录")
     public BaseResult isLogin(HttpServletRequest request) {
@@ -51,4 +52,9 @@ public class UserController {
         return userService.selectUserInfoByUserId(userId);
     }
 
+    @PostMapping("/user/updateUserByUserId")
+    @Operation(summary = "修改用户信息")
+    public BaseResult updateUserByUserId(@RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+        return userService.updateUserByUserId(userUpdateDTO);
+    }
 }

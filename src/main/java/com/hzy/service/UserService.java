@@ -1,6 +1,7 @@
 package com.hzy.service;
 
 import com.hzy.dto.UserDTO;
+import com.hzy.dto.UserUpdateDTO;
 import com.hzy.pojo.User;
 import com.hzy.vo.BaseResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +38,14 @@ public interface UserService {
     User selectUserById(int userId);
 
     /**
+     * 修改用户信息
+     *
+     * @param userUpdateDTO
+     * @return
+     */
+    BaseResult updateUserByUserId(UserUpdateDTO userUpdateDTO);
+
+    /**
      * 查询用户信息
      *
      * @param userId
@@ -53,6 +62,4 @@ public interface UserService {
     String saveImage(MultipartFile file);
 
     void getImage(String fileName, HttpServletResponse response);
-
-    void updateUserByHeadUrl(String headUrl, HttpSession session);
 }

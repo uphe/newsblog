@@ -1,6 +1,7 @@
 package com.hzy.service.impl;
 
 import com.hzy.dto.UserDTO;
+import com.hzy.dto.UserUpdateDTO;
 import com.hzy.mapper.BlogMapper;
 import com.hzy.mapper.FollowMapper;
 import com.hzy.mapper.TokenMapper;
@@ -42,14 +43,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private FollowMapper followMapper;
 
-    /**
-     * 登录业务，并实现保存密码7天
-     *
-     * @param userDTO
-     * @param response
-     * @param session
-     * @return
-     */
+    @Override
     public BaseResult login(UserDTO userDTO, HttpServletResponse response, HttpSession session) {
         log.info("执行登录功能");
 
@@ -79,12 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /**
-     * 注册功能，默认用本地的头像，密码进行salt加密
-     *
-     * @param userDTO
-     * @return
-     */
+    @Override
     public String register(UserDTO userDTO) {
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
@@ -123,6 +112,7 @@ public class UserServiceImpl implements UserService {
         return BaseResult.error("未登录");
     }
 
+    @Override
     public BaseResult logout(HttpServletRequest request) {
         log.info("执行退出登录操作");
         String token = request.getHeader("token");
@@ -135,11 +125,18 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectUserById(userId);
     }
 
-    /**
-     * 查询用户信息
-     * @param userId
-     * @return
-     */
+    @Override
+    public BaseResult updateUserByUserId(UserUpdateDTO userUpdateDTO) {
+        if (StringUtils.isEmpty(userUpdateDTO.getUsername()) &&
+                StringUtils.isEmpty(userUpdateDTO.getPassword()) &&
+                StringUtils.isEmpty(userUpdateDTO.getHeadUrl())) {
+            return BaseResult.error("参数不能全为空");
+        }
+        userMapper.updateUserByUserId(userUpdateDTO);
+        return BaseResult.ok("修改成功");
+    }
+
+    @Override
     public BaseResult selectUserInfoByUserId(int userId) {
         Map<String, Object> map = new HashMap<>();
         User user = userMapper.selectUserById(userId);
@@ -158,12 +155,7 @@ public class UserServiceImpl implements UserService {
         return BaseResult.ok(map);
     }
 
-    /**
-     * 保存到文件中的图片只有图片名，保存到数据库中的文件是文件的全URL路径
-     *
-     * @param file
-     * @return
-     */
+    @Override
     public String saveImage(MultipartFile file) {
         // System.out.println(file.getOriginalFilename());// java.jpg
         int doPos = file.getOriginalFilename().lastIndexOf(".");
@@ -197,12 +189,5 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             log.error("图片读取错误" + e.getMessage());
         }
-    }
-
-    public void updateUserByHeadUrl(String headUrl, HttpSession session) {
-
-        User user = (User) session.getAttribute("user");
-        user.setHeadUrl(headUrl);
-        userMapper.updateUser(user);
     }
 }

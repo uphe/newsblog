@@ -40,7 +40,7 @@ public class CommentController {
 
     @PostMapping("/all/getCommentVOByBlogId")
     @Operation(summary = "通过文章id获取评论信息")
-    public BaseResult selectCommentVOByBlogId(@RequestBody @Valid CommentDTO commentDTO) {
-        return commentService.selectCommentVOByBlogId(commentDTO);
+    public BaseResult getCommentVOByBlogId(@RequestBody @Valid CommentDTO commentDTO) {
+        return commentService.getCommentVOByBlogId(commentDTO);
     }
 }

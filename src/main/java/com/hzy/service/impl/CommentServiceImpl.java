@@ -95,16 +95,8 @@ public class CommentServiceImpl implements CommentService {
         return BaseResult.ok();
     }
 
-    public int selectCommentCountByBlogId(int blogId) {
-        return commentMapper.selectCommentCountByBlogId(blogId);
-    }
-
-    public List<Comment> selectCommentByBlogId(int blogId) {
-        return commentMapper.selectCommentByBlogId(blogId);
-    }
-
     @Override
-    public BaseResult selectCommentVOByBlogId(CommentDTO commentDTO) {
+    public BaseResult getCommentVOByBlogId(CommentDTO commentDTO) {
         int blogId = commentDTO.getBlogId();
         int limit = commentDTO.getLimit();
         int offset = (commentDTO.getPage() - 1) * limit;
@@ -122,9 +114,7 @@ public class CommentServiceImpl implements CommentService {
         return BaseResult.ok(commentVOS);
     }
 
-
-    @Override
-    public List<CommentVO> selectChildCommentVOByCommentId(int commentId) {
+    private List<CommentVO> selectChildCommentVOByCommentId(int commentId) {
 
         // 遍历回复评论，并封装到list中
         List<CommentVO> list = commentMapper.selectChildCommentVOByCommentId(commentId);
@@ -150,10 +140,6 @@ public class CommentServiceImpl implements CommentService {
         }
         return allList;
 
-    }
-
-    public Comment selectCommentByCommentId(int commentId) {
-        return commentMapper.selectCommentByCommentId(commentId);
     }
 
 }

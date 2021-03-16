@@ -14,34 +14,16 @@ public class CollectServiceImpl implements CollectService {
     @Autowired
     private CollectMapper collectMapper;
 
-    /**
-     * 查询某个用户所收藏的文章
-     *
-     * @param userId
-     * @return
-     */
     @Override
     public List<Blog> selectCollectBlogByUserId(int userId) {
         return collectMapper.selectCollectBlogByUserId(userId);
     }
 
-    /**
-     * 查询某篇博客被收藏了多少次
-     *
-     * @param blogId
-     * @return
-     */
     @Override
     public int selectCollectCountByBlogId(int blogId) {
         return collectMapper.selectCollectCountByBlogId(blogId);
     }
 
-    /**
-     * 添加收藏博客
-     *
-     * @param collectDTO
-     * @return
-     */
     @Override
     public int addCollectBlog(CollectDTO collectDTO) {
         int userId = collectDTO.getUserId();

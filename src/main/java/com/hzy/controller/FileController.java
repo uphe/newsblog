@@ -1,5 +1,7 @@
 package com.hzy.controller;
 
+import com.hzy.dto.UserUpdateDTO;
+import com.hzy.pojo.User;
 import com.hzy.service.UserService;
 import com.hzy.utils.JSONUtils;
 import com.hzy.vo.BaseResult;
@@ -25,9 +27,16 @@ public class FileController {
     @PostMapping("/uploadimage")
     @Operation(summary = "上传头像")
     public BaseResult uploadImage(@RequestParam("file") MultipartFile file, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return BaseResult.error("请先登录");
+        }
         String fileUrl = userService.saveImage(file);
         if (fileUrl != null) {
-            userService.updateUserByHeadUrl(fileUrl, session);
+            UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+            userUpdateDTO.setUserId(user.getUserId());
+            userUpdateDTO.setHeadUrl(fileUrl);
+            userService.updateUserByUserId(userUpdateDTO);
             return BaseResult.ok();
         }
         return BaseResult.error();

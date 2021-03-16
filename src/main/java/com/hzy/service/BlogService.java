@@ -16,6 +16,7 @@ public interface BlogService {
      * 首页，暂时是根据一年以内的优文推荐，根据点赞*100+访问排序
      *
      * @param page
+     * @param limit
      * @param session
      * @return
      */
@@ -28,6 +29,7 @@ public interface BlogService {
      * 然后通过权重对查出的所有文章进行筛选，最后展示
      *
      * @param page
+     * @param limit
      * @param session
      * @return
      */
@@ -38,6 +40,7 @@ public interface BlogService {
      * 最新的文章，根据创建时间进行的排序
      *
      * @param page
+     * @param limit
      * @param session
      * @return
      */
@@ -54,6 +57,8 @@ public interface BlogService {
 
     /**
      * 今日推荐你文章，即是昨天的好文，根据点赞*100+访问进行排序
+     * 首先会去redis中取，如果没有就去MySQL中拿，每天推荐10篇
+     * 如果文章中没有图片，那就默认使用用户的头像
      *
      * @return
      */
@@ -71,7 +76,7 @@ public interface BlogService {
     /**
      * 修改文章
      *
-     * @param blogDTO
+     * @param blogUpdateDTO
      * @param session
      * @return
      */
@@ -101,6 +106,7 @@ public interface BlogService {
      * @param userId
      * @param offset
      * @param limit
+     * @param sortName
      * @return
      */
     BaseResult getBlogVOByUserIdAndOffset(int userId, int offset, int limit, String sortName);
@@ -109,7 +115,7 @@ public interface BlogService {
      * 通过类别名获取文章
      *
      * @param typeName
-     * @param offset
+     * @param page
      * @param limit
      * @return
      */
