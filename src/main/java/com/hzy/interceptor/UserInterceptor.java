@@ -20,6 +20,7 @@ import java.util.Date;
 /**
  * 配置一个拦截器，并将该拦截器注入到Spring中，该拦截器默认是什么都不拦截
  * 外面需要一个配置类，去配置该拦截器的拦截路径
+ * @author hzy
  */
 @Component
 public class UserInterceptor implements HandlerInterceptor {

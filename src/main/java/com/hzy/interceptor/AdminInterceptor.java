@@ -17,6 +17,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
+/**
+ * @Author: hzy
+ * @Date: 2020/12/12
+ */
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
     @Autowired
