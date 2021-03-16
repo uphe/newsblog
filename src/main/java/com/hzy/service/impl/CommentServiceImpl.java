@@ -107,7 +107,7 @@ public class CommentServiceImpl implements CommentService {
     public BaseResult selectCommentVOByBlogId(CommentDTO commentDTO) {
         int blogId = commentDTO.getBlogId();
         int limit = commentDTO.getLimit();
-        int offset = (limit - 1) * commentDTO.getPage();
+        int offset = (commentDTO.getPage() - 1) * limit;
         List<CommentVO> commentVOS = commentMapper.selectParentCommentVOByBlogId(blogId, offset, limit);
 
         // 通过父评论找到子评论

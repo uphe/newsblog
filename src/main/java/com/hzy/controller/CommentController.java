@@ -38,9 +38,9 @@ public class CommentController {
         return commentService.deleteCommentByCommentId(commentId);
     }
 
-    @PostMapping("/all/comment")
+    @PostMapping("/all/getCommentVOByBlogId")
     @Operation(summary = "通过文章id获取评论信息")
-    public BaseResult comment(@RequestBody @Valid CommentDTO commentDTO) {
+    public BaseResult selectCommentVOByBlogId(@RequestBody @Valid CommentDTO commentDTO) {
         return commentService.selectCommentVOByBlogId(commentDTO);
     }
 }
