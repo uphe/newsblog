@@ -128,9 +128,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public BaseResult updateUserByUserId(UserUpdateDTO userUpdateDTO) {
         if (StringUtils.isEmpty(userUpdateDTO.getUsername()) &&
-                StringUtils.isEmpty(userUpdateDTO.getPassword()) &&
+                StringUtils.isEmpty(userUpdateDTO.getOldPassword()) &&
+                StringUtils.isEmpty(userUpdateDTO.getNewPassword()) &&
                 StringUtils.isEmpty(userUpdateDTO.getHeadUrl())) {
             return BaseResult.error("参数不能全为空");
+        }
+
+        User user = userMapper.selectUserById(userUpdateDTO.getUserId());
+        if (user == null) {
+            return BaseResult.error("该用户不存在");
+        }
+
+        if (StringUtils.isNotEmpty(userUpdateDTO.getOldPassword()) &&
+                StringUtils.isNotEmpty(userUpdateDTO.getNewPassword())) {
+            if (!user.getPassword().equals(MD5Utils.MD5(userUpdateDTO.getOldPassword() + user.getSalt()))) {
+                return BaseResult.error("原密码错误");
+            } else {
+                userUpdateDTO.setNewPassword(MD5Utils.MD5(userUpdateDTO.getNewPassword() + user.getSalt()));
+            }
+        } else if (StringUtils.isNotEmpty(userUpdateDTO.getOldPassword()) ||
+                StringUtils.isNotEmpty(userUpdateDTO.getNewPassword())) {
+            return BaseResult.error("密码不能为空");
         }
         userMapper.updateUserByUserId(userUpdateDTO);
         return BaseResult.ok("修改成功");

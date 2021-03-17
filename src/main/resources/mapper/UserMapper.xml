@@ -14,8 +14,8 @@
             <if test="username != null">
                 username = #{username},
             </if>
-            <if test="password != null">
-                password = #{password},
+            <if test="newPassword != null">
+                password = #{newPassword},
             </if>
             <if test="headUrl != null">
                 headUrl = #{headUrl}

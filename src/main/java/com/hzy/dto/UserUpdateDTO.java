@@ -14,6 +14,7 @@ public class UserUpdateDTO {
     private Integer userId;
 
     private String username;
-    private String password;
+    private String oldPassword;
+    private String newPassword;
     private String headUrl;
 }
